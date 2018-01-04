@@ -1,0 +1,8 @@
+* Pour le calcul des prix et deltas à t = 0 :
+./pricer ../data/nom-option.dat
+
+* Pour le calcul de la P&L avec les données du marché :
+./pricer -c ../Market-data/simul_nom-option.dat ../produits/nom-option.dat
+
+* Pour le calcul de la P&L avec les données simulées :
+./pricer -d ../produits/nom-option.dat
