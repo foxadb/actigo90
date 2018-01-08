@@ -59,6 +59,8 @@ add_executable(testPL src/testPL.cpp  src/MonteCarlo.cpp  src/Basket.cpp src/Bla
 target_link_libraries(testPL ${LIBS})
 add_executable(testBasketPriceT src/test_basket_priceT.cpp src/Basket.cpp src/MonteCarlo.cpp  src/BlackScholesModel.cpp)
 target_link_libraries( testBasketPriceT ${LIBS})
+add_executable(test_calibration src/test_calibration.cpp src/Calibration.cpp)
+target_link_libraries( test_calibration ${LIBS})
 
 
 add_executable(pricer src/parser.cpp src/pricer.cpp src/Basket.cpp src/MonteCarlo.cpp  src/BlackScholesModel.cpp src/Asian.cpp  src/Performance.cpp)
