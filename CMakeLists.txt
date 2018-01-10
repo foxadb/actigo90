@@ -28,8 +28,10 @@ message(STATUS "Boost include directory ${Boost_INCLUDE_DIR}")
 ## Detect PNL
 
 # Set PNL directory
+set(Pnl_DIR "/matieres/5MMPMP6/pnl/lib/pnl")
 #set(Pnl_DIR "../pnl/build/lib/pnl")
 
+# Find PNL package
 find_package(Pnl REQUIRED)
 set(LIBS ${LIBS} ${PNL_LIBRARIES})
 include_directories(${PNL_INCLUDE_DIRS})
@@ -40,33 +42,9 @@ endif()
 # Add math lib
 set(LIBS ${LIBS} m)
 
-# Testing the parser
-add_executable(parser-test src/parser.cpp src/test_parser.cpp  src/MonteCarlo.cpp  src/Basket.cpp src/BlackScholesModel.cpp)
-target_link_libraries(parser-test ${LIBS})
-add_executable(positifT-test src/testPositifT.cpp  src/MonteCarlo.cpp  src/Basket.cpp src/BlackScholesModel.cpp)
-target_link_libraries(positifT-test ${LIBS})
-add_executable(mc-example src/mc_example.cpp  src/MonteCarlo.cpp  src/Basket.cpp src/BlackScholesModel.cpp)
-target_link_libraries(mc-example ${LIBS})
-add_executable(test_basket1 src/test_basket_1.cpp src/MonteCarlo.cpp  src/Basket.cpp src/BlackScholesModel.cpp )
-target_link_libraries(test_basket1 ${LIBS} )
-add_executable(test_basket2 src/test_basket_2.cpp src/MonteCarlo.cpp  src/Basket.cpp src/BlackScholesModel.cpp )
-target_link_libraries(test_basket2 ${LIBS} )
-add_executable(test_perf src/test_perf.cpp src/MonteCarlo.cpp  src/Performance.cpp src/BlackScholesModel.cpp )
-target_link_libraries(test_perf ${LIBS} )
-add_executable(test_asian src/test_asian.cpp src/MonteCarlo.cpp  src/Asian.cpp src/BlackScholesModel.cpp )
-target_link_libraries(test_asian ${LIBS} )
-add_executable(testDelta src/testDelta.cpp  src/MonteCarlo.cpp  src/Basket.cpp src/BlackScholesModel.cpp)
-target_link_libraries(testDelta ${LIBS})
-add_executable(testPL src/testPL.cpp  src/MonteCarlo.cpp  src/Basket.cpp src/BlackScholesModel.cpp)
-target_link_libraries(testPL ${LIBS})
-add_executable(testBasketPriceT src/test_basket_priceT.cpp src/Basket.cpp src/MonteCarlo.cpp  src/BlackScholesModel.cpp)
-target_link_libraries( testBasketPriceT ${LIBS})
-add_executable(test_calibration src/test_calibration.cpp src/Calibration.cpp)
-target_link_libraries( test_calibration ${LIBS})
-
-add_executable(pricer src/parser.cpp src/pricer.cpp src/Basket.cpp src/MonteCarlo.cpp  src/BlackScholesModel.cpp src/Asian.cpp  src/Performance.cpp)
-target_link_libraries(pricer ${LIBS})
-#install(TARGETS mc-pricer DESTINATION bin)
+## Subdirectories
+add_subdirectory(src)
+add_subdirectory(test)
 
 # Print compiler flags
 get_directory_property(DirDefs COMPILE_DEFINITIONS)
