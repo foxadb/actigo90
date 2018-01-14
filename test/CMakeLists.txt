@@ -1,4 +1,5 @@
-include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/src/pricer)
+include_directories(${CMAKE_SOURCE_DIR}/src/quote)
 
 file(GLOB TEST_SOURCES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.cpp)
 foreach(testsourcefile ${TEST_SOURCES})
