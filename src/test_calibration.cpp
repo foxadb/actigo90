@@ -19,7 +19,8 @@ int main(int argc, char** argv) {
   y[2] = 0.6;
   y[3] = 1.1;
   y[4] = 0.9;
-cout << cal->corr(x,y) << endl;
+  cout << "test"<< endl;
+//cout << cal->corr(x,y) << endl;
 
 PnlVect *spots = pnl_vect_create_from_file("../Market-data/simul_call.dat");
 PnlVect *dates = pnl_vect_create(spots->size);
@@ -29,6 +30,9 @@ for (int i = 1; i < dates->size; i++){
     LET(dates, i) = prec + 1.0/365.0;
     prec = GET(dates, i);
 }
+pnl_vect_print(dates); 
+cout << "spots"<< endl; 
+pnl_vect_print(spots);
 cout << cal->volatility(spots, dates) << endl;
 return 0;
 }

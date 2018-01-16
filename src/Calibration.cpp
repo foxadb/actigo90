@@ -38,8 +38,8 @@ double Calibration::volatility(PnlVect *spots, PnlVect *dates){
   int n = spots->size;
 
   for (int i = 1 ; i < n; i++){
-    biais += pow(log(GET(spots,i) / GET(spots,i-1)) / (GET(dates,i) - GET(dates,i-1)), 2);
-    mean += log(GET(spots,i) / GET(spots,i-1)) / (GET(dates,i) - GET(dates,i-1));
+    biais += pow(log(GET(spots,i) / GET(spots,i-1)) / sqrt((GET(dates,i) - GET(dates,i-1))), 2);
+    mean += log(GET(spots,i) / GET(spots,i-1)) / sqrt((GET(dates,i) - GET(dates,i-1)));
   }
 
   return sqrt(biais / n - pow(mean / n , 2));
