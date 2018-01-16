@@ -48,15 +48,13 @@ void BlackScholesModel::asset(PnlMat *path, double T, int nbTimeSteps, PnlRng *r
 
     for (int t = 1; t < nbTimeSteps + 1; t++) {
 
-        pnl_vect_rng_normal(g, size_, rng);
-        
+        pnl_vect_rng_normal(g, size_, rng);     
         pnl_mat_get_row(newSpot, path, t - 1);
         pnl_mat_mult_vect_inplace(produit, gamma, g);
         pnl_vect_mult_scalar(produit, sqrtStep);
         pnl_vect_mult_vect_term(produit, sigma_);
         pnl_vect_plus_vect(produit, coeff);
         pnl_vect_map_inplace(produit, ptr);
-
         pnl_vect_mult_vect_term(produit, newSpot);
         pnl_mat_set_row(path, produit, t);
 
@@ -66,11 +64,11 @@ void BlackScholesModel::asset(PnlMat *path, double T, int nbTimeSteps, PnlRng *r
 void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps, PnlRng *rng, const PnlMat *past) {
 
 
-    double step = T / nbTimeSteps;
+  double step = T / nbTimeSteps;
 
     double size = past->m - 1;
     double x;
-    int vect = past->m - 1;
+    int vect = past->m-1;
     for (int i = 1; i < past->m; i++) {
         x = pnl_mat_get(past, i, 0);
         if (x == 0) {
@@ -78,26 +76,40 @@ void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps,
             break;
         }
     }
-    double tSuiv = step * vect;
+
+    pnl_vect_clone(coeff, sigmaCarre);
+    pnl_vect_mult_scalar(coeff, step);
+    
+    double tSuiv = step * (vect);
     pnl_mat_set_subblock(path, past, 0, 0);
-
-
     pnl_mat_get_row(pastVect, past, vect);
     size = vect;
     double newStartingPoint = tSuiv - t;
+    pnl_vect_rng_normal(g, size_, rng);
+    pnl_mat_mult_vect_inplace(produit, gamma, g);
+    pnl_vect_clone(coeff, sigmaCarre);
+    pnl_vect_mult_scalar(coeff, newStartingPoint);
+    pnl_vect_mult_vect_term(produit, sigma_);
+    pnl_vect_mult_scalar(produit, sqrt(newStartingPoint));
+    pnl_vect_plus_vect(produit, coeff);
+    pnl_vect_map_inplace(produit, ptr);
+    pnl_vect_mult_vect_term(produit, pastVect);
+    pnl_mat_set_row(path, produit, size); //+1
+    pnl_vect_clone(pastVect,produit);
 
-    for (int i = size; i < path->m; i++) {
-        pnl_vect_rng_normal(g, size_, rng);
 
-        pnl_mat_mult_vect_inplace(produit, gamma, g);
-        pnl_vect_clone(coeff, sigmaCarre);
-        pnl_vect_mult_scalar(coeff, newStartingPoint + (i - size) * step);
-        pnl_vect_mult_vect_term(produit, sigma_);
-        pnl_vect_mult_scalar(produit, sqrt(newStartingPoint + (i - size) * step));
-        pnl_vect_plus_vect(produit, coeff);
-        pnl_vect_map_inplace(produit, ptr);
-        pnl_vect_mult_vect_term(produit, pastVect);
-        pnl_mat_set_row(path, produit, i);
+    for (int i = size+1; i < path->m; i++) { //+2
+      pnl_vect_rng_normal(g, size_, rng);
+      pnl_mat_get_row(pastVect, path, i - 1);
+      pnl_mat_mult_vect_inplace(produit, gamma, g);
+      pnl_vect_clone(coeff, sigmaCarre);
+      pnl_vect_mult_scalar(coeff,  step);
+      pnl_vect_mult_vect_term(produit, sigma_);
+      pnl_vect_mult_scalar(produit, sqrt(step));
+      pnl_vect_plus_vect(produit, coeff);
+      pnl_vect_map_inplace(produit, ptr);
+      pnl_vect_mult_vect_term(produit, pastVect);
+      pnl_mat_set_row(path, produit, i);
     }
 }
 
