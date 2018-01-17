@@ -12,13 +12,11 @@ std::string extractCrumb(std::string code);
 
 std::string extractCookie(const char *cookieFile);
 
-void sendDataRequest(std::string symbol,
+std::string downloadCsv(std::string symbol,
                      int period1,
                      int period2,
                      std::string interval,
                      std::string *crumb,
                      std::string *cookie);
-
-CURLcode getUrlData(std::string url);
 
 #endif /* UTILS_HPP */
