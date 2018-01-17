@@ -6,3 +6,7 @@ add_library(peps ${LIB_SOURCES} ${LIB_HEADERS})
 # Add the pricer executable
 add_executable(pricer pricer/pricer.cpp)
 target_link_libraries(pricer peps ${LIBS})
+
+# Add the quote executable
+add_executable(quote quote/main.cpp)
+target_link_libraries(quote peps ${LIBS} curl)
