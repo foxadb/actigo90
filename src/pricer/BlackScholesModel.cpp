@@ -85,6 +85,8 @@ void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps,
     pnl_mat_get_row(pastVect, past, vect);
     size = vect;
     double newStartingPoint = tSuiv - t;
+    if (newStartingPoint < 0)
+      newStartingPoint = 0;
     pnl_vect_rng_normal(g, size_, rng);
     pnl_mat_mult_vect_inplace(produit, gamma, g);
     pnl_vect_clone(coeff, sigmaCarre);
@@ -96,7 +98,6 @@ void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps,
     pnl_vect_mult_vect_term(produit, pastVect);
     pnl_mat_set_row(path, produit, size); //+1
     pnl_vect_clone(pastVect,produit);
-
 
     for (int i = size+1; i < path->m; i++) { //+2
       pnl_vect_rng_normal(g, size_, rng);
