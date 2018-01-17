@@ -5,7 +5,6 @@
 #include <curl/curl.h>
 
 #include "curl_utils.hpp"
-#include "json.hpp"
 
 size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
@@ -41,18 +40,17 @@ void getCrumbCookie(std::string url,
 }
 
 std::string extractCrumb(std::string code) {
-    int i = 0;
-    std::string line;
-    std::istringstream codestream(code);
-    while (std::getline(codestream, line) && i < 42) {
-        ++i;
-    }
+    // Find the CrumbStore location
+    size_t found = code.find("CrumbStore");
 
-    line = line.substr(16, line.size() - 17);
+    // Get the crumb line (cut at the crumb string start)
+    std::string crumbLine = code.substr(found + 22);
 
-    auto json = nlohmann::json::parse(line);
+    // Crumb string length
+    int8_t crumbSize = crumbLine.find("\"");
 
-    std::string crumb = json["context"]["dispatcher"]["stores"]["CrumbStore"]["crumb"];
+    // Get the crumb and return
+    std::string crumb = crumbLine.substr(0, crumbSize);
     return crumb;
 }
 
