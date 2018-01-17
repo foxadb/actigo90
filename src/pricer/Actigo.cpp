@@ -47,6 +47,3 @@ double Actigo::payoff(const PnlMat* path){
   }
   return 0.9 + totalPerf; 
 }
-
-      
-  
