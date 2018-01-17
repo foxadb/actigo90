@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(mc-pricer CXX)
+project(peps CXX)
 
 # Prefix
 if (NOT PREFIX)
