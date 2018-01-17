@@ -8,7 +8,7 @@ Quote::Quote(std::string symbol) {
     this->symbol = symbol;
 }
 
-void Quote::getHistoricalData(int period1, int period2, char *interval) {
+void Quote::getHistoricalData(int period1, int period2, const char *interval) {
     std::string url = "https://finance.yahoo.com/quote/"
         + this->symbol
         + "/?p="

@@ -20,3 +20,6 @@ CMakeLists.txt.user*
 
 # VSCode
 .vscode
+
+# NetBeans
+nbproject
