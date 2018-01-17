@@ -15,7 +15,7 @@ class Quote {
 
     public:
     Quote(std::string symbol);
-    void getHistoricalData(int period1, int period2, char *interval);
+    void getHistoricalData(int period1, int period2, const char *interval);
 
 };
 

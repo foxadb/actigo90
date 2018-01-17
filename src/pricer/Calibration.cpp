@@ -1,5 +1,8 @@
 #include "Calibration.hpp"
 #include <math.h>
+#include <iostream>
+
+using namespace std;
 
 double Calibration::corr(vector<double> x, vector<double> y){
 
@@ -24,10 +27,20 @@ double Calibration::corr(vector<double> x, vector<double> y){
   if (x_var == 0.0 || y_var == 0.0){
     return 0.0;
   }
-  
+
   return covariance / (sqrt(x_var) * sqrt(y_var));
 }
 
-double Calibration::volatility(vector<double> index){
+double Calibration::volatility(PnlVect *spots, PnlVect *dates){
 
+  double biais = 0.0;
+  double mean = 0.0;
+  int n = spots->size;
+
+  for (int i = 1 ; i < n; i++){
+    biais += pow(log(GET(spots,i) / GET(spots,i-1)) / sqrt((GET(dates,i) - GET(dates,i-1))), 2);
+    mean += log(GET(spots,i) / GET(spots,i-1)) / sqrt((GET(dates,i) - GET(dates,i-1)));
+  }
+
+  return sqrt(biais / n - pow(mean / n , 2));
 }
