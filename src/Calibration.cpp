@@ -4,24 +4,25 @@
 
 using namespace std;
 
-double Calibration::corr(vector<double> x, vector<double> y){
+double Calibration::corr(PnlVect *x, PnlVect *y){
 
   double x_mean, y_mean = 0.0;
+  int size = MIN(x->size, y->size);
 
-  for (int i = 0; i < x.size(); i++){
-    x_mean+= x[i];
-    y_mean += y[i];
+  for (int i = 0; i < size; i++){
+    x_mean += GET(x, i);
+    y_mean += GET(y, i);
   }
 
-  x_mean /= x.size();
-  y_mean /= y.size();
+  x_mean /= size,
+  y_mean /= size;
 
   double covariance, x_var, y_var = 0.0;
 
-  for (int i = 0; i < x.size(); i++){
-    covariance += (x[i] - x_mean) * (y[i] - y_mean);
-    x_var += pow(x[i] - x_mean, 2);
-    y_var += pow(y[i] - y_mean, 2);
+  for (int i = 0; i < size; i++){
+    covariance += (GET(x,i) - x_mean) * (GET(y,i) - y_mean);
+    x_var += pow(GET(x,i) - x_mean, 2);
+    y_var += pow(GET(y,i) - y_mean, 2);
   }
 
   if (x_var == 0.0 || y_var == 0.0){
