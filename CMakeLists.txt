@@ -1,5 +1,26 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.11)
 project(peps CXX)
+
+####################### Google Test ##########################
+
+# Enable testing feature
+enable_testing()
+
+## Download GoogleTest
+configure_file(CMakeLists.txt.in
+        googletest-download/CMakeLists.txt)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download)
+execute_process(COMMAND ${CMAKE_COMMAND} --build .
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download)
+
+# Add GoogleTest during compilation step
+add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
+        ${CMAKE_BINARY_DIR}/googletest-build)
+
+include_directories(${gtest_SOURCE_DIR}/src)
+
+###############################################################
 
 # Prefix
 if (NOT PREFIX)

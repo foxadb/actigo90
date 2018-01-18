@@ -1,10 +1,3 @@
-/* 
- * File:   Basket.cpp
- * Author: elrhatrm
- * 
- * Created on September 15, 2017, 10:08 AM
- */
-
 #include "Basket.hpp"
 #include <iostream>
 

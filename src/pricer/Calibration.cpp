@@ -1,6 +1,7 @@
 #include "Calibration.hpp"
-#include <math.h>
 #include <iostream>
+#include <cmath>
+#include <algorithm>
 
 using namespace std;
 
