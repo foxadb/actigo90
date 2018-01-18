@@ -9,4 +9,4 @@ target_link_libraries(pricer peps ${LIBS})
 
 # Add the quote executable
 add_executable(quote quote/main.cpp)
-target_link_libraries(quote peps ${LIBS} curl)
+target_link_libraries(quote peps curl ${LIBS})
