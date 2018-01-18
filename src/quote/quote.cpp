@@ -1,9 +1,11 @@
 #include <iostream>
 #include <sstream>
 #include <curl/curl.h>
+#include <ctime>
 #include <boost/algorithm/string.hpp>
 
 #include "quote.hpp"
+#include "time_utils.hpp"
 #include "curl_utils.hpp"
 
 Quote::Quote(std::string symbol) {
@@ -12,7 +14,9 @@ Quote::Quote(std::string symbol) {
 
 Quote::~Quote() {}
 
-std::string Quote::getHistoricalCsv(int period1, int period2, const char *interval) {
+std::string Quote::getHistoricalCsv(std::time_t period1,
+                                    std::time_t period2,
+                                    const char *interval) {
     std::string url = "https://finance.yahoo.com/quote/"
             + this->symbol
             + "/?p="
@@ -37,7 +41,9 @@ std::string Quote::getHistoricalCsv(int period1, int period2, const char *interv
 
 }
 
-void Quote::getHistoricalSpots(int period1, int period2, const char *interval) {
+void Quote::getHistoricalSpots(std::time_t period1,
+                               std::time_t period2,
+                               const char *interval) {
     // Download the historical prices Csv
     std::string csv = this->getHistoricalCsv(period1, period2, interval);
 
@@ -51,23 +57,34 @@ void Quote::getHistoricalSpots(int period1, int period2, const char *interval) {
         std::vector<std::string> data;
         boost::split(data, line, boost::is_any_of(","));
 
-        Spot spot = Spot(
-                data[0],                // date
-                std::stod(data[1]),     // open
-                std::stod(data[2]),     // high
-                std::stod(data[3]),     // low
-                std::stod(data[4])      // close
-                );
+        if (data[0] != "null" && data[1] != "null") {
+            Spot spot = Spot(
+                    data[0],                // date
+                    std::stod(data[1]),     // open
+                    std::stod(data[2]),     // high
+                    std::stod(data[3]),     // low
+                    std::stod(data[4])      // close
+                    );
 
-        this->spots.push_back(spot);
+            this->spots.push_back(spot);
+        }
     }
+}
+
+void Quote::getHistoricalSpots(const char *date1,
+                               const char *date2,
+                               const char *interval) {
+    std::time_t period1 = dateToEpoch(date1);
+    std::time_t period2 = dateToEpoch(date2);
+
+    this->getHistoricalSpots(period1, period2, interval);
 }
 
 void Quote::printSpots() {
     for (std::vector<Spot>::iterator it = this->spots.begin();
          it != this->spots.end();
          ++it) {
-         std::cout << std::endl << it->toString();
+        std::cout << std::endl << it->toString();
     }
     std::cout << std::endl;
 }
