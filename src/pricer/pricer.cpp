@@ -1,5 +1,3 @@
-#include <iostream>
-#include <string>
 #include "parser.hpp"
 #include "BlackScholesModel.hpp"
 #include "MonteCarlo.hpp"
@@ -7,6 +5,8 @@
 #include "Performance.hpp"
 #include "Asian.hpp"
 #include "Option.hpp"
+#include <iostream>
+#include <string>
 #include <ctime>
 
 using namespace std;

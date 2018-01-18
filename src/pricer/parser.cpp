@@ -1,11 +1,10 @@
+#include "parser.hpp"
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
 #include <algorithm>
 
 using namespace std;
-
-#include "parser.hpp"
 
 template <typename T>
 std::ostream& operator<< (std::ostream& out, const std::vector<T>& v)
