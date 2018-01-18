@@ -2,6 +2,7 @@
 #define QUOTE_HPP
 
 #include <string>
+#include <ctime>
 #include <vector>
 
 #include "spot.hpp"
@@ -9,18 +10,29 @@
 class Quote {
     private:
     std::string symbol;
-    int period1;
-    int period2;
     std::vector<Spot> spots;
 
     public:
     Quote(std::string symbol);
     ~Quote();
 
-    std::string getHistoricalCsv(int period1, int period2, const char *interval);
-    void getHistoricalSpots(int period1, int period2, const char *interval);
+    Spot getSpot(size_t i);
 
     void printSpots();
+
+    void clearSpots();
+
+    std::string getHistoricalCsv(std::time_t period1,
+                                 std::time_t period2,
+                                 const char *interval);
+
+    void getHistoricalSpots(std::time_t period1,
+                            std::time_t period2,
+                            const char *interval);
+
+    void getHistoricalSpots(const char *period1,
+                            const char *period2,
+                            const char *interval);
 };
 
 #endif /* QUOTE_HPP */

@@ -1,7 +1,7 @@
 #include "MonteCarlo.hpp"
-#include <math.h>
+#include <cstdio>
+#include <cmath>
 #include <iostream>
-#include <stdio.h>
 
 using namespace std;
 

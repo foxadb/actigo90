@@ -19,4 +19,6 @@ class Spot {
     double getClose();
 
     std::string toString();
+
+    void printSpot();
 };

@@ -1,12 +1,7 @@
 #include "BlackScholesModel.hpp"
-#include <math.h>
+#include <cmath>
 #include <iostream>
 
-//int size_; /// nombre d'actifs du modèle
-//    double r_; /// taux d'intérêt
-//    double rho_; /// paramètre de corrélation
-//    PnlVect *sigma_; /// vecteur de volatilités
-//    PnlVect *spot_; /// valeurs initiales du sous-jacent
 using namespace std;
 
 BlackScholesModel::BlackScholesModel(int size, double r, double rho, PnlVect *sigma, PnlVect *spot) {
