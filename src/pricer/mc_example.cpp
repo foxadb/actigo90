@@ -1,11 +1,10 @@
-
-#include <cstdlib>
 #include "MonteCarlo.hpp"
 #include "Basket.hpp"
 #include "BlackScholesModel.hpp"
+
+#include <cstdlib>
 #include <ctime>
 #include <iostream>
-#include <stdio.h>
 
 using namespace std;
 

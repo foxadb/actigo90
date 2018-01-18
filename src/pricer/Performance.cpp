@@ -1,16 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   Performance.cpp
- * Author: elfilalz
- * 
- * Created on September 19, 2017, 11:09 AM
- */
-
 #include "Performance.hpp"
 
 Performance::Performance() {
