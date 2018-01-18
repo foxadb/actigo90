@@ -2,6 +2,7 @@
 #include <string>
 
 #include "quote.hpp"
+#include "curl_utils.hpp"
 
 int main(int argc, char* argv[]) {
     // Get the symbol and create the quote
@@ -14,6 +15,13 @@ int main(int argc, char* argv[]) {
     // Print the spots
     quote->printSpots();
 
+    // Get the EUR/AUD and EUR/USD rates
+    std::string symbols[] = { "AUD", "USD" };
+    double *rates = getForexRates("2018-01-10", "EUR", symbols, 2);
+    std::cout << "EUR/AUD 2017-01-10: " << rates[0] << std::endl;
+    std::cout << "EUR/USD 2017-01-10: " << rates[1] << std::endl;
+
     // Free memory
     delete quote;
+    delete rates;
 }

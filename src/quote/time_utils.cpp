@@ -3,7 +3,7 @@
 #include <ctime>
 #include <cstring>
 
-std::time_t currentEpoch(void) {
+std::time_t currentEpoch() {
     return std::time(nullptr);
 }
 

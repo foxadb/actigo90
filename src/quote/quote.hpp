@@ -16,6 +16,12 @@ class Quote {
     Quote(std::string symbol);
     ~Quote();
 
+    Spot getSpot(size_t i);
+
+    void printSpots();
+
+    void clearSpots();
+
     std::string getHistoricalCsv(std::time_t period1,
                                  std::time_t period2,
                                  const char *interval);
@@ -27,8 +33,6 @@ class Quote {
     void getHistoricalSpots(const char *period1,
                             const char *period2,
                             const char *interval);
-
-    void printSpots();
 };
 
 #endif /* QUOTE_HPP */

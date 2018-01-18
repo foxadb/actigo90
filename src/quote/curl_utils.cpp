@@ -5,6 +5,7 @@
 #include <ctime>
 #include <curl/curl.h>
 
+#include "json.hpp"
 #include "curl_utils.hpp"
 
 size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
@@ -12,9 +13,47 @@ size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     return size * nmemb;
 }
 
-void getCrumbCookie(std::string url,
-                    std::string *crumb,
-                    std::string *cookie) {
+double* getForexRates(std::string date,
+                    std::string base,
+                    std::string *symbol,
+                    int nbSymbols) {
+    std::string url = "https://api.fixer.io/" + date
+            + "?base=" + base
+            +  "&symbols=";
+
+    for (int i = 0; i < nbSymbols; ++i) {
+        url += symbol[i] + ",";
+    }
+
+    CURL* curl = curl_easy_init();
+    std::string responseBuffer;
+
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+        // Write result into the buffer
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBuffer);
+
+        // Perform the request
+        CURLcode res = curl_easy_perform(curl);
+
+        // Cleanup
+        curl_easy_cleanup(curl);
+    }
+
+    auto json = nlohmann::json::parse(responseBuffer);
+
+    double* rates = new double[nbSymbols];
+    for (int i = 0; i < nbSymbols; ++i) {
+        rates[i] = json["rates"][symbol[i]];
+    }
+    return rates;
+}
+
+void getYahooCrumbCookie(std::string url,
+                         std::string *crumb,
+                         std::string *cookie) {
     CURL* curl = curl_easy_init();
     std::string responseBuffer;
 
@@ -36,11 +75,11 @@ void getCrumbCookie(std::string url,
         curl_easy_cleanup(curl);
     }
 
-    *crumb = extractCrumb(responseBuffer);
-    *cookie = extractCookie(cookieFile);
+    *crumb = extractYahooCrumb(responseBuffer);
+    *cookie = extractYahooCookie(cookieFile);
 }
 
-std::string extractCrumb(std::string code) {
+std::string extractYahooCrumb(std::string code) {
     // Find the CrumbStore location
     size_t found = code.find("CrumbStore");
 
@@ -55,7 +94,7 @@ std::string extractCrumb(std::string code) {
     return crumb;
 }
 
-std::string extractCookie(const char *cookieFile) {
+std::string extractYahooCookie(const char* cookieFile) {
     int i = 0;
     std::string line;
     std::ifstream file(cookieFile);
@@ -71,12 +110,12 @@ std::string extractCookie(const char *cookieFile) {
     return cookie;
 }
 
-std::string downloadCsv(std::string symbol,
-                     std::time_t period1,
-                     std::time_t period2,
-                     std::string interval,
-                     std::string *crumb,
-                     std::string *cookie) {
+std::string downloadYahooCsv(std::string symbol,
+                             std::time_t period1,
+                             std::time_t period2,
+                             std::string interval,
+                             std::string *crumb,
+                             std::string *cookie) {
     std::string url = "https://query1.finance.yahoo.com/v7/finance/download/"
             + symbol
             + "?period1=" + std::to_string(period1)

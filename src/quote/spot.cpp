@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 
 #include "spot.hpp"
@@ -39,4 +40,8 @@ std::string Spot::toString() {
             + " low: " + std::to_string(this->low)
             + " close: " + std::to_string(this->close)
             + " }";
+}
+
+void Spot::printSpot() {
+    std::cout << this->toString() << std::endl;
 }
