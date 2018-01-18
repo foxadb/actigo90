@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
     Quote* quote = new Quote(symbol);
 
     // Get the historical spots from Yahoo Finance
-    quote->getHistoricalSpots(1504710156, 1516184887, "1wk");
+    quote->getHistoricalSpots(argv[2], argv[3], argv[4]);
 
     // Print the spots
     quote->printSpots();
