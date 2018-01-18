@@ -14,6 +14,24 @@ Quote::Quote(std::string symbol) {
 
 Quote::~Quote() {}
 
+Spot Quote::getSpot(size_t i) {
+    return this->spots[i];
+}
+
+void Quote::printSpots() {
+    for (std::vector<Spot>::iterator it = this->spots.begin();
+         it != this->spots.end();
+         ++it) {
+        std::cout << std::endl << it->toString();
+    }
+    std::cout << std::endl;
+}
+
+
+void Quote::clearSpots() {
+    this->spots.clear();
+}
+
 std::string Quote::getHistoricalCsv(std::time_t period1,
                                     std::time_t period2,
                                     const char *interval) {
@@ -26,10 +44,10 @@ std::string Quote::getHistoricalCsv(std::time_t period1,
     std::string *cookie = new std::string;
 
     // Get the Crumb and Cookie from Yahoo Finance
-    getCrumbCookie(url, crumb, cookie);
+    getYahooCrumbCookie(url, crumb, cookie);
 
     // Download the historical prices Csv
-    std::string csv = downloadCsv(
+    std::string csv = downloadYahooCsv(
                 this->symbol, period1, period2, interval, crumb, cookie);
 
     // Free memory
@@ -46,7 +64,6 @@ void Quote::getHistoricalSpots(std::time_t period1,
                                const char *interval) {
     // Download the historical prices Csv
     std::string csv = this->getHistoricalCsv(period1, period2, interval);
-
     std::istringstream csvStream(csv);
     std::string line;
 
@@ -79,15 +96,3 @@ void Quote::getHistoricalSpots(const char *date1,
 
     this->getHistoricalSpots(period1, period2, interval);
 }
-
-void Quote::printSpots() {
-    for (std::vector<Spot>::iterator it = this->spots.begin();
-         it != this->spots.end();
-         ++it) {
-        std::cout << std::endl << it->toString();
-    }
-    std::cout << std::endl;
-}
-
-
-
