@@ -18,6 +18,17 @@ Spot Quote::getSpot(size_t i) {
     return this->spots[i];
 }
 
+Spot Quote::getSpot(std::string date) {
+    for (std::vector<Spot>::iterator it = this->spots.begin();
+         it != this->spots.end();
+         ++it) {
+        if (it->getDate() == date) {
+            return *it;
+        }
+    }
+    throw std::invalid_argument("There is not spot at this date");
+}
+
 void Quote::printSpots() {
     for (std::vector<Spot>::iterator it = this->spots.begin();
          it != this->spots.end();

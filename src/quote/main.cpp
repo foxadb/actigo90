@@ -4,22 +4,30 @@
 #include "quote.hpp"
 #include "curl_utils.hpp"
 
-int main(int argc, char* argv[]) {
-    // Get the symbol and create the quote
-    std::string symbol(argv[1]);
-    Quote* quote = new Quote(symbol);
+int main() {
+    // Euro Stoxx 50
+    Quote* quote = new Quote("^STOXX50E");
 
     // Get the historical spots from Yahoo Finance
-    quote->getHistoricalSpots(argv[2], argv[3], argv[4]);
+    quote->getHistoricalSpots("2017-12-01", "2017-12-31", "1d");
 
     // Print the spots
     quote->printSpots();
 
+    // Print a spot
+    try {
+    Spot spot = quote->getSpot("2017-12-01");
+    std::cout << "Spot at 2017-12-01: " << std::endl;
+    spot.printSpot();
+    } catch(const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+
     // Get the EUR/AUD and EUR/USD rates
     std::string symbols[] = { "AUD", "USD" };
     double *rates = getForexRates("2018-01-10", "EUR", symbols, 2);
-    std::cout << "EUR/AUD 2017-01-10: " << rates[0] << std::endl;
-    std::cout << "EUR/USD 2017-01-10: " << rates[1] << std::endl;
+    std::cout << "EUR/AUD 2018-01-10: " << rates[0] << std::endl;
+    std::cout << "EUR/USD 2018-01-10: " << rates[1] << std::endl;
 
     // Free memory
     delete quote;
