@@ -17,9 +17,9 @@ class Quote {
     ~Quote();
 
     Spot getSpot(size_t i);
+    Spot getSpot(std::string date);
 
     void printSpots();
-
     void clearSpots();
 
     std::string getHistoricalCsv(std::time_t period1,
