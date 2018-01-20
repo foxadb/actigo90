@@ -16,9 +16,9 @@ int main() {
 
     // Print a spot
     try {
-    Spot spot = quote->getSpot("2017-12-01");
-    std::cout << "Spot at 2017-12-01: " << std::endl;
-    spot.printSpot();
+        Spot spot = quote->getSpot("2017-12-01");
+        std::cout << "Spot at 2017-12-01: " << std::endl;
+        spot.printSpot();
     } catch(const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
