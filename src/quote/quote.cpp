@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <sstream>
 #include <curl/curl.h>
 #include <ctime>
@@ -15,7 +16,13 @@ Quote::Quote(std::string symbol) {
 Quote::~Quote() {}
 
 Spot Quote::getSpot(size_t i) {
-    return this->spots[i];
+    if (i < this->spots.size()) {
+        return this->spots[i];
+    }
+
+    std::string error = "ERROR: getSpot(index) - Index must be smaller than "
+            + std::to_string(this->spots.size());
+    throw std::invalid_argument(error);
 }
 
 Spot Quote::getSpot(std::string date) {
@@ -26,7 +33,9 @@ Spot Quote::getSpot(std::string date) {
             return *it;
         }
     }
-    throw std::invalid_argument("There is not spot at this date");
+
+    std::string error = "ERROR getSpot(date) - There is not spot at " + date;
+    throw std::invalid_argument(error);
 }
 
 void Quote::printSpots() {

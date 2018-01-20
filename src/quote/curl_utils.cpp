@@ -80,17 +80,21 @@ void getYahooCrumbCookie(std::string url,
 }
 
 std::string extractYahooCrumb(std::string code) {
-    // Find the CrumbStore location
-    size_t found = code.find("CrumbStore");
+    // Find the root app main json
+    size_t root = code.find("root.App.main");
 
-    // Get the crumb line (cut at the crumb string start)
-    std::string crumbLine = code.substr(found + 22);
+    // Create the start of JSON String
+    std::string jsonString = code.substr(root + 16);
 
-    // Crumb string length
-    int8_t crumbSize = crumbLine.find("\"");
+    // Find the last brace (at the end of line)
+    size_t lastBrace = jsonString.find("\n") - 1;
 
-    // Get the crumb and return
-    std::string crumb = crumbLine.substr(0, crumbSize);
+    // Cut the JSON end and parse it correctly
+    jsonString = jsonString.substr(0, lastBrace);
+    auto json = nlohmann::json::parse(jsonString);
+
+    // Extract the crumb
+    std::string crumb = json["context"]["dispatcher"]["stores"]["CrumbStore"]["crumb"];
     return crumb;
 }
 
