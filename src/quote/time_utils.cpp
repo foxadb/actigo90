@@ -1,4 +1,6 @@
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 #include <cstdlib>
 #include <ctime>
 #include <cstring>
@@ -24,4 +26,21 @@ std::time_t dateToEpoch(const char *date) {
     std::time_t epochTime = mktime(&time);
 
     return epochTime;
+}
+
+std::string epochToDate(const std::time_t epoch) {
+    struct std::tm * ptm = std::localtime(&epoch);
+
+    std::ostringstream os;
+    os << std::put_time(ptm, "%Y-%m-%d");
+
+    std::string date = os.str();
+    return date;
+}
+
+bool before(const char *date1, const char *date2) {
+    std::time_t epoch1 = dateToEpoch(date1);
+    std::time_t epoch2 = dateToEpoch(date2);
+
+    return epoch1 < epoch2;
 }
