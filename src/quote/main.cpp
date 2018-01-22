@@ -2,7 +2,9 @@
 #include <string>
 
 #include "quote.hpp"
+#include "forex.hpp"
 #include "curl_utils.hpp"
+#include "time_utils.hpp"
 
 int main() {
     // Euro Stoxx 50
@@ -25,9 +27,14 @@ int main() {
 
     // Get the EUR/AUD and EUR/USD rates
     std::string symbols[] = { "AUD", "USD" };
-    double *rates = getForexRates("2018-01-10", "EUR", symbols, 2);
+    double *rates = getForexRates("2018-01-22", "EUR", symbols, 2);
     std::cout << "EUR/AUD 2018-01-10: " << rates[0] << std::endl;
     std::cout << "EUR/USD 2018-01-10: " << rates[1] << std::endl;
+
+    // Get the historical EUR/USD rates
+    Forex* forex = new Forex("EUR", "USD");
+    forex->getHistoricalRates("2018-01-01", "2018-01-19");
+    forex->printRates();
 
     // Free memory
     delete quote;

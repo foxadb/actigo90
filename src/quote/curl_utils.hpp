@@ -5,10 +5,12 @@
 #include <ctime>
 #include <curl/curl.h>
 
+double getForexRate(std::string date, std::string base, std::string symbol);
+
 double* getForexRates(std::string date,
-                    std::string base,
-                    std::string *symbols,
-                    int nbSymbols);
+                      std::string base,
+                      std::string *symbols,
+                      int nbSymbols);
 
 void getYahooCrumbCookie(std::string url,
                          std::string *crumb,
