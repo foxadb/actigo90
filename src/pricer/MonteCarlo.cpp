@@ -150,3 +150,43 @@ void MonteCarlo::updatePast(PnlMat *past, PnlMat *data, int i) {
     pnl_mat_set_row(past, tmpVect, (i - 1) / step + 1);
     pnl_vect_free(&tmpVect);
 }
+
+
+void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *d, double rDoll, double rAusDoll){
+  
+  delta(past, t, d);
+  double x;
+  int vect = past->m - 1;
+  for (int i = 1; i < past->m; i++) {
+    x = pnl_mat_get(past, i, 0);
+    if (x == 0) {
+      vect = i - 1;
+      break;
+    }
+  }
+
+  PnlVect *lastPrices = pnl_vect_create(opt_->size_);
+  pnl_mat_get_row(lastPrices, past, vect);
+  double N1 = GET(lastPrices,1);
+  double N2 = GET(lastPrices,2);
+  double N3 = GET(lastPrices,3);
+  double N4 = GET(lastPrices,4);
+  
+  PnlVect *multiplyCoeff = pnl_vect_create_from_scalar(opt_->size_, 1.);
+  LET(multiplyCoeff, 1) = 1/N3;
+  LET(multiplyCoeff, 2) = 1/N4;
+  LET(multiplyCoeff, 3) = -exp(rDoll*(opt_->T_-t));
+  LET(multiplyCoeff, 4) = -exp(rAusDoll*(opt_->T_ -t));
+
+  PnlVect *addCoeff = pnl_vect_create_from_scalar(opt_->size_, 0.);
+  LET(addCoeff, 3) = (N1/N3) * GET(d,1);
+  LET(addCoeff, 4) = (N2/N4) * GET(d,2);
+
+  pnl_vect_mult_vect_term(d, multiplyCoeff);
+  pnl_vect_plus_vect(d, addCoeff);
+  
+  
+  
+    
+  
+}

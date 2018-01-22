@@ -46,6 +46,18 @@ public:
      */
     void delta(const PnlMat *past, double t, PnlVect *delta);
 
+      /**
+     * Calcule le delta de l'option à la date t pour actigo
+     *
+     * @param[in] past contient la trajectoire du sous-jacent
+     * jusqu'à l'instant t
+     * @param[in] t date à laquelle le calcul est fait
+     * @param[out] delta contient le vecteur de delta
+     * de confiance sur le calcul du delta
+     */
+
+    void delta(const PnlMat *past, double t, PnlVect *delta, double rDoll, double rAusDoll);
+
      /**
      * Calcule la P&L de l'option
      *
@@ -74,6 +86,7 @@ public:
      *  Destructeur de la classe MonteCarlo
      */
     virtual ~MonteCarlo();
+
 
     void updatePast(PnlMat *past, PnlMat *data, int i);
 
