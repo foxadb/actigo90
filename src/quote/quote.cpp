@@ -15,6 +15,10 @@ Quote::Quote(std::string symbol) {
 
 Quote::~Quote() {}
 
+size_t Quote::nbSpots() {
+    return this->spots.size();
+}
+
 Spot Quote::getSpot(size_t i) {
     if (i < this->spots.size()) {
         return this->spots[i];

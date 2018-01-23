@@ -7,8 +7,8 @@
 #include "time_utils.hpp"
 
 int main() {
-    // Euro Stoxx 50
-    Quote* quote = new Quote("^STOXX50E");
+    // S&P 500
+    Quote *quote = new Quote("^GSPC");
 
     // Get the historical spots from Yahoo Finance
     quote->getHistoricalSpots("2017-12-01", "2017-12-31", "1d");
