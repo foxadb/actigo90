@@ -5,8 +5,7 @@
 #include "pnl/pnl_matrix.h"
 
 /// \brief Modèle de Black Scholes
-class BlackScholesModel
-{
+class BlackScholesModel {
 public:
     int size_; /// nombre d'actifs du modèle
     double r_; /// taux d'intérêt
@@ -18,8 +17,8 @@ public:
     PnlMat *gamma; /// matrice de covariances
     PnlVect *g; /// vecteur d'échantillons iid de la loi normale centrée réduite
 
-    // Ces vecteurs ont été créés dans le constructeur pour gagner en allocation mémoire 
-    PnlVect *newSpot; 
+    // Ces vecteurs ont été créés dans le constructeur pour gagner en allocation mémoire
+    PnlVect *newSpot;
     PnlVect *produit;
     PnlVect *coeff;
     PnlVect *pastVect;
@@ -84,9 +83,9 @@ public:
      *  \param spot : vecteur des spots initiaux
      */
     BlackScholesModel(int size, double r, double rho, PnlVect *sigma, PnlVect *spot);
-   
 
-     /**
+
+    /**
      * Génère une trajectoire du modèle et la stocke dans path
      * avec le trend
      *
@@ -97,10 +96,4 @@ public:
      * @param[in] rng générateur de nombres aléatoires
      */
     void simul_market(PnlMat* path, int nbDates, double T, PnlRng* rng);
-    
-
-        
-    
 };
-
-

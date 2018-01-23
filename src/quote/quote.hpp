@@ -8,11 +8,7 @@
 #include "spot.hpp"
 
 class Quote {
-    private:
-    std::string symbol;
-    std::vector<Spot> spots;
-
-    public:
+public:
     Quote(std::string symbol);
     ~Quote();
 
@@ -35,6 +31,10 @@ class Quote {
     void getHistoricalSpots(const char *period1,
                             const char *period2,
                             const char *interval);
+
+private:
+    std::string symbol;
+    std::vector<Spot> spots;
 };
 
 #endif /* QUOTE_HPP */

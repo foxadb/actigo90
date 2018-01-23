@@ -1,8 +1,3 @@
-/* 
- * File:   Actigo.hpp
- * Author: bernoush
- *
- */
 #include "Option.hpp"
 
 #ifndef ACTIGO_H
@@ -11,26 +6,22 @@
 /// \brief Classe pour le produit Actigo
 class Actigo : public Option {
 public:
-    
-  double euroStoxSpot_; // spot initial de l'indice euroStoxx.
-  double spUsaSpot_; // spot initial de l'indice S&P 500 Usa.
-  double spAusSpot_; // spot initial de l'indice S&P 200 Aus.
-  PnlVect *semestrialSpot_; // vecteur representant le valeur des indices le semstre courant. 
-  
-  Actigo(double maturity, int nbSteps, int size, double euroStoxSpot, double spotUsa, double spAus);
+    double euroStoxSpot_; // spot initial de l'indice euroStoxx.
+    double spUsaSpot_; // spot initial de l'indice S&P 500 Usa.
+    double spAusSpot_; // spot initial de l'indice S&P 200 Aus.
+    PnlVect *semestrialSpot_; // vecteur representant le valeur des indices le semstre courant.
 
-  double indexPerf(double init, double current);
+    Actigo(double maturity, int nbSteps, int size, double euroStoxSpot, double spotUsa, double spAus);
 
-  double payoff(const PnlMat* path);
-   
-  virtual ~Actigo();
+    double indexPerf(double init, double current);
 
-  Actigo();
+    double payoff(const PnlMat* path);
 
-  Actigo(const Actigo& orig);
+    virtual ~Actigo();
 
-private:
+    Actigo();
 
+    Actigo(const Actigo& orig);
 };
 
 #endif	/* ACTIGO_H */

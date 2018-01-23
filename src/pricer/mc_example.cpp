@@ -8,14 +8,10 @@
 
 using namespace std;
 
-/*
- * 
- */
 int main(int argc, char** argv) {
-
     float temps;
     clock_t t1, t2;
-   
+
     PnlVect *weights = pnl_vect_create_from_scalar(40, 0.025);
     PnlVect *sigma = pnl_vect_create_from_scalar(40, 0.2);
     PnlVect *spot = pnl_vect_create_from_scalar(40, 100.0);
@@ -51,7 +47,5 @@ int main(int argc, char** argv) {
     delete mc;
     delete mc2;
 
-    
     return 0;
 }
-
