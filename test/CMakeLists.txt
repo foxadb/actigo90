@@ -15,9 +15,8 @@ include_directories(${CMAKE_SOURCE_DIR}/src/quote)
 
 add_executable(quoteTests
     quote/TestAllQuote.cpp
+    quote/QuoteTest.cpp
     quote/ForexTest.cpp
     )
-
 target_link_libraries(quoteTests peps gtest gtest_main curl ${LIBS})
-
 add_custom_target(runQuoteTests quoteTests)

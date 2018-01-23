@@ -16,6 +16,8 @@ class Quote {
     Quote(std::string symbol);
     ~Quote();
 
+    size_t nbSpots();
+
     Spot getSpot(size_t i);
     Spot getSpot(std::string date);
 
