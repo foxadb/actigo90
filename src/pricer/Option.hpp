@@ -4,13 +4,14 @@
 #include "pnl/pnl_matrix.h"
 
 /// \brief Classe Option abstraite
-class Option
-{
+class Option {
 public:
     double T_; /// maturité
     int nbTimeSteps_; /// nombre de pas de temps de discrétisation
     int size_; /// dimension du modèle, redondant avec BlackScholesModel::size_
-    virtual ~Option() {};
+
+    virtual ~Option() {}
+
     /**
      * Calcule la valeur du payoff sur la trajectoire
      *

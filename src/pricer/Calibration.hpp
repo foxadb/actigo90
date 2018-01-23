@@ -2,9 +2,8 @@
 #include "pnl/pnl_vector.h"
 
 using namespace std;
-class Calibration{
+class Calibration {
 public:
-
-  double corr(PnlVect *x, PnlVect *y);
-  double volatility(PnlVect *spots, PnlVect *dates);
+    double corr(PnlVect *x, PnlVect *y);
+    double volatility(PnlVect *spots, PnlVect *dates);
 };

@@ -46,7 +46,7 @@ public:
      */
     void delta(const PnlMat *past, double t, PnlVect *delta);
 
-      /**
+    /**
      * Calcule le delta de l'option à la date t pour actigo
      *
      * @param[in] past contient la trajectoire du sous-jacent
@@ -58,7 +58,7 @@ public:
 
     void delta(const PnlMat *past, double t, PnlVect *delta, double rDoll, double rAusDoll);
 
-     /**
+    /**
      * Calcule la P&L de l'option
      *
      * @param[in] data contient la trajectoire du sous-jacent
@@ -67,7 +67,7 @@ public:
     double pAndL(PnlMat *data);
 
 
-     /*!
+    /*!
      *  \brief Constructeur
      *
      *  Constructeur de la classe MonteCarlo
@@ -80,17 +80,12 @@ public:
      */
     MonteCarlo(BlackScholesModel *mod, Option *opt, PnlRng *rng, double fdStep, int nbSamples);
 
-     /*!
+    /*!
      *  \brief Destructeur
      *
      *  Destructeur de la classe MonteCarlo
      */
     virtual ~MonteCarlo();
 
-
     void updatePast(PnlMat *past, PnlMat *data, int i);
-
-    
 };
-
-

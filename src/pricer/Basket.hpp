@@ -1,9 +1,3 @@
-/* 
- * File:   Basket.h
- * Author: elrhatrm
- *
- * Created on September 15, 2017, 10:08 AM
- */
 #include "Option.hpp"
 
 #ifndef BASKET_H
@@ -12,12 +6,11 @@
 /// \brief Classe pour option panier
 class Basket : public Option {
 public:
-    
-  float strike; // prix d'exercice de l'option
-  PnlVect *coefficients; // coefficients de pondération de chaque actif
-  PnlVect *spotFinal; // vecteur contenant la valeur du sous-jacent le jour de la maturité
+    float strike; // prix d'exercice de l'option
+    PnlVect *coefficients; // coefficients de pondération de chaque actif
+    PnlVect *spotFinal; // vecteur contenant la valeur du sous-jacent le jour de la maturité
 
-    
+
     /*!
      *  \brief Constructeur
      *
@@ -31,7 +24,7 @@ public:
      */
     Basket(double t, int nbSteps, int size, float str, PnlVect *coeff);
 
-     /**
+    /**
      * Calcule la valeur du payoff sur la trajectoire
      *
      * @param[in] path est une matrice de taille (N+1) x d
@@ -41,7 +34,7 @@ public:
      */
     double payoff(const PnlMat *path);
 
-    
+
     /*!
      *  \brief Destructeur
      *
@@ -52,10 +45,6 @@ public:
     Basket();
 
     Basket(const Basket& orig);
-
-private:
-
 };
 
 #endif	/* BASKET_H */
-
