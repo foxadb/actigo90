@@ -1,9 +1,10 @@
+#include <iostream>
+#include <ctime>
+#include <stdexcept>
+
 #include "forex.hpp"
 #include "curl_utils.hpp"
 #include "time_utils.hpp"
-
-#include <iostream>
-#include <ctime>
 
 Forex::Forex(std::string base, std::string symbol) {
     this->base = base;

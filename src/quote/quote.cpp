@@ -3,6 +3,7 @@
 #include <sstream>
 #include <curl/curl.h>
 #include <ctime>
+#include <stdexcept>
 #include <boost/algorithm/string.hpp>
 
 

@@ -14,6 +14,38 @@ Calibration::Calibration(Data *data){
    sigma_3 = estimate_volatility(data->spAudSpots);
    sigma_x1 = estimate_volatility(data->forexEurUsd);
    sigma_x2 = estimate_volatility(data->forexEurAud);
+
+   double rho = estimate_correlation(data->euroStoxSpots, data->spUsdSpots);
+   MLET(correlations, 0, 1) = rho;
+   MLET(correlations, 1, 0) = rho;
+   rho = estimate_correlation(data->euroStoxSpots, data->spAudSpots);
+   MLET(correlations, 0, 2) = rho;
+   MLET(correlations, 2, 0) = rho;
+   rho = estimate_correlation(data->spUsdSpots, data->spAudSpots);
+   MLET(correlations, 1, 2) = rho;
+   MLET(correlations, 2, 1) = rho;
+   rho = estimate_correlation(data->euroStoxSpots, data->forexEurUsd);
+   MLET(correlations, 0, 3) = rho;
+   MLET(correlations, 3, 0) = rho;
+   rho = estimate_correlation(data->euroStoxSpots, data->forexEurAud);
+   MLET(correlations, 0, 4) = rho;
+   MLET(correlations, 4, 0) = rho;
+   rho = estimate_correlation(data->spUsdSpots, data->forexEurUsd);
+   MLET(correlations, 1, 3) = rho;
+   MLET(correlations, 3, 1) = rho;
+   rho = estimate_correlation(data->spUsdSpots, data->forexEurAud);
+   MLET(correlations, 1, 4) = rho;
+   MLET(correlations, 4, 1) = rho;
+   rho = estimate_correlation(data->spAudSpots, data->forexEurUsd);
+   MLET(correlations, 2, 3) = rho;
+   MLET(correlations, 3, 2) = rho;
+   rho = estimate_correlation(data->spAudSpots, data->forexEurAud);
+   MLET(correlations, 2, 4) = rho;
+   MLET(correlations, 4, 2) = rho;
+   rho = estimate_correlation(data->forexEurUsd, data->forexEurAud);
+   MLET(correlations, 3, 4) = rho;
+   MLET(correlations, 4, 3) = rho;
+
  }
 
 
@@ -49,16 +81,40 @@ Calibration::Calibration(const char *period1_, const char *period2_) {
   sigma_x2 = estimate_volatility(forex2->getCloseSpots());
 
   // correlations;
-  rho_12 = estimate_correlation(quote1->getCloseSpots(), quote2->getCloseSpots());
-  rho_13 = estimate_correlation(quote1->getCloseSpots(), quote3->getCloseSpots());
-  rho_23 = estimate_correlation(quote2->getCloseSpots(), quote3->getCloseSpots());
-  rho_1x1 = estimate_correlation(quote1->getCloseSpots(), forex1->getCloseSpots());
-  rho_1x2 = estimate_correlation(quote1->getCloseSpots(), forex2->getCloseSpots());
-  rho_2x1 = estimate_correlation(quote2->getCloseSpots(), forex1->getCloseSpots());
-  rho_2x2 = estimate_correlation(quote2->getCloseSpots(), forex2->getCloseSpots());
-  rho_3x1 = estimate_correlation(quote3->getCloseSpots(), forex1->getCloseSpots());
-  rho_3x2 = estimate_correlation(quote3->getCloseSpots(), forex2->getCloseSpots());
-  rho_x1x2 = estimate_correlation(forex1->getCloseSpots(), forex2->getCloseSpots());
+  correlations = pnl_mat_create(5,5);
+  for (int i=0; i<5; i++){
+    MLET(correlations, i, i) = 1.0;
+  }
+  double rho = estimate_correlation(quote1->getCloseSpots(), quote2->getCloseSpots());
+  MLET(correlations, 0, 1) = rho;
+  MLET(correlations, 1, 0) = rho;
+  rho = estimate_correlation(quote1->getCloseSpots(), quote3->getCloseSpots());
+  MLET(correlations, 0, 2) = rho;
+  MLET(correlations, 2, 0) = rho;
+  rho = estimate_correlation(quote2->getCloseSpots(), quote3->getCloseSpots());
+  MLET(correlations, 1, 2) = rho;
+  MLET(correlations, 2, 1) = rho;
+  rho = estimate_correlation(quote1->getCloseSpots(), forex1->getCloseSpots());
+  MLET(correlations, 0, 3) = rho;
+  MLET(correlations, 3, 0) = rho;
+  rho = estimate_correlation(quote1->getCloseSpots(), forex2->getCloseSpots());
+  MLET(correlations, 0, 4) = rho;
+  MLET(correlations, 4, 0) = rho;
+  rho = estimate_correlation(quote2->getCloseSpots(), forex1->getCloseSpots());
+  MLET(correlations, 1, 3) = rho;
+  MLET(correlations, 3, 1) = rho;
+  rho = estimate_correlation(quote2->getCloseSpots(), forex2->getCloseSpots());
+  MLET(correlations, 1, 4) = rho;
+  MLET(correlations, 4, 1) = rho;
+  rho = estimate_correlation(quote3->getCloseSpots(), forex1->getCloseSpots());
+  MLET(correlations, 2, 3) = rho;
+  MLET(correlations, 3, 2) = rho;
+  rho = estimate_correlation(quote3->getCloseSpots(), forex2->getCloseSpots());
+  MLET(correlations, 2, 4) = rho;
+  MLET(correlations, 4, 2) = rho;
+  rho = estimate_correlation(forex1->getCloseSpots(), forex2->getCloseSpots());
+  MLET(correlations, 3, 4) = rho;
+  MLET(correlations, 4, 3) = rho;
 
   delete quote1, quote2, quote3, forex1, forex2;
 }
@@ -132,31 +188,6 @@ PnlVect* Calibration::volatilities(PnlMat *correlations) {
   return sigma;
 }
 
-PnlMat* Calibration::correlations(){
-  PnlMat *correlations = pnl_mat_create(5,5);
-  for (int i=0; i<5; i++){
-    MLET(correlations, i, i) = 1.0;
-  }
-  MLET(correlations, 0, 1) = rho_12;
-  MLET(correlations, 1, 0) = rho_12;
-  MLET(correlations, 0, 2) = rho_13;
-  MLET(correlations, 2, 0) = rho_13;
-  MLET(correlations, 0, 3) = rho_1x1;
-  MLET(correlations, 3, 0) = rho_1x1;
-  MLET(correlations, 1, 2) = rho_23;
-  MLET(correlations, 2, 1) = rho_23;
-  MLET(correlations, 1, 3) = rho_2x1;
-  MLET(correlations, 3, 1) = rho_2x1;
-  MLET(correlations, 2, 3) = rho_3x1;
-  MLET(correlations, 3, 2) = rho_3x1;
-  MLET(correlations, 0, 4) = rho_1x2;
-  MLET(correlations, 4, 0) = rho_1x2;
-  MLET(correlations, 1, 4) = rho_2x2;
-  MLET(correlations, 4, 1) = rho_2x2;
-  MLET(correlations, 2, 4) = rho_3x2;
-  MLET(correlations, 4, 2) = rho_3x2;
-  MLET(correlations, 3, 4) = rho_x1x2;
-  MLET(correlations, 4, 3) = rho_x1x2;
-
-  return correlations;
+PnlMat* Calibration::getCorrelationsMatrix(){
+    return correlations;
 }
