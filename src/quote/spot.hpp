@@ -1,3 +1,6 @@
+#ifndef SPOT_HPP
+#define SPOT_HPP
+
 #include <string>
 
 class Spot {
@@ -22,3 +25,5 @@ private:
     double low;
     double close;
 };
+
+#endif /* SPOT_HPP */
