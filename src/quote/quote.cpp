@@ -81,7 +81,6 @@ std::string Quote::getHistoricalCsv(std::time_t period1,
 
     // Return the csv
     return csv;
-
 }
 
 void Quote::getHistoricalSpots(std::time_t period1,
