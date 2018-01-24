@@ -42,6 +42,7 @@ Spot Quote::getSpot(std::string date) {
     throw std::invalid_argument(error);
 }
 
+
 void Quote::printSpots() {
     for (std::vector<Spot>::iterator it = this->spots.begin();
          it != this->spots.end();
