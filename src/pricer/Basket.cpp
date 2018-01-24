@@ -3,11 +3,9 @@
 
 using namespace std;
 
-Basket::Basket() {
-}
+Basket::Basket() {}
 
-Basket::Basket(const Basket& orig) {
-}
+Basket::Basket(const Basket& orig) {}
 
 Basket::~Basket() {
     pnl_vect_free(&coefficients);
@@ -29,5 +27,3 @@ double Basket::payoff(const PnlMat* path) {
     double payoff = pnl_vect_scalar_prod(coefficients, spotFinal);
     return (payoff - strike > 0) ? (payoff - strike) : 0;
 }
-
-

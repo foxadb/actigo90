@@ -13,10 +13,38 @@ size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     return size * nmemb;
 }
 
+double getForexRate(std::string date, std::string base, std::string symbol) {
+     std::string url = "https://api.fixer.io/" + date
+            + "?base=" + base
+            +  "&symbols=" + symbol;
+
+    CURL* curl = curl_easy_init();
+    std::string responseBuffer;
+
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+
+        // Write result into the buffer
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBuffer);
+
+        // Perform the request
+        CURLcode res = curl_easy_perform(curl);
+
+        // Cleanup
+        curl_easy_cleanup(curl);
+    }
+
+    auto json = nlohmann::json::parse(responseBuffer);
+
+    double rate = json["rates"][symbol];
+    return rate;
+}
+
 double* getForexRates(std::string date,
-                    std::string base,
-                    std::string *symbol,
-                    int nbSymbols) {
+                      std::string base,
+                      std::string *symbol,
+                      int nbSymbols) {
     std::string url = "https://api.fixer.io/" + date
             + "?base=" + base
             +  "&symbols=";

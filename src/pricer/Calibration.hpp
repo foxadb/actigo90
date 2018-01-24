@@ -2,7 +2,7 @@
 #include "pnl/pnl_vector.h"
 
 using namespace std;
-class Calibration{
+class Calibration {
 public:
 
   double step;

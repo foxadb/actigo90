@@ -1,10 +1,8 @@
 #include "Performance.hpp"
 
-Performance::Performance() {
-}
+Performance::Performance() {}
 
-Performance::Performance(const Performance& orig) {
-}
+Performance::Performance(const Performance& orig) {}
 
 Performance::~Performance() {
     pnl_vect_free(&coefficients_);
@@ -24,10 +22,17 @@ Performance::Performance(double T, int nbTimeSteps, int size, PnlVect *coefficie
 
 double Performance::payoff(const PnlMat *path){
     double payoff = 1.0;
-    for (int i=1; i<nbTimeSteps_+1; i++) {
-      pnl_mat_get_row(spot,path,i);
-      pnl_mat_get_row(spotAvant,path,i-1);
-      payoff += (pnl_vect_scalar_prod(coefficients_,spot) / pnl_vect_scalar_prod(coefficients_,spotAvant) > 1)?(pnl_vect_scalar_prod(coefficients_,spot) / pnl_vect_scalar_prod(coefficients_,spotAvant) - 1):0;
-}
+    for (int i = 1; i < nbTimeSteps_+1; ++i) {
+        pnl_mat_get_row(spot, path, i);
+        pnl_mat_get_row(spotAvant, path, i-1);
+
+        double ratio = pnl_vect_scalar_prod(coefficients_, spot)
+                / pnl_vect_scalar_prod(coefficients_, spotAvant);
+
+        if (ratio > 1) {
+            payoff += ratio - 1;
+        }
+    }
+
     return payoff;
 }
