@@ -7,39 +7,44 @@
 
 using namespace std;
 
-Calibration::Calibration(const char *period1_, const char *period2_){
+Calibration::Calibration(const char *period1_, const char *period2_) {
 
-  period1 = period1_;
-  period2 = period2_;
-  //historical spots for euro stoxx 50
+  this->period1 = period1_;
+  this->period2 = period2_;
+
+  // Historical spots for euro stoxx 50
   Quote* quote1 = new Quote("^STOXX50E");
   quote1->getHistoricalSpots(period1, period2, "1d");
   index1 = pnl_vect_create(quote1->nbSpots());
-  //historical spots for S&P 500
+
+  // Hstorical spots for S&P 500
   Quote* quote2 = new Quote("^GSPC");
   quote2->getHistoricalSpots(period1, period2, "1d");
   index2 = pnl_vect_create(quote2->nbSpots());
-  //historical spots for S&P ASX 200
+
+  // Historical spots for S&P ASX 200
   Quote* quote3 = new Quote("^AYQFN");
   quote3->getHistoricalSpots(period1, period2, "1d");
   index3 = pnl_vect_create(quote3->nbSpots());
-  //storing historical spots in PnlVects
-  for (int i=0; i<quote1->nbSpots(); i++){
-    LET(index1,i) = quote1->spots[i].getClose();
-    LET(index2,i) = quote2->spots[i].getClose();
-    LET(index3,i) = quote3->spots[i].getClose();
+
+  // Storing historical spots in PnlVects
+  for (int i = 0; i < quote1->nbSpots(); ++i){
+    LET(index1,i) = quote1->getSpot(i).getClose();
+    LET(index2,i) = quote2->getSpot(i).getClose();
+    LET(index3,i) = quote3->getSpot(i).getClose();
   }
 
   delete quote1;
   delete quote2;
   delete quote3;
 
-  //historical spots for USD/EUR
+  // Historical spots for USD/EUR
   Forex *forex1 = new Forex("USD", "EUR");
-  forex1->getHistoricalRates(period1, period2);
-  //historical spots for AUD/EUR
+  forex1->getHistoricalSpots(period1, period2);
+
+  // Historical spots for AUD/EUR
   Forex *forex2 = new Forex("AUD", "EUR");
-  forex2->getHistoricalRates(period1, period2);
+  forex2->getHistoricalSpots(period1, period2);
 
   //add code here to fill x_1 and x_2
 
@@ -77,13 +82,13 @@ Calibration::Calibration(const char *period1_, const char *period2_){
 // }
 
 
-double Calibration::estimate_volatility(PnlVect *x){
+double Calibration::estimate_volatility(PnlVect *x) {
   double biais = 0.0;
   double mean = 0.0;
   int n = x->size;
   double step = 1.0 /365.0;
 
-  for (int i = 1 ; i < n; i++){
+  for (int i = 1 ; i < n; ++i){
     biais += pow(log(GET(x,i) / GET(x,i-1)) / sqrt(step), 2);
     mean += log(GET(x,i) / GET(x,i-1)) / sqrt(step);
   }
@@ -92,7 +97,7 @@ double Calibration::estimate_volatility(PnlVect *x){
 }
 
 
-PnlVect* Calibration::volatilities(PnlMat *correlations){
+PnlVect* Calibration::volatilities(PnlMat *correlations) {
   PnlVect *sigma = pnl_vect_create(5);
 
   double sigma_1 = estimate_volatility(index1);
