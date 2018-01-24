@@ -2,24 +2,30 @@
 #define FOREX_HPP
 
 #include <string>
-#include <map>
+#include <vector>
+
+#include "spot.hpp"
 
 class Forex {
 public:
     Forex(std::string base, std::string symbol);
     ~Forex();
 
+    Spot getSpot(size_t i);
+    Spot getSpot(std::string date);
+
+    double getRate(size_t i);
     double getRate(std::string date);
 
-    void printRates();
-    void clearRates();
+    void printSpots();
+    void clearSpots();
 
-    void getHistoricalRates(const char *period1, const char *period2);
+    void getHistoricalSpots(const char *period1, const char *period2);
 
 private:
     std::string base;
     std::string symbol;
-    std::map<std::string, double> rates;
+    std::vector<Spot> spots;
 };
 
 #endif /* FOREX_HPP */

@@ -28,10 +28,10 @@ TEST_F(ForexTest, getForexRates) {
     EXPECT_EQ(1.2065, rate[0]);
 }
 
-TEST_F(ForexTest, getHistoricalRates) {
+TEST_F(ForexTest, getHistoricalSpots) {
     // Get the EUR/AUD rates
     Forex *forex = new Forex("EUR", "AUD");
-    forex->getHistoricalRates("2017-09-04", "2017-09-08");
+    forex->getHistoricalSpots("2017-09-04", "2017-09-08");
 
     // Expected rates on the period
     double expectedRates[5] = { 1.496, 1.4902, 1.4961, 1.4926, 1.4881 };
@@ -55,7 +55,7 @@ TEST_F(ForexTest, getHistoricalRates) {
 TEST_F(ForexTest, getRate) {
     // Get the EUR/USD rate at 2017-01-22
     Forex *forex = new Forex("EUR", "USD");
-    forex->getHistoricalRates("2018-01-22", "2018-01-22");
+    forex->getHistoricalSpots("2018-01-22", "2018-01-22");
 
     // Test the rate
     EXPECT_EQ(1.2239, forex->getRate("2018-01-22"));
