@@ -33,8 +33,8 @@ int main() {
 
     // Get the historical EUR/USD rates
     Forex* forex = new Forex("EUR", "USD");
-    forex->getHistoricalRates("2018-01-01", "2018-01-19");
-    forex->printRates();
+    forex->getHistoricalSpots("2018-01-01", "2018-01-19");
+    forex->printSpots();
 
     // Free memory
     delete quote;
