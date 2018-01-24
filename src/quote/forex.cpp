@@ -36,6 +36,14 @@ Spot Forex::getSpot(std::string date) {
     throw std::invalid_argument(error);
 }
 
+PnlVect* Forex::getCloseSpots(){
+  PnlVect *closeSpots = pnl_vect_create(this->spots.size());
+  for (int i=0; i<closeSpots->size; i++){
+    LET(closeSpots, i) = spots[i].getClose();
+  }
+  return closeSpots;
+}
+
 double Forex::getRate(size_t i) {
     if (i < this->spots.size()) {
         Spot spot = this->getSpot(i);
@@ -68,7 +76,7 @@ void Forex::clearSpots() {
 void Forex::getHistoricalSpots(const char *period1, const char *period2) {
     std::time_t begin = dateToEpoch(period1);
     std::time_t end = dateToEpoch(period2);
-    
+
     if (begin <= end) {
         std::time_t current = begin;
 
