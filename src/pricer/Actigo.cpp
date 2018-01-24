@@ -28,11 +28,15 @@ double Actigo::indexPerf(double init, double current){
 double Actigo::payoff(const PnlMat* path){
     int currentSemesterDate = 125; //Nombre de jours ouvrés dans un semestre -1:
     int lastDate = path->m;
+    double rDoll = 0.05;
+    double rAus = 0.05;
     //cout << lastDate;
     double totalPerf= 0.;
     while (currentSemesterDate <= lastDate){
         double semestrialPerf = 0.;
         pnl_mat_get_row(semestrialSpot_, path, currentSemesterDate);
+	LET(semestrialSpot_,1) = GET(semestrialSpot_,1)*rDoll/GET(semestrialSpot_,3);
+	LET(semestrialSpot_,2) = GET(semestrialSpot_,2)*rAus/GET(semestrialSpot_,4); 
         semestrialPerf+= indexPerf(euroStoxSpot_, pnl_vect_get(semestrialSpot_, 0));
         semestrialPerf+= indexPerf(spUsaSpot_, pnl_vect_get(semestrialSpot_, 1));
         semestrialPerf+= indexPerf(spAusSpot_, pnl_vect_get(semestrialSpot_, 2));
