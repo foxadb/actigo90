@@ -35,8 +35,8 @@ double Actigo::payoff(const PnlMat* path){
     while (currentSemesterDate <= lastDate){
         double semestrialPerf = 0.;
         pnl_mat_get_row(semestrialSpot_, path, currentSemesterDate);
-	LET(semestrialSpot_,1) = GET(semestrialSpot_,1)*rDoll/GET(semestrialSpot_,3);
-	LET(semestrialSpot_,2) = GET(semestrialSpot_,2)*rAus/GET(semestrialSpot_,4); 
+	      LET(semestrialSpot_,1) = GET(semestrialSpot_,1)*rDoll/GET(semestrialSpot_,3);
+	      LET(semestrialSpot_,2) = GET(semestrialSpot_,2)*rAus/GET(semestrialSpot_,4);
         semestrialPerf+= indexPerf(euroStoxSpot_, pnl_vect_get(semestrialSpot_, 0));
         semestrialPerf+= indexPerf(spUsaSpot_, pnl_vect_get(semestrialSpot_, 1));
         semestrialPerf+= indexPerf(spAusSpot_, pnl_vect_get(semestrialSpot_, 2));
@@ -46,5 +46,5 @@ double Actigo::payoff(const PnlMat* path){
         totalPerf += semestrialPerf;
         currentSemesterDate += 126;
     }
-    return 0.9 + totalPerf;
+    return  totalPerf - 0.1 ;
 }
