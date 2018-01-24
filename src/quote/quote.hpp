@@ -9,6 +9,7 @@
 
 class Quote {
 public:
+    std::vector<Spot> spots;
     Quote(std::string symbol);
     ~Quote();
 
@@ -34,7 +35,7 @@ public:
 
 private:
     std::string symbol;
-    std::vector<Spot> spots;
+
 };
 
 #endif /* QUOTE_HPP */
