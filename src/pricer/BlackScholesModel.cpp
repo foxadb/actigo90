@@ -28,7 +28,29 @@ BlackScholesModel::BlackScholesModel(int size, double r, double rho, PnlVect *si
     coeff = pnl_vect_create(size_);
     pastVect = pnl_vect_create(size_);
     ptr = exp;
+}
 
+BlackScholesModel::BlackScholesModel(int size, double r, PnlMat *correlations, PnlVect *sigma, PnlVect *spot){
+    size_ = size;
+    r_ = r;
+    sigma_ = pnl_vect_new();
+    pnl_vect_clone(sigma_, sigma);
+    spot_ = pnl_vect_new();
+    pnl_vect_clone(spot_, spot);
+    gamma = pnl_mat_new();
+    pnl_mat_clone(gamma, correlations);
+    sigmaCarre = pnl_vect_create(size_);
+    pnl_vect_clone(sigmaCarre, sigma_);
+    pnl_vect_mult_vect_term(sigmaCarre, sigmaCarre);
+    pnl_vect_mult_scalar(sigmaCarre, -0.5);
+    pnl_vect_plus_scalar(sigmaCarre, r_);
+    int positivityGamma = pnl_mat_chol(gamma);
+    g = pnl_vect_create(size_);
+    newSpot = pnl_vect_create(size_);
+    produit = pnl_vect_create(size_);
+    coeff = pnl_vect_create(size_);
+    pastVect = pnl_vect_create(size_);
+    ptr = exp;
 }
 
 
@@ -43,7 +65,7 @@ void BlackScholesModel::asset(PnlMat *path, double T, int nbTimeSteps, PnlRng *r
 
     for (int t = 1; t < nbTimeSteps + 1; t++) {
 
-        pnl_vect_rng_normal(g, size_, rng);     
+        pnl_vect_rng_normal(g, size_, rng);
         pnl_mat_get_row(newSpot, path, t - 1);
         pnl_mat_mult_vect_inplace(produit, gamma, g);
         pnl_vect_mult_scalar(produit, sqrtStep);
@@ -74,7 +96,7 @@ void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps,
 
     pnl_vect_clone(coeff, sigmaCarre);
     pnl_vect_mult_scalar(coeff, step);
-    
+
     double tSuiv = step * (vect);
     pnl_mat_set_subblock(path, past, 0, 0);
     pnl_mat_get_row(pastVect, past, vect);

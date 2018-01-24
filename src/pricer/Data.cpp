@@ -18,32 +18,38 @@ Data::~Data() {
 Data::Data(const char* startDate, const char* currentDate){
   Quote* quote1 = new Quote("^STOXX50E");
   quote1->getHistoricalSpots(startDate, currentDate, "1d");
-  euroStoxSpots = quote1->getCloseSpots();
+  euroStoxSpots = pnl_vect_new();
+  pnl_vect_clone(uroStoxSpots, quote1->getCloseSpots());
 
   // spots for S&P 500
   Quote* quote2 = new Quote("^GSPC");
   quote2->getHistoricalSpots(startDate, currentDate, "1d");
-  spUsdSpots = quote2->getCloseSpots();
+  spUsdSpots = pnl_vect_new();
+  pnl_vect_clone(spUsdSpots, quote2->getCloseSpots());
 
   // spots for S&P ASX 200
   Quote* quote3 = new Quote("^AYQFN");
   quote3->getHistoricalSpots(startDate, currentDate, "1d");
-  spAudSpots = quote3->getCloseSpots();
+  spAudSpots = pnl_vect_new();
+  pnl_vect_clone(spAudSpots, quote3->getCloseSpots());
 
   // rates for USD/EUR
   Forex *forex1 = new Forex("USD", "EUR");
   forex1->getHistoricalSpots(startDate, currentDate);
-  forexEurUsd = forex1->getCloseSpots();
+  forexEurUsd = pnl_vect_new();
+  pnl_vect_clone(forexEurUsd, forex1->getCloseSpots());
 
   // rates for AUD/EUR
   Forex *forex2 = new Forex("AUD", "EUR");
   forex2->getHistoricalSpots(period1, period2);
-  forexEurAud = forex2->getCloseSpots();
+  forexEurAud = pnl_vect_new();
+  pnl_vect_clone(forexEurAud, forex2->getCloseSpots();
 
   delete quote1, quote2, quote3, forex1, forex2;
 }
 
-Data::completeData(int totalNumberOfdates){
-  int remainingDates = totalNumberOfdates - euroStoxSpots->size;
-  //simulate data in remainingDates and put it in dataMatrix;
+void Data::completeData(int remainingDates, Option *option, PnlVect *currentSpots, PnlVect *volatilities, PnlMat *correlations){
+    // BlackScholesModel *bsm = new BlackScholesModel(5, rEur, correlations, volatilities, currentSpots);
+     //double t = 0.;
+     //bsm->asset(t, )
 }
