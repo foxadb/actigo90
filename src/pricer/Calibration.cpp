@@ -7,79 +7,158 @@
 
 using namespace std;
 
+
+Calibration::Calibration(Data *data){
+   sigma_1 = estimate_volatility(data->euroStoxSpots);
+   sigma_2 = estimate_volatility(data->spUsdSpots);
+   sigma_3 = estimate_volatility(data->spAudSpots);
+   sigma_x1 = estimate_volatility(data->forexEurUsd);
+   sigma_x2 = estimate_volatility(data->forexEurAud);
+
+   double rho = estimate_correlation(data->euroStoxSpots, data->spUsdSpots);
+   MLET(correlations, 0, 1) = rho;
+   MLET(correlations, 1, 0) = rho;
+   rho = estimate_correlation(data->euroStoxSpots, data->spAudSpots);
+   MLET(correlations, 0, 2) = rho;
+   MLET(correlations, 2, 0) = rho;
+   rho = estimate_correlation(data->spUsdSpots, data->spAudSpots);
+   MLET(correlations, 1, 2) = rho;
+   MLET(correlations, 2, 1) = rho;
+   rho = estimate_correlation(data->euroStoxSpots, data->forexEurUsd);
+   MLET(correlations, 0, 3) = rho;
+   MLET(correlations, 3, 0) = rho;
+   rho = estimate_correlation(data->euroStoxSpots, data->forexEurAud);
+   MLET(correlations, 0, 4) = rho;
+   MLET(correlations, 4, 0) = rho;
+   rho = estimate_correlation(data->spUsdSpots, data->forexEurUsd);
+   MLET(correlations, 1, 3) = rho;
+   MLET(correlations, 3, 1) = rho;
+   rho = estimate_correlation(data->spUsdSpots, data->forexEurAud);
+   MLET(correlations, 1, 4) = rho;
+   MLET(correlations, 4, 1) = rho;
+   rho = estimate_correlation(data->spAudSpots, data->forexEurUsd);
+   MLET(correlations, 2, 3) = rho;
+   MLET(correlations, 3, 2) = rho;
+   rho = estimate_correlation(data->spAudSpots, data->forexEurAud);
+   MLET(correlations, 2, 4) = rho;
+   MLET(correlations, 4, 2) = rho;
+   rho = estimate_correlation(data->forexEurUsd, data->forexEurAud);
+   MLET(correlations, 3, 4) = rho;
+   MLET(correlations, 4, 3) = rho;
+
+ }
+
+
+
 Calibration::Calibration(const char *period1_, const char *period2_) {
 
   this->period1 = period1_;
   this->period2 = period2_;
 
-  // Historical spots for euro stoxx 50
+  // volatility for euro stoxx 50
   Quote* quote1 = new Quote("^STOXX50E");
   quote1->getHistoricalSpots(period1, period2, "1d");
-  index1 = pnl_vect_create(quote1->nbSpots());
+  sigma_1 = estimate_volatility(quote1->getCloseSpots());
 
-  // Hstorical spots for S&P 500
+  // volatility for S&P 500
   Quote* quote2 = new Quote("^GSPC");
   quote2->getHistoricalSpots(period1, period2, "1d");
-  index2 = pnl_vect_create(quote2->nbSpots());
+  sigma_2 = estimate_volatility(quote2->getCloseSpots());
 
-  // Historical spots for S&P ASX 200
+  // volatility for S&P ASX 200
   Quote* quote3 = new Quote("^AYQFN");
   quote3->getHistoricalSpots(period1, period2, "1d");
-  index3 = pnl_vect_create(quote3->nbSpots());
+  sigma_3 = estimate_volatility(quote3->getCloseSpots());
 
-  // Storing historical spots in PnlVects
-  for (int i = 0; i < quote1->nbSpots(); ++i){
-    LET(index1,i) = quote1->getSpot(i).getClose();
-    LET(index2,i) = quote2->getSpot(i).getClose();
-    LET(index3,i) = quote3->getSpot(i).getClose();
-  }
-
-  delete quote1;
-  delete quote2;
-  delete quote3;
-
-  // Historical spots for USD/EUR
+  // volatility for USD/EUR
   Forex *forex1 = new Forex("USD", "EUR");
   forex1->getHistoricalSpots(period1, period2);
+  sigma_x1 = estimate_volatility(forex1->getCloseSpots());
 
-  // Historical spots for AUD/EUR
+  // volatility for AUD/EUR
   Forex *forex2 = new Forex("AUD", "EUR");
   forex2->getHistoricalSpots(period1, period2);
+  sigma_x2 = estimate_volatility(forex2->getCloseSpots());
 
-  //add code here to fill x_1 and x_2
+  // correlations;
+  correlations = pnl_mat_create(5,5);
+  for (int i=0; i<5; i++){
+    MLET(correlations, i, i) = 1.0;
+  }
+  double rho = estimate_correlation(quote1->getCloseSpots(), quote2->getCloseSpots());
+  MLET(correlations, 0, 1) = rho;
+  MLET(correlations, 1, 0) = rho;
+  rho = estimate_correlation(quote1->getCloseSpots(), quote3->getCloseSpots());
+  MLET(correlations, 0, 2) = rho;
+  MLET(correlations, 2, 0) = rho;
+  rho = estimate_correlation(quote2->getCloseSpots(), quote3->getCloseSpots());
+  MLET(correlations, 1, 2) = rho;
+  MLET(correlations, 2, 1) = rho;
+  rho = estimate_correlation(quote1->getCloseSpots(), forex1->getCloseSpots());
+  MLET(correlations, 0, 3) = rho;
+  MLET(correlations, 3, 0) = rho;
+  rho = estimate_correlation(quote1->getCloseSpots(), forex2->getCloseSpots());
+  MLET(correlations, 0, 4) = rho;
+  MLET(correlations, 4, 0) = rho;
+  rho = estimate_correlation(quote2->getCloseSpots(), forex1->getCloseSpots());
+  MLET(correlations, 1, 3) = rho;
+  MLET(correlations, 3, 1) = rho;
+  rho = estimate_correlation(quote2->getCloseSpots(), forex2->getCloseSpots());
+  MLET(correlations, 1, 4) = rho;
+  MLET(correlations, 4, 1) = rho;
+  rho = estimate_correlation(quote3->getCloseSpots(), forex1->getCloseSpots());
+  MLET(correlations, 2, 3) = rho;
+  MLET(correlations, 3, 2) = rho;
+  rho = estimate_correlation(quote3->getCloseSpots(), forex2->getCloseSpots());
+  MLET(correlations, 2, 4) = rho;
+  MLET(correlations, 4, 2) = rho;
+  rho = estimate_correlation(forex1->getCloseSpots(), forex2->getCloseSpots());
+  MLET(correlations, 3, 4) = rho;
+  MLET(correlations, 4, 3) = rho;
 
-  delete forex1;
-  delete forex2;
+  delete quote1, quote2, quote3, forex1, forex2;
 }
 
 
-// double Calibration::estimate_correlation(PnlVect *x, PnlVect *y){
-//
-//   double x_mean, y_mean = 0.0;
-//   int size = min(x->size, y->size);
-//
-//   for (int i = 0; i < size; i++){
-//     x_mean += GET(x, i);
-//     y_mean += GET(y, i);
-//   }
-//
-//   x_mean /= size,
-//   y_mean /= size;
-//
-//   double covariance, x_var, y_var = 0.0;
-//
-//   for (int i = 0; i < size; i++){
-//     covariance += (GET(x,i) - x_mean) * (GET(y,i) - y_mean);
-//     x_var += pow(GET(x,i) - x_mean, 2);
-//     y_var += pow(GET(y,i) - y_mean, 2);
-//   }
-//
-//   if (x_var == 0.0 || y_var == 0.0){
-//     return 0.0;
-//   }
-//
-//   return covariance / (sqrt(x_var) * sqrt(y_var));
-// }
+double Calibration::estimate_correlation(PnlVect *x, PnlVect *y){
+
+  int size = min(x->size, y->size);
+
+  PnlVect *log_rent_x = pnl_vect_create(size -1);
+  PnlVect *log_rent_y = pnl_vect_create(size -1);
+
+  for (int i =0; i<size-1; i++){
+    LET(log_rent_x, i) = log(GET(x, i+1) / GET(x, i));
+    LET(log_rent_y, i) = log(GET(y, i+1) / GET(y, i));
+  }
+
+  double x_mean, y_mean = 0.0;
+
+  for (int i = 0; i < size; i++){
+    x_mean += GET(log_rent_x, i);
+    y_mean += GET(log_rent_y, i);
+  }
+
+  x_mean /= size - 1,
+  y_mean /= size - 1;
+
+  double covariance, x_var, y_var = 0.0;
+
+  for (int i = 0; i < size -1; i++){
+    covariance += (GET(log_rent_x,i) - x_mean) * (GET(log_rent_y,i) - y_mean);
+    x_var += pow(GET(log_rent_x,i) - x_mean, 2);
+    y_var += pow(GET(log_rent_y,i) - y_mean, 2);
+  }
+
+  pnl_vect_free(&log_rent_x);
+  pnl_vect_free(&log_rent_y);
+
+  if (x_var == 0.0 || y_var == 0.0){
+    return 0.0;
+  }
+
+  return covariance / (sqrt(x_var) * sqrt(y_var));
+}
 
 
 double Calibration::estimate_volatility(PnlVect *x) {
@@ -100,17 +179,15 @@ double Calibration::estimate_volatility(PnlVect *x) {
 PnlVect* Calibration::volatilities(PnlMat *correlations) {
   PnlVect *sigma = pnl_vect_create(5);
 
-  double sigma_1 = estimate_volatility(index1);
-  double sigma_2 = estimate_volatility(index2);
-  double sigma_3 = estimate_volatility(index3);
-  double sigma_x1 = estimate_volatility(x_1);
-  double sigma_x2 = estimate_volatility(x_2);
-
   LET(sigma, 0) = sigma_1;
-  //LET(sigma, 1) = sqrt(pow(sigma_2,2)+pow(sigma_x1,2)+2*pnl_mat_get(correlations, 1, 3)*sigma_2 * sigma_x1);
-  //LET(sigma, 2) = sqrt(pow(sigma_3,2)+pow(sigma_x2,2)+2*pnl_mat_get(correlations, 2, 4)*sigma_3 * sigma_x2);
+  LET(sigma, 1) = sqrt(pow(sigma_2,2)+pow(sigma_x1,2)+2*MGET(correlations, 1, 3)*sigma_2 * sigma_x1);
+  LET(sigma, 2) = sqrt(pow(sigma_3,2)+pow(sigma_x2,2)+2*MGET(correlations, 2, 4)*sigma_3 * sigma_x2);
   LET(sigma, 3) = sigma_x1;
   LET(sigma, 4) = sigma_x2;
 
   return sigma;
+}
+
+PnlMat* Calibration::getCorrelationsMatrix(){
+    return correlations;
 }
