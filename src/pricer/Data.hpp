@@ -1,11 +1,11 @@
 #ifndef DATA_H
 #define	DATA_H
 
-class data:{
+class Data:{
 public:
       PnlVect* euroStoxSpots;
-      PnlVect* sAndpUsd;
-      PnlVect* sAndpAud;
+      PnlVect* spUsdSpots;
+      PnlVect* spAudSpots;
       PnlVect* forexEurUsd;
       PnlVect* forexEurAud;
       double rEur;
@@ -13,6 +13,6 @@ public:
       double rAud;
       PnlMat* dataMatrix;
 
-      data(string debutDate, string currentDate);
-      completeDate(int totalNumberOfdates);
+      data(const char* debutDate, const char* currentDate);
+      completeData(int totalNumberOfdates);
 };

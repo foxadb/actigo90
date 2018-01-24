@@ -7,6 +7,17 @@
 
 using namespace std;
 
+
+Calibration::calibration(Data *data){
+   sigma_1 = estimate_volatility(data->euroStoxSpots);
+   sigma_2 = estimate_volatility(data->spUsdSpots);
+   sigma_3 = estimate_volatility(data->spAudSpots);
+   sigma_x1 = estimate_volatility(data->forexEurUsd);
+   sigma_x2 = estimate_volatility(data->forexEurAud);
+ }
+
+
+
 Calibration::Calibration(const char *period1_, const char *period2_) {
 
   this->period1 = period1_;
