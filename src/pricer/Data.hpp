@@ -1,7 +1,9 @@
 #ifndef DATA_H
 #define	DATA_H
+#include "pnl/pnl_vector.h"
+#include "Option.hpp"
 
-class Data:{
+class Data{
 public:
       PnlVect* euroStoxSpots;
       PnlVect* spUsdSpots;
@@ -13,6 +15,7 @@ public:
       double rAud;
       PnlMat* dataMatrix;
 
-      data(const char* debutDate, const char* currentDate);
+      Data(const char* debutDate, const char* currentDate);
       void completeData(int remainingDates, Option *option, PnlVect *currentSpots, PnlVect *volatilities, PnlMat *correlations);
 };
+#endif
