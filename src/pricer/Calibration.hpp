@@ -1,4 +1,5 @@
 #include <cstdio>
+#inlude "Data.hpp"
 #include "pnl/pnl_vector.h"
 #include "pnl/pnl_matrix.h"
 
@@ -15,6 +16,7 @@ public:
   const char *period2;
 
   Calibration(const char *period1, const char *period2);
+  Calibration(Data *data);
   PnlVect* volatilities(PnlMat *correlations);
   PnlMat* correlations();
 };
