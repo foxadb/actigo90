@@ -1,6 +1,5 @@
-#include "data.hpp"
+#include "Data.hpp"
 
-using namespace std;
 
 Data::Data() {}
 
@@ -15,11 +14,15 @@ Data::~Data() {
     pnl_mat_free(&dataMatrix);
 }
 
+Data::Data(PnlMat *matrixData){
+
+}
+
 Data::Data(const char* startDate, const char* currentDate){
   Quote* quote1 = new Quote("^STOXX50E");
   quote1->getHistoricalSpots(startDate, currentDate, "1d");
   euroStoxSpots = pnl_vect_new();
-  pnl_vect_clone(uroStoxSpots, quote1->getCloseSpots());
+  pnl_vect_clone(euroStoxSpots, quote1->getCloseSpots());
 
   // spots for S&P 500
   Quote* quote2 = new Quote("^GSPC");
@@ -41,15 +44,12 @@ Data::Data(const char* startDate, const char* currentDate){
 
   // rates for AUD/EUR
   Forex *forex2 = new Forex("AUD", "EUR");
-  forex2->getHistoricalSpots(period1, period2);
+  forex2->getHistoricalSpots(startDate, currentDate);
   forexEurAud = pnl_vect_new();
-  pnl_vect_clone(forexEurAud, forex2->getCloseSpots();
+  pnl_vect_clone(forexEurAud, forex2->getCloseSpots());
 
   delete quote1, quote2, quote3, forex1, forex2;
 }
 
 void Data::completeData(int remainingDates, Option *option, PnlVect *currentSpots, PnlVect *volatilities, PnlMat *correlations){
-    // BlackScholesModel *bsm = new BlackScholesModel(5, rEur, correlations, volatilities, currentSpots);
-     //double t = 0.;
-     //bsm->asset(t, )
 }
