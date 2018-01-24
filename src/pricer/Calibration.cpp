@@ -15,41 +15,33 @@ Calibration::Calibration(const char *period1_, const char *period2_) {
   // Historical spots for euro stoxx 50
   Quote* quote1 = new Quote("^STOXX50E");
   quote1->getHistoricalSpots(period1, period2, "1d");
-  index1 = pnl_vect_create(quote1->nbSpots());
+  sigma_1 = estimate_volatility(quote1->getCloseSpots());
+  delete quote1;
 
   // Hstorical spots for S&P 500
   Quote* quote2 = new Quote("^GSPC");
   quote2->getHistoricalSpots(period1, period2, "1d");
-  index2 = pnl_vect_create(quote2->nbSpots());
+  sigma_2 = estimate_volatility(quote2->getCloseSpots());
+  delete quote2;
 
   // Historical spots for S&P ASX 200
   Quote* quote3 = new Quote("^AYQFN");
   quote3->getHistoricalSpots(period1, period2, "1d");
-  index3 = pnl_vect_create(quote3->nbSpots());
-
-  // Storing historical spots in PnlVects
-  for (int i = 0; i < quote1->nbSpots(); ++i){
-    LET(index1,i) = quote1->getSpot(i).getClose();
-    LET(index2,i) = quote2->getSpot(i).getClose();
-    LET(index3,i) = quote3->getSpot(i).getClose();
-  }
-
-  delete quote1;
-  delete quote2;
+  sigma_3 = estimate_volatility(quote3->getCloseSpots());
   delete quote3;
 
   // Historical spots for USD/EUR
   Forex *forex1 = new Forex("USD", "EUR");
   forex1->getHistoricalSpots(period1, period2);
+  sigma_x1 = estimate_volatility(forex1->getCloseSpots());
+  delete forex1;
 
   // Historical spots for AUD/EUR
   Forex *forex2 = new Forex("AUD", "EUR");
   forex2->getHistoricalSpots(period1, period2);
-
-  //add code here to fill x_1 and x_2
-
-  delete forex1;
+  sigma_x2 = estimate_volatility(forex2->getCloseSpots());
   delete forex2;
+
 }
 
 
@@ -100,15 +92,9 @@ double Calibration::estimate_volatility(PnlVect *x) {
 PnlVect* Calibration::volatilities(PnlMat *correlations) {
   PnlVect *sigma = pnl_vect_create(5);
 
-  double sigma_1 = estimate_volatility(index1);
-  double sigma_2 = estimate_volatility(index2);
-  double sigma_3 = estimate_volatility(index3);
-  double sigma_x1 = estimate_volatility(x_1);
-  double sigma_x2 = estimate_volatility(x_2);
-
   LET(sigma, 0) = sigma_1;
-  //LET(sigma, 1) = sqrt(pow(sigma_2,2)+pow(sigma_x1,2)+2*pnl_mat_get(correlations, 1, 3)*sigma_2 * sigma_x1);
-  //LET(sigma, 2) = sqrt(pow(sigma_3,2)+pow(sigma_x2,2)+2*pnl_mat_get(correlations, 2, 4)*sigma_3 * sigma_x2);
+  LET(sigma, 1) = sqrt(pow(sigma_2,2)+pow(sigma_x1,2)+2*pnl_mat_get(correlations, 1, 3)*sigma_2 * sigma_x1);
+  LET(sigma, 2) = sqrt(pow(sigma_3,2)+pow(sigma_x2,2)+2*pnl_mat_get(correlations, 2, 4)*sigma_3 * sigma_x2);
   LET(sigma, 3) = sigma_x1;
   LET(sigma, 4) = sigma_x2;
 

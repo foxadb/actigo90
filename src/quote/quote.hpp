@@ -4,6 +4,7 @@
 #include <string>
 #include <ctime>
 #include <vector>
+#include "pnl/pnl_vector.h"
 
 #include "spot.hpp"
 
@@ -16,6 +17,7 @@ public:
 
     Spot getSpot(size_t i);
     Spot getSpot(std::string date);
+    PnlVect* getCloseSpots();
 
     void printSpots();
     void clearSpots();
