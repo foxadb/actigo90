@@ -84,6 +84,19 @@ public:
      */
     BlackScholesModel(int size, double r, double rho, PnlVect *sigma, PnlVect *spot);
 
+    /*!
+     *  \brief Constructeur
+     *
+     *  Constructeur de la classe BlackScholeModel
+     *
+     *  \param size : nombre d'actifs
+     *  \param r    : taux d'intérêt
+     *  \param correlations: matrice de correlation
+     *  \param sigma: vecteur des écarts-types
+     *  \param spot : vecteur des spots initiaux
+     */
+
+    BlackScholesModel(int size, double r, PnlMat *correlations, PnlVect *sigma, PnlVect *spot);
 
     /**
      * Génère une trajectoire du modèle et la stocke dans path

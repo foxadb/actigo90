@@ -14,5 +14,5 @@ public:
       PnlMat* dataMatrix;
 
       data(const char* debutDate, const char* currentDate);
-      completeData(int totalNumberOfdates);
+      void completeData(int remainingDates, Option *option, PnlVect *currentSpots, PnlVect *volatilities, PnlMat *correlations);
 };

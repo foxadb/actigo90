@@ -8,7 +8,7 @@
 using namespace std;
 
 
-Calibration::calibration(Data *data){
+Calibration::Calibration(Data *data){
    sigma_1 = estimate_volatility(data->euroStoxSpots);
    sigma_2 = estimate_volatility(data->spUsdSpots);
    sigma_3 = estimate_volatility(data->spAudSpots);
