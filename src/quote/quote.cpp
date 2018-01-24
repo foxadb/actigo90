@@ -5,6 +5,7 @@
 #include <ctime>
 #include <boost/algorithm/string.hpp>
 
+
 #include "quote.hpp"
 #include "time_utils.hpp"
 #include "curl_utils.hpp"
@@ -37,6 +38,13 @@ Spot Quote::getSpot(std::string date) {
             return *it;
         }
     }
+PnlVect* Quote::getCloseSpots(){
+  PnlVect *closeSpots = pnl_vect_create(this->spots.size());
+  for (int i=0; i<closeSpots->size; i++){
+    LET(closeSpots, i) = spots[i].getClose();
+  }
+  return closeSpots;
+}
 
     std::string error = "ERROR getSpot(date) - There is not spot at " + date;
     throw std::invalid_argument(error);

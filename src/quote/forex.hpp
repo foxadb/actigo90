@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "pnl/pnl_vector.h"
 #include "spot.hpp"
 
 class Forex {
@@ -13,6 +14,7 @@ public:
 
     Spot getSpot(size_t i);
     Spot getSpot(std::string date);
+    PnlVect* getCloseSpots();
 
     double getRate(size_t i);
     double getRate(std::string date);
