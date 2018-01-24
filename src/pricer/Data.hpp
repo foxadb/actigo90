@@ -2,6 +2,8 @@
 #define	DATA_H
 #include "pnl/pnl_vector.h"
 #include "Option.hpp"
+#include "../quote/quote.hpp"
+#include "../quote/forex.hpp"
 
 class Data{
 public:
@@ -17,6 +19,9 @@ public:
 
       Data(const char* debutDate, const char* currentDate);
       Data(PnlMat *matrixData);
+      Data();
+      ~Data();
+      Data(const Data& orig);
       void completeData(int remainingDates, Option *option, PnlVect *currentSpots, PnlVect *volatilities, PnlMat *correlations);
 };
 #endif

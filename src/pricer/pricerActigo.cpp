@@ -22,14 +22,18 @@ int main(int argc, char **argv){
   time_t todayEpoch = currentEpoch();
   //string currentDate = epochToDate(todayEpoch);
   //Recuperate data from startDate to currentDate
-  Data *data = new Data("2015-10-12", "2017-12-30");
+  //Data *data = new Data("2015-10-12", "2017-12-30");
   //create Actigo option with 2016 = 252*8 nbtimeSteps
-  Actigo *actigo = new Actigo(8., 2016, 5, GET(data->euroStoxSpots, 0),
-                              GET(data->spUsdSpots, 0), GET(data->spAudSpots, 0));
+  Actigo *actigo = new Actigo(8., 2016, 5, 100., 100., 100.);
+  PnlVect *sigma = pnl_vect_create_from_scalar(5, 0.5);
+  PnlVect *spots = pnl_vect_create_from_scalar(5, 100.);
+  BlackScholesModel *bsm = new BlackScholesModel(5, 0.04, 0.2, sigma,spots);
+  //bsm->
+  //Data *data = new Data()
   //Calibrate volatilities and correlations for extracted data
-  Calibration *calibration = new Calibration(data);
+  //Calibration *calibration = new Calibration(data);
   //completeData from currentDate to endDate;
-  int remainingDates = 2016 - data->euroStoxSpots->size;
+  //int remainingDates = 2016 - data->euroStoxSpots->size;
   //data->completeData(remainingDates, actigo, currentSpots, volatilities, correlations);
 
 
