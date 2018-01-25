@@ -12,12 +12,16 @@ private:
 
 
 public:
+
   const char *period1;
   const char *period2;
+
+  Calibration();
+  Calibration(const char *period1, const char *period2);
+  ~Calibration();
   double estimate_volatility(PnlVect *x);
   double estimate_correlation(PnlVect *x, PnlVect *y);
   double estimate_trend(PnlVect *x);
-  Calibration(const char *period1, const char *period2);
   Calibration(Data *data);
   PnlVect* getVolatilities();
   PnlMat* getCorrelationsMatrix();
