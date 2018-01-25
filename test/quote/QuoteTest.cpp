@@ -11,6 +11,9 @@ using namespace std;
 class QuoteTest : public ::testing::Test {
     protected:
 
+        // Tolerance for double equality test
+        double abs_error = 10e-5;
+
         virtual void SetUp() {
             // code called before each test (beginning)
         }
@@ -46,14 +49,55 @@ TEST_F(QuoteTest, getHistoricalSpots) {
 
     // Test the spot at 2017-12-01
     Spot spot = quote->getSpot("2017-12-01");
-    EXPECT_EQ(3527.550049, spot.getOpen());
-    EXPECT_EQ(3527.550049, spot.getHigh());
-    EXPECT_EQ(3527.550049, spot.getLow());
-    EXPECT_EQ(3527.550049, spot.getClose());
+    EXPECT_NEAR(3527.550049, spot.getOpen(), this->abs_error);
+    EXPECT_NEAR(3527.550049, spot.getHigh(), this->abs_error);
+    EXPECT_NEAR(3527.550049, spot.getLow(), this->abs_error);
+    EXPECT_NEAR(3527.550049, spot.getClose(), this->abs_error);
 
+    // Test the spot at 2017-12-04
     spot = quote->getSpot("2017-12-04");
-    EXPECT_EQ(3576.219971, spot.getOpen());
-    EXPECT_EQ(3576.219971, spot.getHigh());
-    EXPECT_EQ(3576.219971, spot.getLow());
-    EXPECT_EQ(3576.219971, spot.getClose());
+    EXPECT_NEAR(3576.219971, spot.getOpen(), this->abs_error);
+    EXPECT_NEAR(3576.219971, spot.getHigh(), this->abs_error);
+    EXPECT_NEAR(3576.219971, spot.getLow(), this->abs_error);
+    EXPECT_NEAR(3576.219971, spot.getClose(), this->abs_error);
+}
+
+TEST_F(QuoteTest, EurUsd) {
+    // EUR/USD rate
+    Quote *quote = new Quote("EURUSD=X");
+    quote->getHistoricalSpots("2017-12-01", "2017-12-31", "1d");
+
+    // Test the spot at 2017-12-08
+    Spot spot = quote->getSpot("2017-12-08");
+    EXPECT_NEAR(1.17744, spot.getOpen(), this->abs_error);
+    EXPECT_NEAR(1.17772, spot.getHigh(), this->abs_error);
+    EXPECT_NEAR(1.17319, spot.getLow(), this->abs_error);
+    EXPECT_NEAR(1.17722, spot.getClose(), this->abs_error);
+
+    // Test the spot at 2017-12-21
+    spot = quote->getSpot("2017-12-21");
+    EXPECT_NEAR(1.18778, spot.getOpen(), this->abs_error);
+    EXPECT_NEAR(1.1892, spot.getHigh(), this->abs_error);
+    EXPECT_NEAR(1.18502, spot.getLow(), this->abs_error);
+    EXPECT_NEAR(1.18782, spot.getClose(), this->abs_error);
+}
+
+TEST_F(QuoteTest, EurAud) {
+    // EUR/AUD rate
+    Quote *quote = new Quote("EURAUD=X");
+    quote->getHistoricalSpots("2017-12-01", "2017-12-31", "1d");
+
+    // Test the spot at 2017-12-13
+    Spot spot = quote->getSpot("2017-12-13");
+    EXPECT_NEAR(1.553756, spot.getOpen(), this->abs_error);
+    EXPECT_NEAR(1.552764, spot.getHigh(), this->abs_error);
+    EXPECT_NEAR(1.545433, spot.getLow(), this->abs_error);
+    EXPECT_NEAR(1.553957, spot.getClose(), this->abs_error);
+
+    // Test the spot at 2017-12-27
+    spot = quote->getSpot("2017-12-27");
+    EXPECT_NEAR(1.534314, spot.getOpen(), this->abs_error);
+    EXPECT_NEAR(1.533646, spot.getHigh(), this->abs_error);
+    EXPECT_NEAR(1.531682, spot.getLow(), this->abs_error);
+    EXPECT_NEAR(1.533925, spot.getClose(), this->abs_error);
 }
