@@ -10,11 +10,15 @@ using namespace std;
 
 Calibration::Calibration(Data *data){
    sigma_1 = estimate_volatility(data->euroStoxSpots);
+   cout << "first variance"<< sigma_1 << endl;
    sigma_2 = estimate_volatility(data->spUsdSpots);
    sigma_3 = estimate_volatility(data->spAudSpots);
    sigma_x1 = estimate_volatility(data->forexEurUsd);
    sigma_x2 = estimate_volatility(data->forexEurAud);
-
+   correlations = pnl_mat_create(5,5);
+   for (int i=0; i<5; i++){
+     MLET(correlations, i, i) = 1.0;
+   }
    double rho = estimate_correlation(data->euroStoxSpots, data->spUsdSpots);
    MLET(correlations, 0, 1) = rho;
    MLET(correlations, 1, 0) = rho;
@@ -134,7 +138,7 @@ double Calibration::estimate_correlation(PnlVect *x, PnlVect *y){
 
   double x_mean, y_mean = 0.0;
 
-  for (int i = 0; i < size; i++){
+  for (int i = 0; i < size-1; i++){
     x_mean += GET(log_rent_x, i);
     y_mean += GET(log_rent_y, i);
   }
@@ -149,13 +153,18 @@ double Calibration::estimate_correlation(PnlVect *x, PnlVect *y){
     x_var += pow(GET(log_rent_x,i) - x_mean, 2);
     y_var += pow(GET(log_rent_y,i) - y_mean, 2);
   }
+  
+  x_var /= size - 1;
+  y_var /= size - 1;
+  covariance /= size -1;
 
   pnl_vect_free(&log_rent_x);
   pnl_vect_free(&log_rent_y);
 
-  if (x_var == 0.0 || y_var == 0.0){
+  if (x_var <= 0.0 || y_var <= 0.0){
     return 0.0;
   }
+
 
   return covariance / (sqrt(x_var) * sqrt(y_var));
 }
@@ -166,7 +175,8 @@ double Calibration::estimate_volatility(PnlVect *x) {
   double mean = 0.0;
   int n = x->size;
   double step = 1.0 /365.0;
-
+  cout << "first x" << endl;
+  pnl_vect_print(x);
   for (int i = 1 ; i < n; ++i){
     biais += pow(log(GET(x,i) / GET(x,i-1)) / sqrt(step), 2);
     mean += log(GET(x,i) / GET(x,i-1)) / sqrt(step);

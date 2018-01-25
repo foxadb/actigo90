@@ -15,7 +15,16 @@ Data::~Data() {
 }
 
 Data::Data(PnlMat *matrixData){
-
+   euroStoxSpots = pnl_vect_new();
+   spUsdSpots = pnl_vect_new();
+   spAudSpots = pnl_vect_new();
+   forexEurUsd = pnl_vect_new();
+   forexEurAud = pnl_vect_new();
+   pnl_mat_get_col(euroStoxSpots, matrixData, 0);
+   pnl_mat_get_col(spUsdSpots, matrixData, 1);
+   pnl_mat_get_col(spAudSpots, matrixData, 2);
+   pnl_mat_get_col(forexEurUsd, matrixData, 3);
+   pnl_mat_get_col(forexEurAud, matrixData, 4);
 }
 
 Data::Data(const char* startDate, const char* currentDate){
