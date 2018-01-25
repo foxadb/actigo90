@@ -14,6 +14,7 @@ using namespace std;
 int main(int argc, char **argv){
   //Recuperate data from actigo first day: "2015-10-12" to today
   Data *data = new Data("2015-10-12","2018-01-24");
+  pnl_mat_print(data->historicalDataMatrix);
   //Calibrate data
   Calibration *calibration = new Calibration(data);
   // create Actigo Option
@@ -22,11 +23,11 @@ int main(int argc, char **argv){
   PnlVect *initialSpots = pnl_vect_create(size);
   PnlVect *todaySpots = pnl_vect_create(size);
   data->getInitialSpots(initialSpots);
-  data->getTodaySpots(toDaySpots);
+  data->getTodaySpots(todaySpots);
   Actigo *actigo = new Actigo(maturity, 2016, size, GET(initialSpots,0), GET(initialSpots, 1), GET(initialSpots, 2));
   //complete data from today to actigo end date
   int remainingDates = 0.;
-  data->completeData(remainingDates, actigo, toDaySpots, calibration->getVolatilities(), calibration->getCorrelationsMatrix());
+  data->completeData(remainingDates, actigo, todaySpots, calibration->getVolatilities(), calibration->getCorrelationsMatrix());
   //create the BlackScholesModel
   double rEur = 0.04;
   BlackScholesModel *bsm = new BlackScholesModel(size, rEur, calibration->getCorrelationsMatrix(), calibration->getVolatilities(), initialSpots);
@@ -36,6 +37,7 @@ int main(int argc, char **argv){
   PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
   pnl_rng_sseed(rng, time(NULL));
   MonteCarlo *mc = new MonteCarlo(bsm, actigo, rng, fdStep, nbSamples);
-  double pl = mc->pAndL(data->completeDataMatrix);
-  cout << " the P&L is " << pl << endl;
+  //double pl = mc->pAndL(data->completeDataMatrix);
+  //cout << " the P&L is " << pl << endl;
   return 0;
+}
