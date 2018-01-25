@@ -16,6 +16,10 @@ Calibration::Calibration(Data *data){
    sigma_x2 = estimate_volatility(data->forexEurAud);
 
    double rho = estimate_correlation(data->euroStoxSpots, data->spUsdSpots);
+   correlations = pnl_mat_create(5, 5);
+   for (int i=0; i<5; i++){
+     MLET(correlations, i, i) = 1.0;
+   }
    MLET(correlations, 0, 1) = rho;
    MLET(correlations, 1, 0) = rho;
    rho = estimate_correlation(data->euroStoxSpots, data->spAudSpots);
@@ -134,7 +138,7 @@ double Calibration::estimate_correlation(PnlVect *x, PnlVect *y){
 
   double x_mean, y_mean = 0.0;
 
-  for (int i = 0; i < size; i++){
+  for (int i = 0; i < size - 1; i++){
     x_mean += GET(log_rent_x, i);
     y_mean += GET(log_rent_y, i);
   }
