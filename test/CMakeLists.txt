@@ -18,5 +18,14 @@ add_executable(quoteTests
     quote/QuoteTest.cpp
     quote/ForexTest.cpp
     )
+
+add_executable(pricerTests
+    pricer/TestAllPricer.cpp
+    pricer/test_calibration.cpp
+    )
+
 target_link_libraries(quoteTests peps gtest gtest_main curl ${LIBS})
 add_custom_target(runQuoteTests quoteTests)
+
+target_link_libraries(pricerTests peps gtest gtest_main curl  ${LIBS})
+add_custom_target(runPricerTests pricerTests)
