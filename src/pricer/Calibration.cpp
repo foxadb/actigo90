@@ -7,6 +7,11 @@
 
 using namespace std;
 
+Calibration::Calibration(){
+  trends = pnl_vect_create(5);
+  volatilities = pnl_vect_create(5);
+  correlations = pnl_mat_create(5,5);
+}
 
 Calibration::Calibration(Data *data){
 
@@ -69,6 +74,10 @@ Calibration::Calibration(Data *data){
     LET(trends, 3) = estimate_trend(data->forexEurUsd) + pow(sigma_x1, 2) / 2.0;
     LET(trends, 4) = estimate_trend(data->forexEurAud) + pow(sigma_x2, 2) /2.0;
  }
+
+Calibration::~Calibration(){
+  
+}
 
 double Calibration::estimate_correlation(PnlVect *x, PnlVect *y){
 
