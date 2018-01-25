@@ -56,11 +56,9 @@ void Quote::printSpots() {
     for (std::vector<Spot>::iterator it = this->spots.begin();
          it != this->spots.end();
          ++it) {
-        std::cout << std::endl << it->toString();
+        std::cout << it->toString() << std::endl;
     }
-    std::cout << std::endl;
 }
-
 
 void Quote::clearSpots() {
     this->spots.clear();
