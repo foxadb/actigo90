@@ -2,41 +2,42 @@
 #include <string>
 
 #include "quote.hpp"
-#include "forex.hpp"
 #include "curl_utils.hpp"
 #include "time_utils.hpp"
 
 int main() {
     // S&P 500
-    Quote *quote = new Quote("^GSPC");
+    Quote *snp500 = new Quote("^GSPC");
 
     // Get the historical spots from Yahoo Finance
-    quote->getHistoricalSpots("2017-12-01", "2017-12-31", "1d");
+    snp500->getHistoricalSpots("2017-12-01", "2017-12-31", "1d");
 
     // Print the spots
-    quote->printSpots();
+    snp500->printSpots();
 
     // Print a spot
     try {
-        Spot spot = quote->getSpot("2017-12-01");
+        Spot spot = snp500->getSpot("2017-12-01");
         std::cout << "Spot at 2017-12-01: " << std::endl;
         spot.printSpot();
     } catch(const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
 
-    // Get the EUR/AUD and EUR/USD rates
-    std::string symbols[] = { "AUD", "USD" };
-    double *rates = getForexRates("2018-01-22", "EUR", symbols, 2);
-    std::cout << "EUR/AUD 2018-01-10: " << rates[0] << std::endl;
-    std::cout << "EUR/USD 2018-01-10: " << rates[1] << std::endl;
-
     // Get the historical EUR/USD rates
-    Forex* forex = new Forex("EUR", "USD");
-    forex->getHistoricalSpots("2018-01-01", "2018-01-19");
-    forex->printSpots();
+    Quote *eurusd = new Quote("EURUSD=X");
+    eurusd->getHistoricalSpots("2018-01-01", "2018-01-10", "1d");
+    std::cout << "EUR/USD rates between 2018-01-01 and 2018-01-10" << std::endl;
+    eurusd->printSpots();
+
+    // Get the historical EUR/AUD rates
+    Quote *euraud = new Quote("EURAUD=X");
+    euraud->getHistoricalSpots("2018-01-01", "2018-01-10", "1d");
+    std::cout << "EUR/AUD rates between 2018-01-01 and 2018-01-10" << std::endl;
+    euraud->printSpots();
 
     // Free memory
-    delete quote;
-    delete rates;
+    delete snp500;
+    delete eurusd;
+    delete euraud;
 }

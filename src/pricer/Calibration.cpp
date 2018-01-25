@@ -3,7 +3,6 @@
 #include <cmath>
 #include <algorithm>
 #include "../quote/quote.hpp"
-#include "../quote/forex.hpp"
 
 using namespace std;
 
@@ -30,25 +29,25 @@ Calibration::Calibration(Data *data){
     rho = estimate_correlation(data->spUsdSpots, data->spAudSpots);
     MLET(correlations, 1, 2) = rho;
     MLET(correlations, 2, 1) = rho;
-    rho = estimate_correlation(data->euroStoxSpots, data->forexEurUsd);
+    rho = estimate_correlation(data->euroStoxSpots, data->eurUsd);
     MLET(correlations, 0, 3) = rho;
     MLET(correlations, 3, 0) = rho;
-    rho = estimate_correlation(data->euroStoxSpots, data->forexEurAud);
+    rho = estimate_correlation(data->euroStoxSpots, data->eurAud);
     MLET(correlations, 0, 4) = rho;
     MLET(correlations, 4, 0) = rho;
-    rho = estimate_correlation(data->spUsdSpots, data->forexEurUsd);
+    rho = estimate_correlation(data->spUsdSpots, data->eurUsd);
     MLET(correlations, 1, 3) = rho;
     MLET(correlations, 3, 1) = rho;
-    rho = estimate_correlation(data->spUsdSpots, data->forexEurAud);
+    rho = estimate_correlation(data->spUsdSpots, data->eurAud);
     MLET(correlations, 1, 4) = rho;
     MLET(correlations, 4, 1) = rho;
-    rho = estimate_correlation(data->spAudSpots, data->forexEurUsd);
+    rho = estimate_correlation(data->spAudSpots, data->eurUsd);
     MLET(correlations, 2, 3) = rho;
     MLET(correlations, 3, 2) = rho;
-    rho = estimate_correlation(data->spAudSpots, data->forexEurAud);
+    rho = estimate_correlation(data->spAudSpots, data->eurAud);
     MLET(correlations, 2, 4) = rho;
     MLET(correlations, 4, 2) = rho;
-    rho = estimate_correlation(data->forexEurUsd, data->forexEurAud);
+    rho = estimate_correlation(data->eurUsd, data->eurAud);
     MLET(correlations, 3, 4) = rho;
     MLET(correlations, 4, 3) = rho;
 
@@ -57,8 +56,8 @@ Calibration::Calibration(Data *data){
     double sigma_1 = estimate_volatility(data->euroStoxSpots);
     double sigma_2 = estimate_volatility(data->spUsdSpots);
     double sigma_3 = estimate_volatility(data->spAudSpots);
-    double sigma_x1 = estimate_volatility(data->forexEurUsd);
-    double sigma_x2 = estimate_volatility(data->forexEurAud);
+    double sigma_x1 = estimate_volatility(data->eurUsd);
+    double sigma_x2 = estimate_volatility(data->eurAud);
 
     LET(volatilities, 0) = sigma_1;
     LET(volatilities, 1) = sqrt(pow(sigma_2,2)+pow(sigma_x1,2)+2*MGET(correlations, 1, 3)*sigma_2 * sigma_x1);
@@ -71,8 +70,8 @@ Calibration::Calibration(Data *data){
     LET(trends, 0) = estimate_trend(data->euroStoxSpots) + pow(sigma_1, 2) / 2.0;
     LET(trends, 1) = estimate_trend(data->spUsdSpots) + pow(sigma_2, 2) / 2.0;
     LET(trends, 2) = estimate_trend(data->spAudSpots) + pow(sigma_3, 2) / 2.0;
-    LET(trends, 3) = estimate_trend(data->forexEurUsd) + pow(sigma_x1, 2) / 2.0;
-    LET(trends, 4) = estimate_trend(data->forexEurAud) + pow(sigma_x2, 2) /2.0;
+    LET(trends, 3) = estimate_trend(data->eurUsd) + pow(sigma_x1, 2) / 2.0;
+    LET(trends, 4) = estimate_trend(data->eurAud) + pow(sigma_x2, 2) /2.0;
  }
 
 Calibration::~Calibration(){
