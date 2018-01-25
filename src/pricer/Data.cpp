@@ -78,4 +78,11 @@ void Data::getTodaySpots(PnlVect *todaySpots){
 }
 
 void Data::completeData(int remainingDates, Option *option, PnlVect *currentSpots, PnlVect *volatilities, PnlMat *correlations){
+int totalSize = remainingDates + historicalDataMatrix->m;
+BlackScholesModel *bs = new BlackScholesModel(option->size, 0.04, correlations, volatilities, currentSpots);
+double timeToMaturity = 0.; //to modify
+PnlMat *remainingData = pnl_mat_create(remainingDates, option->size);
+bs->simul_market(remainingDates, remainingDates, timeToMaturity, rng);
+//fusionner remainingData et historicalDataMatrix in completeDataMatrix
+
 }
