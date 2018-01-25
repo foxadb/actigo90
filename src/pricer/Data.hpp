@@ -15,7 +15,7 @@ public:
       double rEur;
       double rUsd;
       double rAud;
-      PnlMat* historialDataMatrix;
+      PnlMat* historicalDataMatrix;
       PnlMat* completeDataMatrix;
 
       Data(const char* debutDate, const char* currentDate);
