@@ -5,6 +5,14 @@
 #include <ctime>
 #include <curl/curl.h>
 
+void saveYahooCredentials(const char* filename, std::string *crumb, std::string *cookie);
+
+std::time_t readCookieTime(const char* filename);
+
+void readCrumbCredential(const char* filename, std::string *crumb);
+
+void readCookieCredential(const char* filename, std::string *cookie);
+
 void getYahooCrumbCookie(std::string url, std::string *crumb, std::string *cookie);
 
 std::string extractYahooCrumb(std::string code);
