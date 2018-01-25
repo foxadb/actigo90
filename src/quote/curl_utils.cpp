@@ -14,7 +14,9 @@ size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
 }
 
 double getForexRate(std::string date, std::string base, std::string symbol) {
-     std::string url = "https://api.fixer.io/" + date
+    std::cerr << "getForexRate: DEPRECATED" << std::endl;
+
+    std::string url = "https://api.fixer.io/" + date
             + "?base=" + base
             +  "&symbols=" + symbol;
 
@@ -35,6 +37,7 @@ double getForexRate(std::string date, std::string base, std::string symbol) {
         curl_easy_cleanup(curl);
     }
 
+    std::cout << responseBuffer << std::endl;
     auto json = nlohmann::json::parse(responseBuffer);
 
     double rate = json["rates"][symbol];

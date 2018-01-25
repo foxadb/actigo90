@@ -1,17 +1,17 @@
 #ifndef DATA_H
 #define	DATA_H
+
 #include "pnl/pnl_vector.h"
 #include "Option.hpp"
 #include "../quote/quote.hpp"
-#include "../quote/forex.hpp"
 
 class Data{
 public:
       PnlVect* euroStoxSpots;
       PnlVect* spUsdSpots;
       PnlVect* spAudSpots;
-      PnlVect* forexEurUsd;
-      PnlVect* forexEurAud;
+      PnlVect* eurUsd;
+      PnlVect* eurAud;
       double rEur;
       double rUsd;
       double rAud;
