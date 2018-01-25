@@ -15,13 +15,16 @@ public:
       double rEur;
       double rUsd;
       double rAud;
-      PnlMat* dataMatrix;
+      PnlMat* historialDataMatrix;
+      PnlMat* completeDataMatrix;
 
       Data(const char* debutDate, const char* currentDate);
       Data(PnlMat *matrixData);
       Data();
       ~Data();
       Data(const Data& orig);
+      void getInitialSpots(PnlVect *initialSpots);
+      void getTodaySpots(PnlVect *toDaySpots);
       void completeData(int remainingDates, Option *option, PnlVect *currentSpots, PnlVect *volatilities, PnlMat *correlations);
 };
 #endif
