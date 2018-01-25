@@ -27,7 +27,8 @@ TEST_F(CalibrationTest, correlations) {
       EXPECT_TRUE(MGET(correlations, i, j) <= 1.0);
     }
   }
-  pnl_mat_free(&correlations);
+  delete calibration;
+  delete data;
 }
 
 TEST_F(CalibrationTest, correlation) {
@@ -42,6 +43,7 @@ TEST_F(CalibrationTest, correlation) {
   EXPECT_TRUE(rho>0.99);
   EXPECT_TRUE(rho<1.01);
   pnl_vect_free(&x);
+  delete calibration;
 }
 
 TEST_F(CalibrationTest, volatility) {
@@ -51,4 +53,15 @@ TEST_F(CalibrationTest, volatility) {
     EXPECT_TRUE(sigma > 0.18);
     EXPECT_TRUE(sigma < 0.22);
     pnl_vect_free(&x);
+    delete calibration;
+}
+
+TEST_F(CalibrationTest, trend){
+  PnlVect *x = pnl_vect_create_from_file("../../market-data/simul_call.dat");
+  Calibration *calibration = new Calibration();
+  double trend = calibration->estimate_trend(x);
+  double sigma = calibration->estimate_volatility(x);
+  trend += (sigma * sigma) / 2.0;
+  EXPECT_TRUE(trend < 0.05);
+  EXPECT_TRUE(trend > 0.03);
 }
