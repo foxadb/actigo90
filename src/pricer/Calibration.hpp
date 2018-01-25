@@ -6,8 +6,9 @@
 using namespace std;
 class Calibration {
 private:
-  double sigma_1, sigma_2, sigma_3, sigma_x1, sigma_x2;
+  PnlVect *volatilities;
   PnlMat *correlations;
+  PnlVect *trends;
 
 
 public:
@@ -18,7 +19,7 @@ public:
   double estimate_trend(PnlVect *x);
   Calibration(const char *period1, const char *period2);
   Calibration(Data *data);
-  PnlVect* volatilities(PnlMat *correlations);
+  PnlVect* getVolatilities();
   PnlMat* getCorrelationsMatrix();
   PnlVect* getTrends();
 };
