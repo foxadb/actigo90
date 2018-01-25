@@ -40,7 +40,7 @@ Data::Data(const char* startDate, const char* currentDate){
   pnl_vect_clone(spUsdSpots, quote2->getCloseSpots());
 
   // spots for S&P ASX 200
-  Quote* quote3 = new Quote("^AYQFN");
+  Quote* quote3 = new Quote("^AXJO");
   quote3->getHistoricalSpots(startDate, currentDate, "1d");
   spAudSpots = pnl_vect_new();
   pnl_vect_clone(spAudSpots, quote3->getCloseSpots());

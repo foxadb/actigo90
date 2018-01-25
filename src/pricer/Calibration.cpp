@@ -10,7 +10,6 @@ using namespace std;
 
 Calibration::Calibration(Data *data){
    sigma_1 = estimate_volatility(data->euroStoxSpots);
-   cout << "first variance"<< sigma_1 << endl;
    sigma_2 = estimate_volatility(data->spUsdSpots);
    sigma_3 = estimate_volatility(data->spAudSpots);
    sigma_x1 = estimate_volatility(data->forexEurUsd);
@@ -52,78 +51,6 @@ Calibration::Calibration(Data *data){
 
  }
 
-
-
-Calibration::Calibration(const char *period1_, const char *period2_) {
-
-  this->period1 = period1_;
-  this->period2 = period2_;
-
-  // volatility for euro stoxx 50
-  Quote* quote1 = new Quote("^STOXX50E");
-  quote1->getHistoricalSpots(period1, period2, "1d");
-  sigma_1 = estimate_volatility(quote1->getCloseSpots());
-
-  // volatility for S&P 500
-  Quote* quote2 = new Quote("^GSPC");
-  quote2->getHistoricalSpots(period1, period2, "1d");
-  sigma_2 = estimate_volatility(quote2->getCloseSpots());
-
-  // volatility for S&P ASX 200
-  Quote* quote3 = new Quote("^AYQFN");
-  quote3->getHistoricalSpots(period1, period2, "1d");
-  sigma_3 = estimate_volatility(quote3->getCloseSpots());
-
-  // volatility for USD/EUR
-  Forex *forex1 = new Forex("USD", "EUR");
-  forex1->getHistoricalSpots(period1, period2);
-  sigma_x1 = estimate_volatility(forex1->getCloseSpots());
-
-  // volatility for AUD/EUR
-  Forex *forex2 = new Forex("AUD", "EUR");
-  forex2->getHistoricalSpots(period1, period2);
-  sigma_x2 = estimate_volatility(forex2->getCloseSpots());
-
-  // correlations;
-  correlations = pnl_mat_create(5,5);
-  for (int i=0; i<5; i++){
-    MLET(correlations, i, i) = 1.0;
-  }
-  double rho = estimate_correlation(quote1->getCloseSpots(), quote2->getCloseSpots());
-  MLET(correlations, 0, 1) = rho;
-  MLET(correlations, 1, 0) = rho;
-  rho = estimate_correlation(quote1->getCloseSpots(), quote3->getCloseSpots());
-  MLET(correlations, 0, 2) = rho;
-  MLET(correlations, 2, 0) = rho;
-  rho = estimate_correlation(quote2->getCloseSpots(), quote3->getCloseSpots());
-  MLET(correlations, 1, 2) = rho;
-  MLET(correlations, 2, 1) = rho;
-  rho = estimate_correlation(quote1->getCloseSpots(), forex1->getCloseSpots());
-  MLET(correlations, 0, 3) = rho;
-  MLET(correlations, 3, 0) = rho;
-  rho = estimate_correlation(quote1->getCloseSpots(), forex2->getCloseSpots());
-  MLET(correlations, 0, 4) = rho;
-  MLET(correlations, 4, 0) = rho;
-  rho = estimate_correlation(quote2->getCloseSpots(), forex1->getCloseSpots());
-  MLET(correlations, 1, 3) = rho;
-  MLET(correlations, 3, 1) = rho;
-  rho = estimate_correlation(quote2->getCloseSpots(), forex2->getCloseSpots());
-  MLET(correlations, 1, 4) = rho;
-  MLET(correlations, 4, 1) = rho;
-  rho = estimate_correlation(quote3->getCloseSpots(), forex1->getCloseSpots());
-  MLET(correlations, 2, 3) = rho;
-  MLET(correlations, 3, 2) = rho;
-  rho = estimate_correlation(quote3->getCloseSpots(), forex2->getCloseSpots());
-  MLET(correlations, 2, 4) = rho;
-  MLET(correlations, 4, 2) = rho;
-  rho = estimate_correlation(forex1->getCloseSpots(), forex2->getCloseSpots());
-  MLET(correlations, 3, 4) = rho;
-  MLET(correlations, 4, 3) = rho;
-
-  delete quote1, quote2, quote3, forex1, forex2;
-}
-
-
 double Calibration::estimate_correlation(PnlVect *x, PnlVect *y){
 
   int size = min(x->size, y->size);
@@ -137,7 +64,7 @@ double Calibration::estimate_correlation(PnlVect *x, PnlVect *y){
   }
 
   double x_mean, y_mean = 0.0;
-
+  
   for (int i = 0; i < size-1; i++){
     x_mean += GET(log_rent_x, i);
     y_mean += GET(log_rent_y, i);
@@ -158,6 +85,9 @@ double Calibration::estimate_correlation(PnlVect *x, PnlVect *y){
   y_var /= size - 1;
   covariance /= size -1;
 
+  covariance /= size - 1;
+  x_var /= size - 1;
+  y_var /= size - 1;
   pnl_vect_free(&log_rent_x);
   pnl_vect_free(&log_rent_y);
 
@@ -175,8 +105,6 @@ double Calibration::estimate_volatility(PnlVect *x) {
   double mean = 0.0;
   int n = x->size;
   double step = 1.0 /365.0;
-  cout << "first x" << endl;
-  pnl_vect_print(x);
   for (int i = 1 ; i < n; ++i){
     biais += pow(log(GET(x,i) / GET(x,i-1)) / sqrt(step), 2);
     mean += log(GET(x,i) / GET(x,i-1)) / sqrt(step);
