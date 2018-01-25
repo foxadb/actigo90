@@ -76,7 +76,9 @@ Calibration::Calibration(Data *data){
  }
 
 Calibration::~Calibration(){
-  
+  pnl_vect_free(&trends);
+  pnl_vect_free(&volatilities);
+  pnl_mat_free(&correlations);
 }
 
 double Calibration::estimate_correlation(PnlVect *x, PnlVect *y){
@@ -137,7 +139,7 @@ double Calibration::estimate_volatility(PnlVect *x) {
     mean += log(GET(x,i) / GET(x,i-1)) / sqrt(step);
   }
 
-  return sqrt(biais / n - pow(mean / n , 2));
+  return sqrt(biais / (n - 1) - pow(mean / (n -1) , 2));
 }
 
 double Calibration::estimate_trend(PnlVect *x){
@@ -149,7 +151,7 @@ double Calibration::estimate_trend(PnlVect *x){
     mean += log(GET(x, i) / GET(x, i-1)) / step;
   }
 
-  mean /= x->size;
+  mean /= x->size -1;
   return mean;
 }
 
