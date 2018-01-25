@@ -11,7 +11,8 @@ Data::~Data() {
     pnl_vect_free(&spAudSpots);
     pnl_vect_free(&forexEurAud);
     pnl_vect_free(&forexEurUsd);
-    pnl_mat_free(&dataMatrix);
+    pnl_mat_free(&historicalDataMatrix);
+    pnl_mat_free(&completeDataMatrix);
 }
 
 Data::Data(PnlMat *matrixData){
@@ -58,7 +59,7 @@ Data::Data(const char* startDate, const char* currentDate){
   pnl_vect_clone(forexEurAud, forex2->getCloseSpots());
 
   //put spots vectors in dataMatrix
-  dataMatrix = pnl_mat_create(euroStoxSpots->size, 5);
+  historicalDataMatrix = pnl_mat_create(euroStoxSpots->size, 5);
   pnl_mat_set_col(historicalDataMatrix, euroStoxSpots, 0);
   pnl_mat_set_col(historicalDataMatrix, spUsdSpots, 1);
   pnl_mat_set_col(historicalDataMatrix, spAudSpots, 2);
@@ -69,11 +70,11 @@ Data::Data(const char* startDate, const char* currentDate){
 }
 
 void Data::getInitialSpots(PnlVect *initialSpots){
-  pnl_mat_get_row(historicalDataMatrix, initialSpots, 0);
+  pnl_mat_get_row(initialSpots, historicalDataMatrix, 0);
 }
 
-void getTodaySpots(PnlVect *todaySpots){
-  pnl_mat_get_row(historicalDataMatrix, todaySpots, historicalDataMatrix->m -1);
+void Data::getTodaySpots(PnlVect *todaySpots){
+  pnl_mat_get_row(todaySpots, historicalDataMatrix, historicalDataMatrix->m -1);
 }
 
 void Data::completeData(int remainingDates, Option *option, PnlVect *currentSpots, PnlVect *volatilities, PnlMat *correlations){

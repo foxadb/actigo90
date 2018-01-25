@@ -26,10 +26,10 @@ int main(int argc, char **argv){
   Actigo *actigo = new Actigo(maturity, 2016, size, GET(initialSpots,0), GET(initialSpots, 1), GET(initialSpots, 2));
   //complete data from today to actigo end date
   int remainingDates = 0.;
-  data->completeData(remainingDates, actigo, toDaySpots, calibration->volatilities, calibration->correlations);
+  data->completeData(remainingDates, actigo, toDaySpots, calibration->getVolatilities(), calibration->getCorrelationsMatrix());
   //create the BlackScholesModel
   double rEur = 0.04;
-  BlackScholesModel *bsm = new BlackScholesModel(size, rEur, calibration->correlations, calibration->volatilities, initialSpots);
+  BlackScholesModel *bsm = new BlackScholesModel(size, rEur, calibration->getCorrelationsMatrix(), calibration->getVolatilities(), initialSpots);
   //create monteCarlo Simulation
   int nbSamples = 50000;
   double fdStep = 0.01;
