@@ -70,7 +70,7 @@ Calibration::Calibration(const char *period1_, const char *period2_) {
   sigma_2 = estimate_volatility(quote2->getCloseSpots());
 
   // volatility for S&P ASX 200
-  Quote* quote3 = new Quote("^AYQFN");
+  Quote* quote3 = new Quote("^AXJO");
   quote3->getHistoricalSpots(period1, period2, "1d");
   sigma_3 = estimate_volatility(quote3->getCloseSpots());
 
@@ -154,9 +154,11 @@ double Calibration::estimate_correlation(PnlVect *x, PnlVect *y){
     y_var += pow(GET(log_rent_y,i) - y_mean, 2);
   }
 
+  covariance /= size - 1;
+  x_var /= size - 1;
+  y_var /= size - 1;
   pnl_vect_free(&log_rent_x);
   pnl_vect_free(&log_rent_y);
-
   if (x_var == 0.0 || y_var == 0.0){
     return 0.0;
   }

@@ -18,7 +18,7 @@ class CalibrationTest : public ::testing::Test {
 };
 
 TEST_F(CalibrationTest, correlations) {
-  Data *data = new Data("2017-12-01", "2017-12-30");
+  Data *data = new Data("2017-12-01", "2017-12-15");
   Calibration *calibration = new Calibration(data);
   PnlMat *correlations = calibration->getCorrelationsMatrix();
   pnl_mat_print(correlations);
