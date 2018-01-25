@@ -28,7 +28,7 @@ int main(int argc, char **argv){
   PnlMat* correlations = pnl_mat_create(5,5);
   pnl_mat_clone(correlations, calibration->getCorrelationsMatrix());
   pnl_mat_print(correlations);
-  PnlVect *vols= calibration->volatilities(correlations);
+  PnlVect *vols= calibration->getVolatilities();
   pnl_vect_print(vols);
 
   return 0;
