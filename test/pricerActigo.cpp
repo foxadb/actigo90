@@ -16,17 +16,19 @@ int main(int argc, char **argv){
   Data *data = new Data("2015-10-12","2018-01-24");
   cout << "size" << data->historicalDataMatrix->m << endl;
   //Calibrate data
-  Calibration *calibration = new Calibration(data);
   // create Actigo Option
   double maturity = 8.;
+  int nbTimeSteps = 2016;
+  double step = maturity / nbTimeSteps;
+  Calibration *calibration = new Calibration(data, step);
   int size = 5;
   PnlVect *initialSpots = pnl_vect_create(size);
   PnlVect *todaySpots = pnl_vect_create(size);
   data->getInitialSpots(initialSpots);
   data->getTodaySpots(todaySpots);
-  Actigo *actigo = new Actigo(maturity, 2016, size, GET(initialSpots,0), GET(initialSpots, 1), GET(initialSpots, 2));
+  Actigo *actigo = new Actigo(maturity, nbTimeSteps, size, GET(initialSpots,0), GET(initialSpots, 1), GET(initialSpots, 2));
   //complete data from today to actigo end date
-  int remainingDates = 2016 - data->euroStoxSpots->size;
+  int remainingDates = nbTimeSteps - data->euroStoxSpots->size;
   PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
   pnl_rng_sseed(rng, time(NULL));
   data->completeData(remainingDates, actigo, todaySpots, calibration->getVolatilities(),

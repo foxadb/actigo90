@@ -18,6 +18,7 @@ private:
   PnlVect *volatilities; // volatilities vector associated to data. Empty by default.
   PnlMat *correlations;  // correlations matrix associated to data. Empty by default.
   PnlVect *trends; // trends vector associated to data. Empty by default.
+  double step; // step between data dates
 
 
 public:
@@ -30,9 +31,10 @@ public:
   * @brief Calibration constructor.
   * @brief Estimates the trends, volatilities and correlations corresponding to data
   * @brief and stores them.
-  * @param data contains the data that we wish to calibrate
+  * @param data contains the data that we wish to calibrate.
+  * @param step the time separating two dates at which data has been retrieved. 
   */
-  Calibration(Data *data);
+  Calibration(Data *data, double step);
 
   /**
   * @brief Calibration destructor
