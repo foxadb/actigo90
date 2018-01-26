@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   testPL.cpp
  * Author: amine
  *
@@ -17,7 +17,7 @@
 using namespace std;
 
 /*
- * 
+ *
  */
 int main(int argc, char** argv) {
 
@@ -43,7 +43,6 @@ int main(int argc, char** argv) {
     t2 = clock();
     temps = (float) (t2 - t1) / CLOCKS_PER_SEC;
     cout << temps << endl;
-
     cout << pL;
     pnl_vect_free(&sigma);
     pnl_vect_free(&spot);
@@ -53,9 +52,8 @@ int main(int argc, char** argv) {
     delete basket;
     delete bsm;
     delete monteCarlo;
-    
+
 
 
     return 0;
 }
-

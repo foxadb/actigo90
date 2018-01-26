@@ -14,13 +14,14 @@ using namespace std;
 int main(int argc, char **argv){
   //Recuperate data from actigo first day: "2015-10-12" to today
   Data *data = new Data("2015-10-12","2018-01-24");
-  cout << "size" << data->historicalDataMatrix->m << endl;
   //Calibrate data
   // create Actigo Option
   double maturity = 8.;
   int nbTimeSteps = 2016;
   double step = maturity / nbTimeSteps;
+  cout << "Extracting historical data ..." << endl << endl;
   Calibration *calibration = new Calibration(data, step);
+  cout << "Data successufly extracted." << endl << endl;
   int size = 5;
   PnlVect *initialSpots = pnl_vect_create(size);
   PnlVect *todaySpots = pnl_vect_create(size);
@@ -37,11 +38,11 @@ int main(int argc, char **argv){
   double rEur = 0.04;
   BlackScholesModel *bsm = new BlackScholesModel(size, rEur, calibration->getCorrelationsMatrix(), calibration->getVolatilities(), initialSpots);
   //create monteCarlo Simulation
-  int nbSamples = 20;
+  int nbSamples = 500;
   double fdStep = 0.01;
-
   MonteCarlo *mc = new MonteCarlo(bsm, actigo, rng, fdStep, nbSamples);
+  cout << "Calculating P&L..." << endl << endl;
   double pl = mc->pAndL(data->completeDataMatrix);
-  cout << " the P&L is " << pl << endl;
+  cout << " the final P&L is " << pl << endl;
   return 0;
 }

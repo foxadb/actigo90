@@ -38,7 +38,7 @@ public:
     /**
     * @param init initial spot
     * @param current current spot
-    * @return return (current - init)/current
+    * @return return (current - init)/init
     */
     double indexPerf(double init, double current);
 

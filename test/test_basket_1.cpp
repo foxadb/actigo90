@@ -29,9 +29,8 @@ int main(int argc, char** argv) {
   int nbSamples = 50000;
   MonteCarlo *mc = new MonteCarlo(bsm,myBasket,rng,0.1,nbSamples);
   mc->price(prix,ic);
-  cout << " hello" <<endl;
   cout << prix << endl;
-  cout << ic << endl; 
+  cout << ic << endl;
   pnl_vect_free(&spotVector);
   pnl_vect_free(&basketWeights);
   delete myBasket;

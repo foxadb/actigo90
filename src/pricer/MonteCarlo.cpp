@@ -51,7 +51,6 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta) {
         }
     }
 
-
     PnlVect *scalar = pnl_vect_create_from_scalar(opt_->size_, exp(mod_->r_ * (t - opt_->T_))
                                                   / (2.0 * fdStep_ * nbSamples_));
 
@@ -86,7 +85,6 @@ void MonteCarlo::price(const PnlMat* past, double t, double& prix, double& ic) {
     double esperance = prix / nbSamples_;
     prix = exp(-mod_->r_ * (opt_->T_ - t)) * prix / nbSamples_;
     variance = exp(-2.0 * mod_->r_ * (opt_->T_ - t)) * (variance / nbSamples_ - pow(esperance, 2.0));
-
     ic = sqrt(variance / nbSamples_);
 }
 
@@ -105,17 +103,18 @@ double MonteCarlo::pAndL(PnlMat *data) {
     PnlVect *spot = pnl_vect_create(data->n);
     pnl_vect_clone(spot, mod_->spot_);
     price(prix, ic);
-    //cout << prix << endl;
     pnl_mat_set_row(past, spot, 0);
     double pas = opt_->T_ / data->m;
     double temps = 0.0;
     this->delta(past, 0.0, delta);
+    cout << "The deltas at 0" << endl << endl;
     pnl_vect_print(delta);
-
     double v = prix - pnl_vect_scalar_prod(delta, spot);
+    cout << "the portfolio value at 0: " << v << endl << endl;
     double param = mod_->r_ * opt_->T_ / data->m;
 
     for (int i = 1; i < data->m; i++) {
+        cout << i << endl;
         updatePast(past, data, i);
         pnl_vect_clone(pastDelta, delta);
         temps = temps + pas;
@@ -149,37 +148,4 @@ void MonteCarlo::updatePast(PnlMat *past, PnlMat *data, int i) {
     pnl_mat_get_row(tmpVect, data, i);
     pnl_mat_set_row(past, tmpVect, (i - 1) / step + 1);
     pnl_vect_free(&tmpVect);
-}
-
-void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *d, double rDoll, double rAusDoll){
-    delta(past, t, d);
-    double x;
-    int vect = past->m - 1;
-    for (int i = 1; i < past->m; i++) {
-        x = pnl_mat_get(past, i, 0);
-        if (x == 0) {
-            vect = i - 1;
-            break;
-        }
-    }
-
-    PnlVect *lastPrices = pnl_vect_create(opt_->size_);
-    pnl_mat_get_row(lastPrices, past, vect);
-    double N1 = GET(lastPrices,1);
-    double N2 = GET(lastPrices,2);
-    double N3 = GET(lastPrices,3);
-    double N4 = GET(lastPrices,4);
-
-    PnlVect *multiplyCoeff = pnl_vect_create_from_scalar(opt_->size_, 1.);
-    LET(multiplyCoeff, 1) = 1/N3;
-    LET(multiplyCoeff, 2) = 1/N4;
-    LET(multiplyCoeff, 3) = -exp(rDoll*(opt_->T_-t));
-    LET(multiplyCoeff, 4) = -exp(rAusDoll*(opt_->T_ -t));
-
-    PnlVect *addCoeff = pnl_vect_create_from_scalar(opt_->size_, 0.);
-    LET(addCoeff, 3) = (N1/N3) * GET(d,1);
-    LET(addCoeff, 4) = (N2/N4) * GET(d,2);
-
-    pnl_vect_mult_vect_term(d, multiplyCoeff);
-    pnl_vect_plus_vect(d, addCoeff);
 }
