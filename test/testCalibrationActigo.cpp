@@ -28,7 +28,9 @@ int main(int argc, char **argv){
   Calibration *calibration = new Calibration(data, step);
   PnlMat* correlations = pnl_mat_create(5,5);
   pnl_mat_clone(correlations, calibration->getCorrelationsMatrix());
+  cout << "this is the correlations matrix" << endl;
   pnl_mat_print(correlations);
+  cout << "this is the volatility vector" << endl;
   PnlVect *vols= calibration->getVolatilities();
   pnl_vect_print(vols);
 
