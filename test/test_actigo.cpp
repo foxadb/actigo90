@@ -1,11 +1,9 @@
 #include <cstdlib>
 #include "MonteCarlo.hpp"
-#include "Asian.hpp"
 #include "BlackScholesModel.hpp"
 #include <ctime>
 #include <iostream>
 #include "Actigo.hpp"
-#include "Basket.hpp"
 
 using namespace std;
 
@@ -42,8 +40,6 @@ int main(int argc, char** argv) {
   delete actigo;
   delete bsm;
   delete monteCarlo;
-    
-
-
+  
   return 0;
 }
