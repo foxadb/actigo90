@@ -74,6 +74,10 @@ Data::Data(const char* startDate, const char* currentDate){
   pnl_vect_resize(eurUsd, minSize);
   pnl_vect_resize(eurAud, minSize);
 
+  //converting everyting to euro
+  pnl_vect_mult_vect_term (spUsdSpots, eurUsd);
+  pnl_vect_mult_vect_term (spAudSpots, eurAud);
+
   //put spots vectors in dataMatrix
   historicalDataMatrix = pnl_mat_create(euroStoxSpots->size, 5);
   pnl_mat_set_col(historicalDataMatrix, euroStoxSpots, 0);
