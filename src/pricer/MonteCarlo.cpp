@@ -171,10 +171,10 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *d, double rDoll, d
     double N4 = GET(lastPrices,4);
 
     PnlVect *multiplyCoeff = pnl_vect_create_from_scalar(opt_->size_, 1.);
-    LET(multiplyCoeff, 1) = 1/N3;
-    LET(multiplyCoeff, 2) = 1/N4;
-    LET(multiplyCoeff, 3) = -exp(rDoll*(opt_->T_-t));
-    LET(multiplyCoeff, 4) = -exp(rAusDoll*(opt_->T_ -t));
+    LET(multiplyCoeff, 1) = 1 / N3;
+    LET(multiplyCoeff, 2) = 1 / N4;
+    LET(multiplyCoeff, 3) = -exp(rDoll * (opt_->T_-t));
+    LET(multiplyCoeff, 4) = -exp(rAusDoll * (opt_->T_ - t));
 
     PnlVect *addCoeff = pnl_vect_create_from_scalar(opt_->size_, 0.);
     LET(addCoeff, 3) = (N1/N3) * GET(d,1);
