@@ -24,7 +24,8 @@ int main(int argc, char **argv){
   PnlMat* dataMatrix = pnl_mat_create_from_scalar(365,5, 0.0);
   bsm->simul_market(dataMatrix, 365, 1., rng);
   Data *data = new Data(dataMatrix);
-  Calibration *calibration = new Calibration(data);
+  double step = actigo->T_ / actigo->nbTimeSteps_;
+  Calibration *calibration = new Calibration(data, step);
   PnlMat* correlations = pnl_mat_create(5,5);
   pnl_mat_clone(correlations, calibration->getCorrelationsMatrix());
   pnl_mat_print(correlations);
