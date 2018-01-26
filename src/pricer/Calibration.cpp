@@ -7,9 +7,9 @@
 using namespace std;
 
 Calibration::Calibration(){
-  trends = pnl_vect_create(5);
-  volatilities = pnl_vect_create(5);
-  correlations = pnl_mat_create(5,5);
+  trends = pnl_vect_new();
+  volatilities = pnl_vect_new();
+  correlations = pnl_mat_new();
 }
 
 Calibration::Calibration(Data *data){
