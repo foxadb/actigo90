@@ -48,5 +48,5 @@ double Actigo::payoff(const PnlMat* path){
         currentSemesterDate += 126;
     }
 
-    return  totalPerf - 0.1 ;
+    return  (totalPerf - 0.1);
 }

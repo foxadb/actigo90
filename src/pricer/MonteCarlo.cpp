@@ -120,10 +120,10 @@ double MonteCarlo::pAndL(PnlMat *data) {
         pnl_vect_clone(pastDelta, delta);
         temps = temps + pas;
         pnl_vect_set_all(delta, 0.0);
+        this->delta(past, temps, delta);;
         pnl_mat_get_row(spot, data, i);
         pnl_vect_minus_vect(pastDelta, delta);
         v = v * exp(param) + pnl_vect_scalar_prod(pastDelta, spot);
-        cout << v << endl;
     }
     double produit = pnl_vect_scalar_prod(delta, spot);
     pnl_vect_free(&delta);
