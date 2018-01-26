@@ -25,9 +25,21 @@ make
 
 ## Run
 
-Run the pricer with
+In the build directory, run the pricer with
 ```
-./pricerActigo [samples number]
+./test/pricerActigo [samples number]
 ```
+The computation might take a while. Please run with small value at first to test the performance (e.g. 100)
 
-The computation might take a while. Please run with small value first (e.g. 100)
+## Unit tests
+
+Run the unit tests with
+- `make runQuoteTests` for quote library test
+- `make runPricerTests` for pricer test
+
+## Documentation
+
+Build the documentation using Doxygen with
+```
+make doc
+```
