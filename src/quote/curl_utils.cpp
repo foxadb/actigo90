@@ -7,104 +7,100 @@
 
 #include "json.hpp"
 #include "curl_utils.hpp"
+#include "time_utils.hpp"
 
 size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
 
-double getForexRate(std::string date, std::string base, std::string symbol) {
-     std::string url = "https://api.fixer.io/" + date
-            + "?base=" + base
-            +  "&symbols=" + symbol;
+void saveYahooCredentials(const char* filename, std::string *crumb, std::string *cookie) {
+    // Open cookie file
+    std::ofstream file(filename);
 
-    CURL* curl = curl_easy_init();
-    std::string responseBuffer;
+    // Save update time, crumb and cookie
+    file << currentEpoch() << std::endl;
+    file << *crumb << std::endl;
+    file << *cookie << std::endl;
 
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-
-        // Write result into the buffer
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBuffer);
-
-        // Perform the request
-        CURLcode res = curl_easy_perform(curl);
-
-        // Cleanup
-        curl_easy_cleanup(curl);
-    }
-
-    auto json = nlohmann::json::parse(responseBuffer);
-
-    double rate = json["rates"][symbol];
-    return rate;
+    // Close cookie file
+    file.close();
 }
 
-double* getForexRates(std::string date,
-                      std::string base,
-                      std::string *symbol,
-                      int nbSymbols) {
-    std::string url = "https://api.fixer.io/" + date
-            + "?base=" + base
-            +  "&symbols=";
+std::time_t readCookieTime(const char* filename) {
+    // Open cookie file
+    std::ifstream file(filename);
 
-    for (int i = 0; i < nbSymbols; ++i) {
-        url += symbol[i] + ",";
-    }
+    // Read the last cookie update time
+    std::time_t date;
+    file >> date;
 
-    CURL* curl = curl_easy_init();
-    std::string responseBuffer;
+    return date;
+}
 
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+void readCrumbCredential(const char* filename, std::string *crumb) {
+    // Open cookie file
+    std::ifstream file(filename);
 
-        // Write result into the buffer
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBuffer);
+    // Read the crumb
+    file >> *crumb;
+    *crumb = "";
+    file >> *crumb;
+}
 
-        // Perform the request
-        CURLcode res = curl_easy_perform(curl);
+void readCookieCredential(const char* filename, std::string *cookie) {
+    // Open cookie file
+    std::ifstream file(filename);
 
-        // Cleanup
-        curl_easy_cleanup(curl);
-    }
+    // Read the cookie
+    file >> *cookie >> *cookie;
+    *cookie = "";
+    file >> *cookie;
+}
 
-    auto json = nlohmann::json::parse(responseBuffer);
-
-    double* rates = new double[nbSymbols];
-    for (int i = 0; i < nbSymbols; ++i) {
-        rates[i] = json["rates"][symbol[i]];
-    }
-    return rates;
+bool needNewCookie(const char* filename, std::time_t time) {
+    std::time_t currentDate = currentEpoch();
+    std::time_t cookieDate = readCookieTime(filename);
+    return currentDate - cookieDate > time;
 }
 
 void getYahooCrumbCookie(std::string url,
                          std::string *crumb,
                          std::string *cookie) {
-    CURL* curl = curl_easy_init();
-    std::string responseBuffer;
-
+    const char* credentialFile = "/tmp/yahoo-finance-credentials";
     const char* cookieFile = "/tmp/yahoo-finance-cookie";
 
-    if (curl) {
-        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
-        curl_easy_setopt(curl, CURLOPT_COOKIEJAR,  cookieFile);
-        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    // Download new cookie every 5 minutes
+    if (needNewCookie(credentialFile, 300)) {
+        CURL* curl = curl_easy_init();
+        std::string responseBuffer;
 
-        // Write result into the buffer
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBuffer);
+        if (curl) {
+            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+            curl_easy_setopt(curl, CURLOPT_COOKIEJAR,  cookieFile);
+            curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
-        // Perform the request
-        CURLcode res = curl_easy_perform(curl);
+            // Write result into the buffer
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBuffer);
 
-        // Cleanup
-        curl_easy_cleanup(curl);
+            // Perform the request
+            CURLcode res = curl_easy_perform(curl);
+
+            // Cleanup
+            curl_easy_cleanup(curl);
+        }
+
+        *crumb = extractYahooCrumb(responseBuffer);
+        *cookie = extractYahooCookie(cookieFile);
+
+        // Save crumb and cookie values
+        saveYahooCredentials(credentialFile, crumb, cookie);
+    } else {
+        // Read crumb and cookie values from tmp file
+        readCrumbCredential(credentialFile, crumb);
+        readCookieCredential(credentialFile, cookie);
     }
-
-    *crumb = extractYahooCrumb(responseBuffer);
-    *cookie = extractYahooCookie(cookieFile);
 }
 
 std::string extractYahooCrumb(std::string code) {
