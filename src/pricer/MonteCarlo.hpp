@@ -20,15 +20,13 @@ public:
 
     /**
      * @brief Computes the option's price at 0
-     *
-     * @param[out] price given by the monte carlo estimation
+     * @param[out] prix price given by the monte carlo estimation
      * @param[out] ic width of the confidence interval
      */
     void price(double &prix, double &ic);
 
     /**
      * @brief Computes the option's price at t
-     *
      * @param[in]  past contains the underlying asset path until t
      * @param[in] t date at which we want to compute the price
      * @param[out] prix contains the price
@@ -39,7 +37,6 @@ public:
 
     /**
      * @brief Computes the option's delta at t
-     *
      * @param[in] past contains the path of the underlying asset
      * until t
      * @param[in] t date at which the comutation is done
@@ -49,27 +46,25 @@ public:
 
     /**
      * @brief Computes the Actigo's delta at t
-     *
      * @param[in] past contains the path of the underlying asset
      * until t
      * @param[in] t date at which the comutation is done
      * @param[out] delta contains the delta vector
+     * @param[in] rDoll EUR/USD exchange rate
+     * @param[in] rAusDoll EUR/AUD exchange rate
      */
     void delta(const PnlMat *past, double t, PnlVect *delta, double rDoll, double rAusDoll);
 
     /**
      * @brief Computes the P&L
-     *
      * @param[in] data contains the underlying asset path
      * on the rebalance subdivision
      */
     double pAndL(PnlMat *data);
 
 
-    /*!
+    /**
      *  @brief MonteCarlo Constructor
-     *
-     *
      *  @param mod       : A BlackScholesModel to generate the underlying assets path
      *  @param opt       : Option to price/hedge
      *  \param rng       : Random numbers generator
@@ -78,8 +73,7 @@ public:
      */
     MonteCarlo(BlackScholesModel *mod, Option *opt, PnlRng *rng, double fdStep, int nbSamples);
 
-    /*!
-     *
+    /**
      * @brief MonteCarlo destructor
      */
     virtual ~MonteCarlo();

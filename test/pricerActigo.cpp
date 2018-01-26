@@ -37,7 +37,7 @@ int main(int argc, char **argv){
   double rEur = 0.04;
   BlackScholesModel *bsm = new BlackScholesModel(size, rEur, calibration->getCorrelationsMatrix(), calibration->getVolatilities(), initialSpots);
   //create monteCarlo Simulation
-  int nbSamples = 20;
+  int nbSamples = 50000;
   double fdStep = 0.01;
 
   MonteCarlo *mc = new MonteCarlo(bsm, actigo, rng, fdStep, nbSamples);
