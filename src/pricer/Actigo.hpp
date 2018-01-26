@@ -21,17 +21,14 @@ public:
     double spAusSpot_; // S&P 200 initial spot
     PnlVect *semestrialSpot_; // spots at the current semester date
 
-    /*!
-     *  \brief Construcotr
-     *
-     *  Actigo class constructor
-     *
-     *  \param maturity       : actigo's maturity = 8 years
-     *  \param nbSteps : hedging dates number
-     *  \param size    : actigo option's size = 5
-     *  \param euroStoxSpot    : euroStox initial spot
-     *  \param spotUsa:  S&P 500 initial spot
-     *  \param spotUsa: S&P200 initial spot
+    /**
+     * @brief Actigo constructor
+     * @param maturity       : actigo's maturity = 8 years
+     * @param nbSteps : hedging dates number
+     * @param size    : actigo option's size = 5
+     * @param euroStoxSpot    : euroStox initial spot
+     * @param spotUsa: S&P 500 initial spot
+     * @param spotAus: S&P200 initial spot
      */
     Actigo(double maturity, int nbSteps, int size, double euroStoxSpot, double spotUsa, double spotAus);
 
