@@ -70,6 +70,7 @@ set(LIBS ${LIBS} m)
 ## Subdirectories
 add_subdirectory(src)
 add_subdirectory(test)
+add_subdirectory(doc)
 
 # Print compiler flags
 get_directory_property(DirDefs COMPILE_DEFINITIONS)
