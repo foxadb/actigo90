@@ -71,8 +71,8 @@ public:
       void getInitialSpots(PnlVect *initialSpots);
 
       /**
-      * @param toDaySppots
       * @brief fill the input vector with current spots which is the last line of the historical data matrix
+      * @param toDaySpots
       */
       void getTodaySpots(PnlVect *toDaySpots);
 

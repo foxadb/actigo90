@@ -73,8 +73,8 @@ void getYahooCrumbCookie(std::string url,
     const char* credentialFile = "/tmp/yahoo-finance-credentials";
     const char* cookieFile = "/tmp/yahoo-finance-cookie";
 
-    // Download new cookie every 5 minutes
-    if (needNewCookie(credentialFile, 300)) {
+    // Download new cookie every 15 minutes
+    if (needNewCookie(credentialFile, 900)) {
         CURL* curl = curl_easy_init();
         std::string responseBuffer;
 
