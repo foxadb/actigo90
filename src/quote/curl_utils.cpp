@@ -122,10 +122,10 @@ std::string extractYahooCrumb(std::string code) {
     return crumb;
 }
 
-std::string extractYahooCookie(const char* cookieFile) {
+std::string extractYahooCookie(const char* filename) {
     int i = 0;
     std::string line;
-    std::ifstream file(cookieFile);
+    std::ifstream file(filename);
 
     if (file.is_open()) {
         while (std::getline(file, line) && i < 4) {
