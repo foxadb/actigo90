@@ -60,8 +60,11 @@ bool needNewCookie(const char* filename, std::time_t time) {
     return currentDate - cookieDate > time;
 }
 
-size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp) {
-    ((std::string*)userp)->append((char*)contents, size * nmemb);
+size_t writeCallback(char *content, size_t size, size_t nmemb, void *userdata) {
+    // Append the content to user data
+    ((std::string*)userdata)->append(content, size * nmemb);
+
+    // Return the real content size
     return size * nmemb;
 }
 
@@ -72,7 +75,7 @@ void getYahooCrumbCookie(std::string url,
     const char* cookieFile = "/tmp/yahoo-finance-cookie";
 
     // Download new cookie every 5 minutes
-    if (needNewCookie(credentialFile, 1)) {
+    if (needNewCookie(credentialFile, 300)) {
         CURL* curl = curl_easy_init();
         std::string responseBuffer;
 
