@@ -1,26 +1,68 @@
+/**
+ * @file Actigo.hpp
+ * @version 0.1
+ * @date 01 janvier 2018
+ *
+ *
+ */
+
 #include "Option.hpp"
 
 #ifndef ACTIGO_H
 #define	ACTIGO_H
 
-/// \brief Classe pour le produit Actigo
+/**
+ * @brief Actigo class
+ */
 class Actigo : public Option {
 public:
-    double euroStoxSpot_; // spot initial de l'indice euroStoxx.
-    double spUsaSpot_; // spot initial de l'indice S&P 500 Usa.
-    double spAusSpot_; // spot initial de l'indice S&P 200 Aus.
-    PnlVect *semestrialSpot_; // vecteur representant le valeur des indices le semstre courant.
+    double euroStoxSpot_; // euroStox initial spot
+    double spUsaSpot_; // S&P 500 initial spot
+    double spAusSpot_; // S&P 200 initial spot
+    PnlVect *semestrialSpot_; // spots at the current semester date
 
-    Actigo(double maturity, int nbSteps, int size, double euroStoxSpot, double spotUsa, double spAus);
+    /*!
+     *  \brief Construcotr
+     *
+     *  Actigo class constructor
+     *
+     *  \param maturity       : actigo's maturity = 8 years
+     *  \param nbSteps : hedging dates number
+     *  \param size    : actigo option's size = 5
+     *  \param euroStoxSpot    : euroStox initial spot
+     *  \param spotUsa:  S&P 500 initial spot
+     *  \param spotUsa: S&P200 initial spot
+     */
+    Actigo(double maturity, int nbSteps, int size, double euroStoxSpot, double spotUsa, double spotAus);
 
+    /**
+    * @param init initial spot
+    * @param current current spot
+    * @return return (current - init)/current
+    */
     double indexPerf(double init, double current);
 
+    /**
+    * @param path matrix containing the market data
+    * @return Actgo's payoff
+    */
     double payoff(const PnlMat* path);
 
+    /**
+    * @brief Actigo destructor
+    */
     virtual ~Actigo();
 
+    /**
+    * @brief Acitgo constructor
+    */
     Actigo();
 
+    /**
+    * @brief Actigo constructor.
+    * @brief copy constructor
+    * @param orig atigo option to copy
+    */
     Actigo(const Actigo& orig);
 };
 
