@@ -1,7 +1,8 @@
-#include "MonteCarlo.hpp"
 #include <cstdio>
 #include <cmath>
 #include <iostream>
+
+#include "MonteCarlo.hpp"
 
 using namespace std;
 
@@ -17,8 +18,8 @@ MonteCarlo::MonteCarlo(BlackScholesModel *mod, Option *opt, PnlRng *rng, double 
 }
 
 void MonteCarlo::price(double &prix, double &ic) {
-    double variance = 0.0;
-    double payOff = 0.0;
+    double variance = 0;
+    double payOff = 0;
     pnl_mat_set_row(path, mod_->spot_, 0);
     int nb = opt_->nbTimeSteps_;
     double mat = opt_->T_;
@@ -26,7 +27,7 @@ void MonteCarlo::price(double &prix, double &ic) {
         mod_->asset(path, mat, nb,rng_);
         payOff = opt_->payoff(path);
         prix += payOff;
-        variance += pow(payOff, 2.0);
+        variance += pow(payOff, 2);
     }
 
     double esperance = prix / nbSamples_;
@@ -73,13 +74,13 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta) {
 }
 
 void MonteCarlo::price(const PnlMat* past, double t, double& prix, double& ic) {
-    double variance = 0.0;
+    double variance = 0;
 
-    for (int i = 0; i < nbSamples_; i++) {
+    for (int i = 0; i < nbSamples_; ++i) {
         mod_->asset(path, t, opt_->T_, opt_->nbTimeSteps_, rng_, past);
         double x = opt_->payoff(path);
         prix += x;
-        variance += pow(x, 2.0);
+        variance += pow(x, 2);
     }
 
     double esperance = prix / nbSamples_;
@@ -95,8 +96,8 @@ MonteCarlo::~MonteCarlo() {
 }
 
 double MonteCarlo::pAndL(PnlMat *data) {
-
     double prix, ic;
+
     PnlMat *past = pnl_mat_create_from_scalar(opt_->nbTimeSteps_ + 1, data->n, 0);
     PnlVect *delta = pnl_vect_create_from_scalar(data->n, 0);
     PnlVect *pastDelta = pnl_vect_create(data->n);
