@@ -93,7 +93,6 @@ void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps,
             break;
         }
     }
-
     pnl_vect_clone(coeff, sigmaCarre);
     pnl_vect_mult_scalar(coeff, step);
 

@@ -99,7 +99,7 @@ MonteCarlo::~MonteCarlo() {
 double MonteCarlo::pAndL(PnlMat *data) {
 
     double prix, ic;
-    PnlMat *past = pnl_mat_create(opt_->nbTimeSteps_ + 1, data->n);
+    PnlMat *past = pnl_mat_create_from_scalar(opt_->nbTimeSteps_ + 1, data->n, 0);
     PnlVect *delta = pnl_vect_create_from_scalar(data->n, 0);
     PnlVect *pastDelta = pnl_vect_create(data->n);
     PnlVect *spot = pnl_vect_create(data->n);
@@ -110,23 +110,20 @@ double MonteCarlo::pAndL(PnlMat *data) {
     double pas = opt_->T_ / data->m;
     double temps = 0.0;
     this->delta(past, 0.0, delta);
+    pnl_vect_print(delta);
 
     double v = prix - pnl_vect_scalar_prod(delta, spot);
     double param = mod_->r_ * opt_->T_ / data->m;
 
     for (int i = 1; i < data->m; i++) {
         updatePast(past, data, i);
-
         pnl_vect_clone(pastDelta, delta);
         temps = temps + pas;
         pnl_vect_set_all(delta, 0.0);
-	cout << i << endl;
-        this->delta(past, temps, delta);
-	//cout << "----"<< endl;
-	//pnl_vect_print(delta);
         pnl_mat_get_row(spot, data, i);
         pnl_vect_minus_vect(pastDelta, delta);
         v = v * exp(param) + pnl_vect_scalar_prod(pastDelta, spot);
+        cout << v << endl;
     }
     double produit = pnl_vect_scalar_prod(delta, spot);
     pnl_vect_free(&delta);
