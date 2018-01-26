@@ -23,7 +23,6 @@ public:
 
     /**
      * @brief Quote destructor
-     * @param symbol
      */
     ~Quote();
 
