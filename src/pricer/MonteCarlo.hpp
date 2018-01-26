@@ -4,86 +4,77 @@
 #include "BlackScholesModel.hpp"
 #include "pnl/pnl_random.h"
 
-/// \brief Classe pour simulation MonteCarlo
+/**
+* @brief MonteCarlo class
+*/
 class MonteCarlo {
+
 public:
-    BlackScholesModel *mod_; /*! pointeur vers le modèle */
-    Option *opt_; /*! pointeur sur l'option */
-    PnlRng *rng_; /*! pointeur sur le générateur */
-    double fdStep_; /*! pas de différence finie */
-    int nbSamples_; /*! nombre de tirages Monte Carlo */
-    PnlMat *path;   /*! matrice contenant la trajectoire */
-    PnlMat *shiftPath; /*! matrice contenant la trajectoire shiftée */
+    BlackScholesModel *mod_; /*! pointer to the model */
+    Option *opt_; /*! pointer to the option */
+    PnlRng *rng_; /*! pointer to the generator */
+    double fdStep_; /*! step of the finite difference discretization */
+    int nbSamples_; /*! number of draws Monte Carlo */
+    PnlMat *path;   /*! matrix conatining the path */
+    PnlMat *shiftPath; /*! matrix containing the shifted path */
 
     /**
-     * Calcule le prix de l'option à la date 0
-     *
-     * @param[out] prix valeur de l'estimateur Monte Carlo
-     * @param[out] ic largeur de l'intervalle de confiance
+     * @brief Computes the option's price at 0
+     * @param[out] prix price given by the monte carlo estimation
+     * @param[out] ic width of the confidence interval
      */
     void price(double &prix, double &ic);
 
     /**
-     * Calcule le prix de l'option à la date t
-     *
-     * @param[in]  past contient la trajectoire du sous-jacent
-     * jusqu'à l'instant t
-     * @param[in] t date à laquelle le calcul est fait
-     * @param[out] prix contient le prix
-     * @param[out] ic contient la largeur de l'intervalle
-     * de confiance sur le calcul du prix
+     * @brief Computes the option's price at t
+     * @param[in]  past contains the underlying asset path until t
+     * @param[in] t date at which we want to compute the price
+     * @param[out] prix contains the price
+     * @param[out] ic contains the width of the confidence interval
+     * for the price estimation
      */
     void price(const PnlMat *past, double t, double &prix, double &ic);
 
     /**
-     * Calcule le delta de l'option à la date t
-     *
-     * @param[in] past contient la trajectoire du sous-jacent
-     * jusqu'à l'instant t
-     * @param[in] t date à laquelle le calcul est fait
-     * @param[out] delta contient le vecteur de delta
-     * de confiance sur le calcul du delta
+     * @brief Computes the option's delta at t
+     * @param[in] past contains the path of the underlying asset
+     * until t
+     * @param[in] t date at which the comutation is done
+     * @param[out] delta contains the delta vector
      */
     void delta(const PnlMat *past, double t, PnlVect *delta);
 
     /**
-     * Calcule le delta de l'option à la date t pour actigo
-     *
-     * @param[in] past contient la trajectoire du sous-jacent
-     * jusqu'à l'instant t
-     * @param[in] t date à laquelle le calcul est fait
-     * @param[out] delta contient le vecteur de delta
-     * de confiance sur le calcul du delta
+     * @brief Computes the Actigo's delta at t
+     * @param[in] past contains the path of the underlying asset
+     * until t
+     * @param[in] t date at which the comutation is done
+     * @param[out] delta contains the delta vector
+     * @param[in] rDoll EUR/USD exchange rate
+     * @param[in] rAusDoll EUR/AUD exchange rate
      */
-
     void delta(const PnlMat *past, double t, PnlVect *delta, double rDoll, double rAusDoll);
 
     /**
-     * Calcule la P&L de l'option
-     *
-     * @param[in] data contient la trajectoire du sous-jacent
-     * sur toute la subdivision de rebalancement
+     * @brief Computes the P&L
+     * @param[in] data contains the underlying asset path
+     * on the rebalance subdivision
      */
     double pAndL(PnlMat *data);
 
 
-    /*!
-     *  \brief Constructeur
-     *
-     *  Constructeur de la classe MonteCarlo
-     *
-     *  \param mod       : un BlackScholesModel pour générer la trajectoire des actifs
-     *  \param opt       : option à pricer/couvrir
-     *  \param rng       : générateur de nombres aléatoires
-     *  \param fdStep    : pas de différentiation
-     *  \param nbSamples : nombre de simulations MonteCarlo
+    /**
+     *  @brief MonteCarlo Constructor
+     *  @param mod       : A BlackScholesModel to generate the underlying assets path
+     *  @param opt       : Option to price/hedge
+     *  \param rng       : Random numbers generator
+     *  \param fdStep    : step of finite difference discretization
+     *  \param nbSamples : number of simulations Monte Carlo
      */
     MonteCarlo(BlackScholesModel *mod, Option *opt, PnlRng *rng, double fdStep, int nbSamples);
 
-    /*!
-     *  \brief Destructeur
-     *
-     *  Destructeur de la classe MonteCarlo
+    /**
+     * @brief MonteCarlo destructor
      */
     virtual ~MonteCarlo();
 
