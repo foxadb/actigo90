@@ -96,15 +96,15 @@ void Data::getTodaySpots(PnlVect *todaySpots){
 }
 
 void Data::completeData(int remainingDates, Option *option, PnlVect *currentSpots, PnlVect *volatilities, PnlMat *correlations, PnlVect* trends, PnlRng *rng){
-int totalSize = remainingDates + historicalDataMatrix->m;
-BlackScholesModel *bs = new BlackScholesModel(option->size_, 0.04, correlations, volatilities, currentSpots);
-bs->trend_ = trends;
-double timeToMaturity = 8.0 - remainingDates/252; //to modify
-PnlMat *remainingDataMatrix = pnl_mat_create(remainingDates+1, option->size_);
-bs->simul_market(remainingDataMatrix, remainingDates+1, timeToMaturity, rng);
-completeDataMatrix = pnl_mat_create_from_scalar(totalSize, option->size_, -50000);
-pnl_mat_resize(historicalDataMatrix,historicalDataMatrix->m-1, historicalDataMatrix->n);
-pnl_mat_set_subblock(completeDataMatrix, historicalDataMatrix, 0, 0);
-pnl_mat_set_subblock(completeDataMatrix, remainingDataMatrix, historicalDataMatrix->m, 0);
+  int totalSize = remainingDates + historicalDataMatrix->m;
+  BlackScholesModel *bs = new BlackScholesModel(option->size_, 0.04, correlations, volatilities, currentSpots);
+  bs->trend_ = trends;
+  double timeToMaturity = 8.0 - remainingDates/252; //to modify
+  PnlMat *remainingDataMatrix = pnl_mat_create(remainingDates+1, option->size_);
+  bs->simul_market(remainingDataMatrix, remainingDates+1, timeToMaturity, rng);
+  completeDataMatrix = pnl_mat_create_from_scalar(totalSize, option->size_, -50000);
+  pnl_mat_resize(historicalDataMatrix,historicalDataMatrix->m-1, historicalDataMatrix->n);
+  pnl_mat_set_subblock(completeDataMatrix, historicalDataMatrix, 0, 0);
+  pnl_mat_set_subblock(completeDataMatrix, remainingDataMatrix, historicalDataMatrix->m, 0);
 
 }
