@@ -108,22 +108,25 @@ double MonteCarlo::pAndL(PnlMat *data) {
     double pas = opt_->T_ / data->m;
     double temps = 0.0;
     this->delta(past, 0.0, delta);
-    cout << "The deltas at 0" << endl << endl;
+    cout << endl << "Deltas at 0:" << endl;
     pnl_vect_print(delta);
     double v = prix - pnl_vect_scalar_prod(delta, spot);
-    cout << "the portfolio value at 0: " << v << endl << endl;
+    cout << endl << "Portfolio value at 0: " << v << endl << endl;
     double param = mod_->r_ * opt_->T_ / data->m;
 
-    for (int i = 1; i < data->m; i++) {
+    cout << "P&L computation..." << endl;
+
+    for (int i = 1; i < data->m; ++i) {
         updatePast(past, data, i);
         pnl_vect_clone(pastDelta, delta);
         temps = temps + pas;
         pnl_vect_set_all(delta, 0.0);
-        this->delta(past, temps, delta);;
+        this->delta(past, temps, delta);
         pnl_mat_get_row(spot, data, i);
         pnl_vect_minus_vect(pastDelta, delta);
         v = v * exp(param) + pnl_vect_scalar_prod(pastDelta, spot);
     }
+
     double produit = pnl_vect_scalar_prod(delta, spot);
     pnl_vect_free(&delta);
     pnl_vect_free(&pastDelta);
@@ -134,11 +137,13 @@ double MonteCarlo::pAndL(PnlMat *data) {
     int newStep = pathStep / pas;
     PnlVect* vect = pnl_vect_create(opt_->size_);
     int count = 0;
+
     for (int i = 0; i < data->m; i += newStep) {
         pnl_mat_get_row(vect, data, i);
         pnl_mat_set_row(dataAtNbTimeSteps, vect, count);
         ++count;
     }
+
     return v + produit - opt_->payoff(dataAtNbTimeSteps);
 }
 
