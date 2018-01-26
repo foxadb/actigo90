@@ -4,109 +4,105 @@
 #include "pnl/pnl_vector.h"
 #include "pnl/pnl_matrix.h"
 
-/// \brief Modèle de Black Scholes
+/**
+* @brief BlackScholesModel class
+*/
+
 class BlackScholesModel {
 public:
-    int size_; /// nombre d'actifs du modèle
-    double r_; /// taux d'intérêt
-    double rho_; /// paramètre de corrélation
-    PnlVect *sigma_; /// vecteur de volatilités
-    PnlVect *spot_; /// valeurs initiales du sous-jacent
-    PnlVect *trend_; /// tendance du modèle
-    PnlVect *sigmaCarre; /// volatilités au carré
-    PnlMat *gamma; /// matrice de covariances
-    PnlVect *g; /// vecteur d'échantillons iid de la loi normale centrée réduite
+    int size_; /// number of assets in the model
+    double r_; /// interest rate
+    double rho_; /// correlation parameter
+    PnlVect *sigma_; /// volatilities vector
+    PnlVect *spot_; /// initial values of the underlying assets
+    PnlVect *trend_; /// model trend
+    PnlMat *gamma; /// covariance matrix
+    PnlVect *g; /// vector of iid samples from the normal centered reduced law
 
-    // Ces vecteurs ont été créés dans le constructeur pour gagner en allocation mémoire
+    // vectors created in constructor to gain  in performance
     PnlVect *newSpot;
     PnlVect *produit;
     PnlVect *coeff;
     PnlVect *pastVect;
+    PnlVect *sigmaCarre;
     double(*ptr)(double);
 
     /*!
-     *  \brief Destructeur
+     *  \brief BlackScholesModel destructor
      *
-     *  Destructeur de la classe BlackScholesModel
      */
     ~BlackScholesModel();
 
     /**
-     * Génère une trajectoire du modèle et la stocke dans path
+     * @bried Generates a path of the model and stocks it in a matrix path
      *
-     * @param[out] path contient une trajectoire du modèle.
-     * C'est une matrice de taille (nbTimeSteps+1) x d
-     * @param[in] T  maturité
-     * @param[in] nbTimeSteps nombre de dates de constatation
+     * @param[out] path contains a path of the model
+     * its a matrix of size (nbTimeSteps+1) x d
+     * @param[in] T  maturity
+     * @param[in] nbTimeSteps number of observation dates
      */
     void asset(PnlMat *path, double T, int nbTimeSteps, PnlRng *rng);
 
     /**
-     * Calcule une trajectoire du sous-jacent connaissant le
-     * passé jusqu' à la date t
+     * @brief Calculates a path of the underlying asset knowing the until the date t
      *
-     * @param[out] path  contient une trajectoire du sous-jacent
-     * donnée jusqu'à l'instant t par la matrice past
-     * @param[in] t date jusqu'à laquelle on connait la trajectoire.
-     * t n'est pas forcément une date de discrétisation
-     * @param[in] nbTimeSteps nombre de pas de constatation
-     * @param[in] T date jusqu'à laquelle on simule la trajectoire
-     * @param[in] past trajectoire réalisée jusqu'a la date t
+     * @param[out] path  contains a path of the underlying asset
+     * given by the matrix past until the date t
+     * @param[in] t date until which we know the path.
+     * t is not necessarily a date of discretization
+     * @param[in] nbTimeSteps number of observation dates
+     * @param[in] T date until which we simulate the path
+     * @param[in] past path known until the date t
      */
     void asset(PnlMat *path, double t, double T, int nbTimeSteps, PnlRng *rng, const PnlMat *past);
 
     /**
-     * Shift d'une trajectoire du sous-jacent
+     * Shift a path of the underlying asset
      *
-     * @param[in]  path contient en input la trajectoire
-     * du sous-jacent
-     * @param[out] shift_path contient la trajectoire path
-     * dont la composante d a été shiftée par (1+h)
-     * à partir de la date t.
-     * @param[in] t date à partir de laquelle on shift
-     * @param[in] h pas de différences finies
-     * @param[in] d indice du sous-jacent à shifter
-     * @param[in] timestep pas de constatation du sous-jacent
+     * @param[in]  path contains in input the path
+     * of the underlying asset
+     * @param[out] shift_path contient a path for which the d^th
+     * component has been shifted by (1+h) starting the date t.
+     * @param[in] t date from which we start shifting.
+     * @param[in] h the step of the finite difference discretization
+     * @param[in] d index of the underlying asset to be shifted
+     * @param[in] timestep step of observation for the underlying asset.
      */
     void shiftAsset(PnlMat *shift_path, const PnlMat *path, int d, double h, double t, double timestep);
 
 
     /*!
-     *  \brief Constructeur
+     *  @brief BlackScholesModel constructor
      *
-     *  Constructeur de la classe BlackScholeModel
      *
-     *  \param size : nombre d'actifs
-     *  \param r    : taux d'intérêt
-     *  \param rho  : coefficient de corrélation
-     *  \param sigma: vecteur des écarts-types
-     *  \param spot : vecteur des spots initiaux
+     *  @param size : number of underlying assets
+     *  @param r    :  interest rate
+     *  @param rho  : correlation coefficient
+     *  @param sigma: standard deviation vector
+     *  @param spot : initial spots vector
      */
     BlackScholesModel(int size, double r, double rho, PnlVect *sigma, PnlVect *spot);
 
     /*!
-     *  \brief Constructeur
      *
-     *  Constructeur de la classe BlackScholeModel
+     * @brief BlackScholesModel constructor
      *
-     *  \param size : nombre d'actifs
-     *  \param r    : taux d'intérêt
-     *  \param correlations: matrice de correlation
-     *  \param sigma: vecteur des écarts-types
-     *  \param spot : vecteur des spots initiaux
+     *  @param size : number of underlying assets.
+     *  @param r    : interest rate
+     *  @param correlations: correlations matrix
+     *  @param sigma: standard deviation vector
+     *  @param spot : initial spots vector
      */
 
     BlackScholesModel(int size, double r, PnlMat *correlations, PnlVect *sigma, PnlVect *spot);
 
     /**
-     * Génère une trajectoire du modèle et la stocke dans path
-     * avec le trend
+     * @brief Generates a path of the model with the trend and stocks it
      *
-     * @param[out]  path contient la trajectoire
-     * du sous-jacent
-     * @param[in] nbDates nombre de dates de constation
-     * @param[in] T maturité de l'option
-     * @param[in] rng générateur de nombres aléatoires
+     * @param[out]  path contains a path of  underlying asset
+     * @param[in] nbDates number of observation dates
+     * @param[in] T option maturity
+     * @param[in] rng random numbers generator
      */
     void simul_market(PnlMat* path, int nbDates, double T, PnlRng* rng);
 };
