@@ -35,6 +35,16 @@ void readCrumbCredential(const char* filename, std::string *crumb);
 void readCookieCredential(const char* filename, std::string *cookie);
 
 /**
+ * @brief Write callback function for Curl
+ * @param content Deliver content pointer
+ * @param size Content element bytes size
+ * @param nmemb Number of content element
+ * @param userdata User data where contents are storaged
+ * @return Real buffer size = size * nmemb
+ */
+size_t writeCallback(char *content, size_t size, size_t nmemb, void *userdata);
+
+/**
  * @brief Get the Yahoo Finance crumb and cookie
  * @param url Request url
  * @param crumb Crumb pointer
