@@ -32,7 +32,7 @@ public:
   * @brief Estimates the trends, volatilities and correlations corresponding to data
   * @brief and stores them.
   * @param data contains the data that we wish to calibrate.
-  * @param step the time separating two dates at which data has been retrieved. 
+  * @param step the time separating two dates at which data has been retrieved.
   */
   Calibration(Data *data, double step);
 
