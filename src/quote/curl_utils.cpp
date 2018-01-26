@@ -6,7 +6,6 @@
 #include <curl/curl.h>
 #include <boost/algorithm/string/replace.hpp>
 
-#include "json.hpp"
 #include "curl_utils.hpp"
 #include "time_utils.hpp"
 
