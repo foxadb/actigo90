@@ -43,16 +43,16 @@ int main(int argc, char **argv) {
     int nbSamples = atoi(argv[1]);
     double fdStep = 0.01;
 
-    cout << "nbSamples: " << nbSamples << endl;
+    cout << "Samples number: " << nbSamples << endl;
 
     MonteCarlo *mc = new MonteCarlo(bsm, actigo, rng, fdStep, nbSamples);
 
     // Compute P&L
-    clock_t pnlStart = clock();
+    clock_t start = clock();
     double pnl = mc->pAndL(data->completeDataMatrix);
-    double pnlDuration = (clock() - pnlStart) / (double)CLOCKS_PER_SEC;
-    cout << "P&L: " << pnl * 100 << "%" << endl;
-    cout << "P&L duration: " << pnlDuration << " seconds" << endl;
+    double duration = (clock() - start) / (double)CLOCKS_PER_SEC;
+    cout << "P&L: " << pnl * 100 << " %" << endl;
+    cout << "P&L duration: " << duration << " seconds" << endl;
 
     return EXIT_SUCCESS;
 }
