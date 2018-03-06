@@ -148,10 +148,15 @@ std::string downloadYahooCsv(std::string symbol,
                              std::string interval,
                              std::string *crumb,
                              std::string *cookie) {
+    std::stringstream ss1; 
+    ss1 << period1; 
+    std::stringstream ss2; 
+    ss2 << period2;
+
     std::string url = "https://query1.finance.yahoo.com/v7/finance/download/"
             + symbol
-            + "?period1=" + std::to_string(period1)
-            + "&period2=" + std::to_string(period2)
+            + "?period1=" + ss1.str()
+            + "&period2=" + ss2.str()
             + "&interval=" + interval
             + "&events=history"
             + "&crumb=" + *crumb;

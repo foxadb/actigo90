@@ -25,9 +25,11 @@ Spot Quote::getSpot(size_t i) {
     if (i < this->spots.size()) {
         return this->spots[i];
     }
+    std::stringstream ss; 
+    ss << this->spots.size();
 
     std::string error = "ERROR: getSpot(index) - Index must be smaller than "
-            + std::to_string(this->spots.size());
+      + ss.str();
     throw std::invalid_argument(error);
 }
 
@@ -108,10 +110,10 @@ void Quote::getHistoricalSpots(std::time_t period1,
         if (data[0] != "null" && data[1] != "null") {
             Spot spot = Spot(
                     data[0],                // date
-                    std::stod(data[1]),     // open
-                    std::stod(data[2]),     // high
-                    std::stod(data[3]),     // low
-                    std::stod(data[4])      // close
+                    std::atof(data[1].c_str()),     // open
+                    std::atof(data[2].c_str()),      // high
+                    std::atof(data[3].c_str()),     // low
+                    std::atof(data[4].c_str())      // close
                     );
 
             this->spots.push_back(spot);
