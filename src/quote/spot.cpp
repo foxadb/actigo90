@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include "spot.hpp"
 
@@ -34,11 +35,20 @@ double Spot::getClose() {
 }
 
 std::string Spot::toString() {
+
+    std::ostringstream osOpen;
+    osOpen << this->open;
+    std::ostringstream osHigh;
+    osHigh << this->high;
+    std::ostringstream osLow;
+    osLow << this->low;
+    std::ostringstream osClose;
+    osClose << this->close;
     return "{ date: " + this->date
-            + " open: " + std::to_string(this->open)
-            + " high: " + std::to_string(this->high)
-            + " low: " + std::to_string(this->low)
-            + " close: " + std::to_string(this->close)
+            + " open: " + osOpen.str()
+            + " high: " + osHigh.str()
+            + " low: " + osLow.str()
+            + " close: " + osClose.str()
             + " }";
 }
 

@@ -6,7 +6,7 @@
 #include <cstring>
 
 std::time_t currentEpoch() {
-    return std::time(nullptr);
+    return std::time(NULL);
 }
 
 std::time_t dateToEpoch(const char *date) {
@@ -31,10 +31,13 @@ std::time_t dateToEpoch(const char *date) {
 std::string epochToDate(const std::time_t epoch) {
     struct std::tm * ptm = std::localtime(&epoch);
 
-    std::ostringstream os;
-    os << std::put_time(ptm, "%Y-%m-%d");
-
-    std::string date = os.str();
+    std::stringstream osYear; 
+    osYear << ptm->tm_year;
+    std::stringstream osMonth; 
+    osMonth << ptm->tm_mon;
+    std::stringstream osDay; 
+    osDay << ptm->tm_mday;
+    std::string date = osYear.str()+ "-" + osMonth.str() + "-" + osDay.str();
     return date;
 }
 
