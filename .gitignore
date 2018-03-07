@@ -1,3 +1,19 @@
+################# IDE ##################
+
+# QtCreator
+*.autosave
+*.qmlproject.user
+*.qmlproject.user.*
+CMakeLists.txt.user*
+
+# VSCode
+.vscode
+
+# NetBeans
+nbproject
+
+################# C++ ##################
+
 # Build directory
 build
 
@@ -12,14 +28,30 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 
-# QtCreator
-*.autosave
-*.qmlproject.user
-*.qmlproject.user.*
-CMakeLists.txt.user*
+############### ExpressJS ##############
 
-# VSCode
-.vscode
+# OS X
+.DS_Store*
+Icon?
+._*
 
-# NetBeans
-nbproject
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
+*~
+
+# npm
+node_modules
+package-lock.json
+*.log
+*.gz
+
+# Coveralls
+coverage
+
+# Benchmarking
+benchmarks/graphs
