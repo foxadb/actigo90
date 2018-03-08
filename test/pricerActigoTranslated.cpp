@@ -13,30 +13,31 @@ using namespace std;
 
 int main(int argc, char **argv) {
     //Recuperate data from actigo first day: "2015-10-12" to today
-    Data *data = new Data("2015-10-12","2018-01-24");
+    Data *data = new Data("2011-04-10","2012-04-14");
     cout << "Historical matrix size: " << data->historicalDataMatrix->m << endl;
 
     //// Data calibration
     // Create Actigo Option
+    int rebalancingFrequency = 2;
+    int totalRebalancingDates = data->historicalDataMatrix->m / rebalancingFrequency;
+    cout << "rebalancingDates " << totalRebalancingDates << endl;
+    PnlMat *path = pnl_mat_create_from_scalar(totalRebalancingDates, 5, 0);
+    cout << "lines" << path->m << endl;
+    data->getDataAtRebalancingDates(path, rebalancingFrequency);
     double maturity = 8;
-    int nbTimeSteps = 2016;
-    double step = maturity / nbTimeSteps;
+    double step = rebalancingFrequency / 365.;
     Calibration *calibration = new Calibration(data, step);
     int size = 5;
     PnlVect *initialSpots = pnl_vect_create(size);
-    PnlVect *initialSpotsEuro = pnl_vect_create(size);
-    PnlVect *todaySpots = pnl_vect_create(size);
     data->getInitialSpots(initialSpots);
-    data->getInitialSpotsEuro(initialSpotsEuro);
-    data->getTodaySpots(todaySpots);
+    PnlVect *initialSpotsEuro = pnl_vect_create(size);
+    cout << "created"<< endl;
+    data->getInitialSpots(initialSpotsEuro);
+
     Actigo *actigo = new Actigo(maturity, 16, size, GET(initialSpots,0), GET(initialSpots, 1), GET(initialSpots, 2));
     // Complete data from today to actigo end date
-    int remainingDates = nbTimeSteps - data->euroStoxSpots->size;
     PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
     pnl_rng_sseed(rng, time(NULL));
-    data->completeData(remainingDates, actigo, todaySpots, calibration->getVolatilities(),
-                       calibration->getCorrelationsMatrix(), calibration->getTrends(), rng);
-
     // Create the BlackScholesModel
     double rEur = 0.04;
     BlackScholesModel *bsm = new BlackScholesModel(size, rEur, calibration->getCorrelationsMatrix(), calibration->getVolatilities(), initialSpotsEuro);
@@ -46,15 +47,15 @@ int main(int argc, char **argv) {
     double fdStep = 0.01;
 
     cout << "Samples number: " << nbSamples << endl;
-
     MonteCarlo *mc = new MonteCarlo(bsm, actigo, rng, fdStep, nbSamples);
 
     // Compute P&L
     clock_t start = clock();
-    double pnl = mc->pAndL(data->completeDataMatrix);
+    double pnl = mc->pAndL(path);
     double duration = (clock() - start) / (double)CLOCKS_PER_SEC;
     cout << "P&L: " << pnl * 100 << " %" << endl;
     cout << "P&L duration: " << duration << " seconds" << endl;
+    //pnl_mat_free(&path);*/
 
     return EXIT_SUCCESS;
 }
