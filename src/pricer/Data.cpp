@@ -14,6 +14,7 @@ Data::~Data() {
     pnl_vect_free(&eurAud);
     pnl_vect_free(&eurUsd);
     pnl_mat_free(&historicalDataMatrix);
+    pnl_mat_free(&historicalDataMatrixEuro);
     pnl_mat_free(&completeDataMatrix);
 }
 
@@ -24,6 +25,7 @@ Data::Data(PnlMat *matrixData){
    eurUsd = pnl_vect_new();
    eurAud = pnl_vect_new();
    historicalDataMatrix = pnl_mat_new();
+   historicalDataMatrixEuro = pnl_mat_new();
    completeDataMatrix = pnl_mat_new();
    pnl_mat_get_col(euroStoxSpots, matrixData, 0);
    pnl_mat_get_col(spUsdSpots, matrixData, 1);
@@ -74,10 +76,6 @@ Data::Data(const char* startDate, const char* currentDate){
   pnl_vect_resize(eurUsd, minSize);
   pnl_vect_resize(eurAud, minSize);
 
-  //converting everyting to euro
-  pnl_vect_mult_vect_term (spUsdSpots, eurUsd);
-  pnl_vect_mult_vect_term (spAudSpots, eurAud);
-
   //put spots vectors in dataMatrix
   historicalDataMatrix = pnl_mat_create(euroStoxSpots->size, 5);
   pnl_mat_set_col(historicalDataMatrix, euroStoxSpots, 0);
@@ -85,6 +83,17 @@ Data::Data(const char* startDate, const char* currentDate){
   pnl_mat_set_col(historicalDataMatrix, spAudSpots, 2);
   pnl_mat_set_col(historicalDataMatrix, eurUsd, 3);
   pnl_mat_set_col(historicalDataMatrix, eurAud, 4);
+
+    //converting everyting to euro
+  pnl_vect_mult_vect_term (spUsdSpots, eurUsd);
+  pnl_vect_mult_vect_term (spAudSpots, eurAud);
+
+  historicalDataMatrixEuro = pnl_mat_create(euroStoxSpots->size, 5);
+  pnl_mat_set_col(historicalDataMatrixEuro, euroStoxSpots, 0);
+  pnl_mat_set_col(historicalDataMatrixEuro, spUsdSpots, 1);
+  pnl_mat_set_col(historicalDataMatrixEuro, spAudSpots, 2);
+  pnl_mat_set_col(historicalDataMatrixEuro, eurUsd, 3);
+  pnl_mat_set_col(historicalDataMatrixEuro, eurAud, 4);
 
   completeDataMatrix = pnl_mat_new();
 
@@ -95,8 +104,12 @@ void Data::getInitialSpots(PnlVect *initialSpots){
   pnl_mat_get_row(initialSpots, historicalDataMatrix, 0);
 }
 
+void Data::getInitialSpotsEuro(PnlVect *initialSpotsEuro){
+  pnl_mat_get_row(initialSpotsEuro, historicalDataMatrix, 0);
+}
+
 void Data::getTodaySpots(PnlVect *todaySpots){
-  pnl_mat_get_row(todaySpots, historicalDataMatrix, historicalDataMatrix->m -1);
+  pnl_mat_get_row(todaySpots, historicalDataMatrixEuro, historicalDataMatrix->m -1);
 }
 
 void Data::completeData(int remainingDates, Option *option, PnlVect *currentSpots, PnlVect *volatilities, PnlMat *correlations, PnlVect* trends, PnlRng *rng){
@@ -108,7 +121,21 @@ void Data::completeData(int remainingDates, Option *option, PnlVect *currentSpot
   bs->simul_market(remainingDataMatrix, remainingDates+1, timeToMaturity, rng);
   completeDataMatrix = pnl_mat_create_from_scalar(totalSize, option->size_, -50000);
   pnl_mat_resize(historicalDataMatrix,historicalDataMatrix->m-1, historicalDataMatrix->n);
-  pnl_mat_set_subblock(completeDataMatrix, historicalDataMatrix, 0, 0);
+  pnl_mat_set_subblock(completeDataMatrix, historicalDataMatrixEuro, 0, 0);
   pnl_mat_set_subblock(completeDataMatrix, remainingDataMatrix, historicalDataMatrix->m, 0);
+}
 
+void Data::getDataAtRebalancingDates(PnlMat* path, int rebalancingFrequency){
+  int totalNumberOfDates = historicalDataMatrix->m;
+  int totalRebalancingDate = totalNumberOfDates / rebalancingFrequency;
+  PnlVect *priceVect = pnl_vect_create_from_scalar(5,0);
+  int rebalancingDate = 0;
+  //borne à revoir dans des cas
+  for (int date = 0; date < totalNumberOfDates - rebalancingFrequency; date += rebalancingFrequency){
+    pnl_mat_get_row(priceVect, historicalDataMatrix, date);
+    pnl_mat_set_row(path, priceVect, rebalancingDate);
+    rebalancingDate++;
+  }
+  pnl_mat_print(path);
+  pnl_vect_free(&priceVect);
 }
