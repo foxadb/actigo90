@@ -43,5 +43,5 @@ double Actigo::payoff(const PnlMat* path){
             semestrialPerf = 0. ;
         totalPerf += semestrialPerf;
     }
-    return  (totalPerf - 0.1);
+    return  (totalPerf + 0.9);
 }
