@@ -13,12 +13,12 @@ using namespace std;
 
 int main(int argc, char **argv) {
     //Recuperate data from actigo first day: "2015-10-12" to today
-    Data *data = new Data("2009-01-01","2017-01-19");
+    Data *data = new Data("2009-01-01","2010-01-07");
     cout << "Historical matrix size: " << data->historicalDataMatrix->m << endl;
 
     //// Data calibration
     // Create Actigo Option
-    double maturity = 8;
+    double maturity = 1.0;
     double step = maturity / data->historicalDataMatrix->m;
     Calibration *calibration = new Calibration(data, step);
     int size = 5;

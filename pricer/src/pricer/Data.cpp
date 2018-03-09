@@ -32,9 +32,17 @@ Data::Data(PnlMat *matrixData){
    pnl_mat_get_col(spAudSpots, matrixData, 2);
    pnl_mat_get_col(eurUsd, matrixData, 3);
    pnl_mat_get_col(eurAud, matrixData, 4);
+   rEur = 0.05;
+   rUsd = 0.05;
+   rAud = 0.05;
 }
 
 Data::Data(const char* startDate, const char* currentDate){
+
+  rEur = 0.05;
+  rUsd = 0.05;
+  rAud = 0.05;
+
   Quote *quote1 = new Quote("^STOXX50E");
   quote1->getHistoricalSpots(startDate, currentDate, "1d");
   euroStoxSpots = pnl_vect_new();
@@ -88,12 +96,16 @@ Data::Data(const char* startDate, const char* currentDate){
   pnl_vect_mult_vect_term (spUsdSpots, eurUsd);
   pnl_vect_mult_vect_term (spAudSpots, eurAud);
 
+  getZeroCoupon(eurUsd, rUsd, 1.0);
+  getZeroCoupon(eurAud, rAud, 1.0);
   historicalDataMatrixEuro = pnl_mat_create(euroStoxSpots->size, 5);
   pnl_mat_set_col(historicalDataMatrixEuro, euroStoxSpots, 0);
   pnl_mat_set_col(historicalDataMatrixEuro, spUsdSpots, 1);
   pnl_mat_set_col(historicalDataMatrixEuro, spAudSpots, 2);
   pnl_mat_set_col(historicalDataMatrixEuro, eurUsd, 3);
   pnl_mat_set_col(historicalDataMatrixEuro, eurAud, 4);
+  //pnl_mat_print(historicalDataMatrixEuro);
+
 
   completeDataMatrix = pnl_mat_new();
 
@@ -138,4 +150,11 @@ void Data::getDataAtRebalancingDates(PnlMat* path, int rebalancingFrequency){
   }
   pnl_mat_print(path);
   pnl_vect_free(&priceVect);
+}
+
+void Data::getZeroCoupon(PnlVect *exchangeRate, double r, double maturity){
+  double step = maturity / exchangeRate->size;
+    for (int i=0; i < exchangeRate->size; i++){
+      LET(exchangeRate, i) *= exp(-r * (maturity - i * step));
+    }
 }
