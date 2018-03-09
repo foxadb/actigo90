@@ -116,7 +116,6 @@ double MonteCarlo::pAndL(PnlMat *data) {
 
     cout << "P&L computation..." << endl;
     for (int i = 1; i < data->m; i++) {
-
         updatePast(past, data, i);
         pnl_vect_clone(pastDelta, delta);
         temps = temps + pas;
@@ -126,7 +125,6 @@ double MonteCarlo::pAndL(PnlMat *data) {
         pnl_vect_minus_vect(pastDelta, delta);
         v = v * exp(param) + pnl_vect_scalar_prod(pastDelta, spot);
     }
-
     double produit = pnl_vect_scalar_prod(delta, spot);
     pnl_vect_free(&delta);
     pnl_vect_free(&pastDelta);
@@ -143,7 +141,6 @@ double MonteCarlo::pAndL(PnlMat *data) {
         pnl_mat_set_row(dataAtNbTimeSteps, vect, count);
         ++count;
     }
-
     return v + produit - opt_->payoff(dataAtNbTimeSteps);
 }
 
