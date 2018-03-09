@@ -97,5 +97,7 @@ public:
                         PnlVect *volatilities, PnlMat *correlations, PnlVect* trends, PnlRng* rng);
 
       void getDataAtRebalancingDates(PnlMat* path, int rebalancingFrequency);
+
+      void getZeroCoupon(PnlVect *exchangeRate, double r, double maturity);
 };
 #endif
