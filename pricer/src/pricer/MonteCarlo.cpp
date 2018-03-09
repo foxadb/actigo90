@@ -42,7 +42,6 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta) {
     for (int j = 0; j < nbSamples_; j++) {
         mod_->asset(path, t, opt_->T_, opt_->nbTimeSteps_, rng_, past);
         payOffDifference = 0.0;
-
         for (int d = 0; d < opt_->size_; d++) {
             mod_->shiftAsset(shiftPath, path, d, fdStep_, t, opt_->T_ / opt_->nbTimeSteps_);
             payOffDifference = opt_->payoff(shiftPath);
@@ -104,6 +103,7 @@ double MonteCarlo::pAndL(PnlMat *data) {
     PnlVect *spot = pnl_vect_create(data->n);
     pnl_vect_clone(spot, mod_->spot_);
     price(prix, ic);
+    cout << "price at 0: " << prix << endl;
     pnl_mat_set_row(past, spot, 0);
     double pas = opt_->T_ / data->m;
     double temps = 0.0;
@@ -116,11 +116,13 @@ double MonteCarlo::pAndL(PnlMat *data) {
 
     cout << "P&L computation..." << endl;
     for (int i = 1; i < data->m; i++) {
+        cout << i << endl;
         updatePast(past, data, i);
         pnl_vect_clone(pastDelta, delta);
         temps = temps + pas;
         pnl_vect_set_all(delta, 0.0);
         this->delta(past, temps, delta);
+        pnl_vect_print(delta);
         pnl_mat_get_row(spot, data, i);
         pnl_vect_minus_vect(pastDelta, delta);
         v = v * exp(param) + pnl_vect_scalar_prod(pastDelta, spot);
