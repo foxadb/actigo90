@@ -23,7 +23,6 @@ Calibration::Calibration(Data *data, double step){
     for (int i = 0; i < 5; i++){
       MLET(correlations, i, i) = 1.0;
     }
-
     double rho = estimate_correlation(data->euroStoxSpots, data->spUsdSpots);
     MLET(correlations, 0, 1) = rho;
     MLET(correlations, 1, 0) = rho;
@@ -77,6 +76,7 @@ Calibration::Calibration(Data *data, double step){
     LET(trends, 2) = estimate_trend(data->spAudSpots) + pow(sigma_3, 2) / 2.0;
     LET(trends, 3) = estimate_trend(data->eurUsd) + pow(sigma_x1, 2) / 2.0;
     LET(trends, 4) = estimate_trend(data->eurAud) + pow(sigma_x2, 2) /2.0;
+
  }
 
 

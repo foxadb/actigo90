@@ -29,6 +29,7 @@ public:
       double rUsd; //american free rate
       double rAud; //australian free rate
       PnlMat* historicalDataMatrix; //Matrix containing hsitorical extrracted Data from the begenning of Actigo to current Day
+      PnlMat* historicalDataMatrixEuro;
       PnlMat* completeDataMatrix; //Matrix containing historical data plus simulated Data
 
       /**
@@ -71,6 +72,12 @@ public:
       void getInitialSpots(PnlVect *initialSpots);
 
       /**
+      * @param initialSpots
+      * @brief fill the input vector with the initialSpots converted to euro
+      */
+      void getInitialSpotsEuro(PnlVect *initialSpots);
+
+      /**
       * @brief fill the input vector with current spots which is the last line of the historical data matrix
       * @param toDaySpots
       */
@@ -88,5 +95,7 @@ public:
       */
       void completeData(int remainingDates, Option *option, PnlVect *currentSpots,
                         PnlVect *volatilities, PnlMat *correlations, PnlVect* trends, PnlRng* rng);
+
+      void getDataAtRebalancingDates(PnlMat* path, int rebalancingFrequency);
 };
 #endif
