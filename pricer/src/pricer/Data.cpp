@@ -96,8 +96,10 @@ Data::Data(const char* startDate, const char* currentDate){
   pnl_vect_mult_vect_term (spUsdSpots, eurUsd);
   pnl_vect_mult_vect_term (spAudSpots, eurAud);
 
-  getZeroCoupon(eurUsd, rUsd, 1.0);
-  getZeroCoupon(eurAud, rAud, 1.0);
+  //constructing zero coupons
+  getZeroCoupon(eurUsd, rUsd, 8.0);
+  getZeroCoupon(eurAud, rAud, 8.0);
+
   historicalDataMatrixEuro = pnl_mat_create(euroStoxSpots->size, 5);
   pnl_mat_set_col(historicalDataMatrixEuro, euroStoxSpots, 0);
   pnl_mat_set_col(historicalDataMatrixEuro, spUsdSpots, 1);
