@@ -31,7 +31,7 @@ double Actigo::payoff(const PnlMat* path){
     double rAud = 0.05;
     //cout << lastDate;
     double totalPerf= 0.;
-    for (int currentSemesterDate = 1; currentSemesterDate <=15; currentSemesterDate++){
+    for (int currentSemesterDate = 1; currentSemesterDate <=16; currentSemesterDate++){
         double semestrialPerf = 0.;
         pnl_mat_get_row(semestrialSpot_, path, currentSemesterDate);
 	      LET(semestrialSpot_,1) = GET(semestrialSpot_,1)*exp(-rUsd * (T_ - currentSemesterDate / 2.0)) / GET(semestrialSpot_,3);
@@ -44,5 +44,5 @@ double Actigo::payoff(const PnlMat* path){
             semestrialPerf = 0. ;
         totalPerf += semestrialPerf;
     }
-    return  (totalPerf + 0.9);
+    return  (totalPerf/16 + 0.9);
 }
