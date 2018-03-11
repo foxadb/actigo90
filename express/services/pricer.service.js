@@ -1,7 +1,7 @@
 const exec = require('child_process').exec;
 
 exports.getPricing = function (callback) {
-    const pricer = exec('~/Projets3A/peps/build/test/pricerActigo 200', { timeout: 10000 });
+    const pricer = exec('~/Projets3A/peps/pricer/build/test/pricerActigo 200', { timeout: 10000 });
 
     let json;
     pricer.stdout.on('data', (data) => {

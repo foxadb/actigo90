@@ -116,7 +116,6 @@ double MonteCarlo::pAndL(PnlMat *data) {
 
     cout << "P&L computation..." << endl;
     for (int i = 1; i < data->m; i++) {
-        cout << i << endl;
         updatePast(past, data, i);
         pnl_vect_clone(pastDelta, delta);
         temps = temps + pas;

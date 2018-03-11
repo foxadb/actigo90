@@ -53,7 +53,8 @@ message(STATUS "Boost include directory ${Boost_INCLUDE_DIR}")
 
 # Set PNL directory
 #set(Pnl_DIR "/matieres/5MMPMP6/pnl/lib/pnl")
-set(Pnl_DIR "../../pnl/build/lib/cmake/pnl")
+#set(Pnl_DIR "../../pnl/build/lib/cmake/pnl")
+set(Pnl_DIR "../../pnl/build/lib/pnl")
 
 # Find PNL package
 find_package(Pnl REQUIRED)

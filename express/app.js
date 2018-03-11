@@ -4,11 +4,20 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var index = require('./routes/index.route');
 var api = require('./routes/api.route');
 
 var app = express();
+
+// MongoDB
+//mongoose.Promise = bluebird;
+var mongodbUrl = 'mongodb://localhost:27017/peps';
+mongoose.connect(mongodbUrl).then(
+    res => console.log(`Successfully connected to the MongoDB Database at: ${mongodbUrl}\n`),
+    err => console.log(`Error Connecting to the MongoDB Database at: ${mongodbUrl}\n`)
+);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
