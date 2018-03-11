@@ -12,7 +12,7 @@ StockSchema.methods.toDto = function () {
         id: this._id,
         symbol: this.symbol,
         name: this.name,
-        spots: this.spots.map((spot) => { return spot.toDto(); })
+        spots: this.spots.length < 10 ? this.spots : this.spots.length
     };
 };
 

@@ -15,6 +15,7 @@ exports.getSpots = async function (query, page, limit) {
 exports.getSpot = async function (id) {
     try {
         let spot = await Spot.findById(id);
+
         if (spot) {
             return spot;
         } else {
@@ -36,6 +37,8 @@ exports.createSpot = async function (spot) {
     try {
         // Saving the Spot 
         let savedSpot = await newSpot.save();
+
+        // Return the result
         return savedSpot;
     } catch (error) {
         throw Error('Invalid parameters');
@@ -60,7 +63,10 @@ exports.updateSpot = async function (spot) {
     oldSpot.price = spot.price != null ? spot.price : oldSpot.price;
 
     try {
+        // Saving the Spot 
         var savedSpot = await oldSpot.save();
+        
+        // Return the result
         return savedSpot;
     } catch (e) {
         throw Error('Invalid parameters');
@@ -70,9 +76,13 @@ exports.updateSpot = async function (spot) {
 exports.deleteSpot = async function (id) {
     try {
         let deleted = await Spot.remove({ _id: id });
+        
+        // Check if deletion passed correctly
         if (deleted.n === 0) {
             throw Error('Spot could not be deleted');
         }
+        
+        // Return the result
         return deleted;
     } catch (error) {
         throw Error('Error occured while deleting the spot');

@@ -15,6 +15,7 @@ exports.getStocks = async function (query, page, limit) {
 exports.getStock = async function (id) {
     try {
         let stock = await Stock.findById(id);
+
         if (stock) {
             return stock;
         } else {
@@ -35,6 +36,8 @@ exports.createStock = async function (stock) {
     try {
         // Saving the Stock 
         let savedStock = await newStock.save();
+        
+        // Return the result
         return savedStock;
     } catch (error) {
         throw Error('Invalid parameters');
@@ -59,7 +62,10 @@ exports.updateStock = async function (stock) {
     oldStock.name = stock.name != null ? stock.name : oldStock.name;
 
     try {
+        // Saving the Stock
         var savedStock = await oldStock.save();
+        
+        // Return the result
         return savedStock;
     } catch (error) {
         throw Error('Invalid parameters');
@@ -69,9 +75,13 @@ exports.updateStock = async function (stock) {
 exports.deleteStock = async function (id) {
     try {
         let deleted = await Stock.remove({ _id: id });
+        
+        // Check if deletion passed correctly
         if (deleted.n === 0) {
             throw Error('Stock could not be deleted');
         }
+        
+        // Return the result
         return deleted;
     } catch (error) {
         throw Error('Error occured while deleting the stock');

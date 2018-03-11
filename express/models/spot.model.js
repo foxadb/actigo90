@@ -7,9 +7,13 @@ var SpotSchema = new mongoose.Schema({
     price: { type: Number, default: 0 }
 }, { timestamps: true });
 
+// Avoid spot duplication
+SpotSchema.index({ stock: 1, date: 1}, { unique: true });
+
 SpotSchema.methods.toDto = function () {
     return {
         id: this._id,
+        stock: this.stock,
         date: this.date,
         price: this.price
     };

@@ -1,6 +1,5 @@
 const request = require('request');
 
-const Spot = require('../models/spot.model');
 const SpotService = require('./spot.service');
 const StockService = require('./stock.service');
 
@@ -77,21 +76,25 @@ exports.parseSpotsCsv = async function (stockId, csv) {
     lines.pop();
 
     try {
-        for (let i = 0; i < lines.length; ++i) {
-            let line = lines[i];
+        if (lines) {
+            for (let i = 0; i < lines.length; ++i) {
+                let line = lines[i];
 
-            // Split line
-            let lineArray = line.split(RegExp(','));
+                // Split line
+                let lineArray = line.split(RegExp(','));
 
-            // Create the new spot
-            let newSpot = await SpotService.createSpot({
-                stock: stockId,
-                date: lineArray[0],
-                price: lineArray[4]
-            });
-
-            // Add the spot to the stock spots list
-            await StockService.addSpot(stockId, newSpot._id);
+                // Create the new spot
+                SpotService.createSpot({
+                    stock: stockId,
+                    date: lineArray[0],
+                    price: lineArray[4]
+                }).then(function (spot) {
+                    // Add the spot to the stock spots list
+                    StockService.addSpot(stockId, spot._id);
+                }, function (error) {
+                    // do nothing
+                });
+            }
         }
     } catch (error) {
         throw Error('Error while parsing spots CSV file');
