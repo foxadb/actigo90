@@ -1,5 +1,6 @@
 <div class="container">
-  <h2>{{ stock?.name }}</h2>
+  <h1>{{ stock?.name }}</h1>
+  <h2>{{ stock?.symbol }} - {{ stock?.currency }}</h2>
   <ul>
     <li *ngFor="let spot of spots">
       <p>{{ spot.date | date: format: mediumDate }} - {{ spot.price }}</p>

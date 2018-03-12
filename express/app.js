@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var cors = require('cors');
 
 var index = require('./routes/index.route');
 var api = require('./routes/api.route');
@@ -18,6 +19,24 @@ mongoose.connect(mongodbUrl).then(
     res => console.log(`Successfully connected to the MongoDB Database at: ${mongodbUrl}\n`),
     err => console.log(`Error Connecting to the MongoDB Database at: ${mongodbUrl}\n`)
 );
+
+// Enable CORS
+var corsWhitelist = [
+    undefined, // Remove it to disallow local API request
+    'http://localhost:4200',  // Angular Client
+    'http://localhost:49152'  // E2E Test Client
+];
+var corsOptions = {
+    origin: function (origin, callback) {
+        if (corsWhitelist.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

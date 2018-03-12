@@ -25,9 +25,11 @@ export class StockComponent implements OnInit {
 
   ngOnInit() {
     this.stockService.getStocks().subscribe(stocks => {
+      // Find stock
       this.stock = stocks.find(stock => stock.symbol === this.stockSymbol);
       this.spots = [];
 
+      // Retreive spots
       this.stock.spots.forEach(id => {
         this.spotService.getSpot(id).subscribe(
           spot => {
@@ -35,7 +37,7 @@ export class StockComponent implements OnInit {
           },
           error => console.log('Error: ', error),
           () => {
-            // Sort match by tournament date
+            // Sort spot by date
             this.spots.sort((a, b) =>
               new Date(b.date).getTime() - new Date(a.date).getTime());
           });
