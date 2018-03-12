@@ -23,8 +23,24 @@ exports.getSpot = async function (req, res) {
     let id = req.params.id;
 
     try {
-        let player = await SpotService.getSpot(id);
-        return res.status(200).json({ status: 200, data: player, message: 'Successfully spot received' });
+        let spot = await SpotService.getSpot(id);
+        return res.status(200).json({ status: 200, data: spot, message: 'Successfully spot received' });
+    } catch (error) {
+        return res.status(404).json({ status: 404, message: error.message });
+    }
+};
+
+exports.getStockSpots = async function (req, res) {
+    // Stock ID
+    let id = req.params.id;
+
+    // Check the existence of the query parameters, If the exists doesn't exists assign a default value
+    let page = req.query.page ? +req.query.page : 1;
+    let limit = req.query.limit ? +req.query.limit : 30;
+
+    try {
+        let spots = await SpotService.getSpots({ stock: id }, page, limit);
+        return res.status(200).json({ status: 200, data: spots, message: 'Successfully spot received' });
     } catch (error) {
         return res.status(404).json({ status: 404, message: error.message });
     }

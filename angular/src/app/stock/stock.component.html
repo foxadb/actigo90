@@ -1,9 +1,17 @@
 <div class="container">
-  <h1>{{ stock?.name }}</h1>
-  <h2>{{ stock?.symbol }} - {{ stock?.currency }}</h2>
-  <ul>
-    <li *ngFor="let spot of spots">
-      <p>{{ spot.date | date: format: mediumDate }} - {{ spot.price }}</p>
-    </li>
-  </ul>
+  <div class="row">
+    <div class="col">
+      <h1>{{ stock?.name }}</h1>
+      <h2>{{ stock?.symbol }} - {{ stock?.currency }}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="chart">
+        <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [legend]="chartLegend"
+          [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+        </canvas>
+      </div>
+    </div>
+  </div>
 </div>

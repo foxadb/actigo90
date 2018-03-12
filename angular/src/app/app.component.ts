@@ -6,8 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Actigo 90';
-  euroStoxx50 = '^STOXX50E';
-  snp500 = '^GSPC';
-  snp200 = '^AXJO';
+  public title = 'Actigo 90';
+  public euroStoxx50 = '^STOXX50E';
+  public snp500 = '^GSPC';
+  public snp200 = '^AXJO';
 }

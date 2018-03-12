@@ -15,34 +15,64 @@ export class StockComponent implements OnInit {
 
   @Input() stockSymbol: string;
 
-  stock: Stock;
-  spots: Array<Spot>;
+  public stock: Stock;
+  public spots: Array<Spot>;
+
+  public spotPrices: Array<Number> = [];
+  public chartData: Array<any> = [{ data: this.spotPrices, label: '' }];
+  public chartLabels: Array<any> = [];
+
+  public chartOptions: any = {
+    responsive: true,
+    elements: {
+      point: {
+        radius: 1
+      }
+    }
+  };
+  public chartLegend = false;
+  public chartType = 'line';
 
   constructor(
     private stockService: StockService,
     private spotService: SpotService
   ) { }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.stockService.getStocks().subscribe(stocks => {
       // Find stock
       this.stock = stocks.find(stock => stock.symbol === this.stockSymbol);
       this.spots = [];
 
-      // Retreive spots
-      this.stock.spots.forEach(id => {
-        this.spotService.getSpot(id).subscribe(
-          spot => {
-            this.spots.push(spot);
-          },
-          error => console.log('Error: ', error),
-          () => {
-            // Sort spot by date
-            this.spots.sort((a, b) =>
-              new Date(b.date).getTime() - new Date(a.date).getTime());
+      // Chart label
+      this.chartData[0].label = this.stock.name;
+
+      this.spotService.getStockSpots(this.stock._id, 1, 250).subscribe(
+        spots => {
+          this.spots = spots;
+        },
+        error => console.error('Error: ', error),
+        () => {
+          // Sort spot by date
+          this.spots.sort((a, b) =>
+            new Date(a.date).getTime() - new Date(b.date).getTime());
+
+          // Fill chart data
+          this.spots.forEach(spot => {
+            this.chartLabels.push(new Date(spot.date).toLocaleDateString());
+            this.spotPrices.push(spot.price);
           });
-      });
+        }
+      );
     });
+  }
+
+  public chartClicked(event: any): void {
+    console.log(event);
+  }
+
+  public chartHovered(event: any): void {
+    console.log(event);
   }
 
 }

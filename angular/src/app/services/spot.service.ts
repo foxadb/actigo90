@@ -1,6 +1,6 @@
 import Spot from '../models/spot.model';
 
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 
@@ -18,20 +18,27 @@ export class SpotService {
   constructor(private http: HttpClient) { }
 
   // Requests options
-  public options(): any {
+  public options(page?: number, limit?: number): any {
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
 
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('limit', String(limit));
+
     const options = {
-      headers: headers
+      headers: headers,
+      params: params
     };
 
     return options;
   }
 
   // Get Spots from API
-  public getSpots(): Observable<Array<Spot>> {
-    return this.http.get(this.spotUrl)
+  public getSpots(page: number, limit: number): Observable<Array<Spot>> {
+    const options = this.options(page, limit);
+
+    return this.http.get(this.spotUrl, options)
       .map(res => {
         const spots: Array<Spot> = [];
         res['data'].docs.forEach(spot => {
@@ -47,6 +54,21 @@ export class SpotService {
     return this.http.get(`${this.spotUrl}/${id}`)
       .map(res => {
         return new Spot(res['data']);
+      })
+      .catch(err => this.handleError(err));
+  }
+
+  // Get Spots of a Stock from API by ID
+  public getStockSpots(id: string, page: number, limit: number): Observable<Array<Spot>> {
+    const options = this.options(page, limit);
+
+    return this.http.get(`${this.spotUrl}/stock/${id}`, options)
+      .map(res => {
+        const spots: Array<Spot> = [];
+        res['data'].docs.forEach(spot => {
+          spots.push(new Spot(spot));
+        });
+        return spots;
       })
       .catch(err => this.handleError(err));
   }

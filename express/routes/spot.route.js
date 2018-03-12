@@ -5,6 +5,7 @@ const SpotController = require('../controllers/spot.controller');
 
 router.get('/', SpotController.getSpots);
 router.get('/:id', SpotController.getSpot);
+router.get('/stock/:id', SpotController.getStockSpots);
 router.post('/', SpotController.createSpot);
 router.put('/:id', SpotController.updateSpot);
 router.delete('/:id', SpotController.deleteSpot);
