@@ -1,18 +1,28 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
+import { StockComponent } from './stock/stock.component';
 
+import { StockService } from './services/stock.service';
+import { SpotService } from './services/spot.service';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    StockComponent
   ],
   imports: [
-    BrowserModule
+    NgbModule.forRoot(),
+    BrowserModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    StockService,
+    SpotService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

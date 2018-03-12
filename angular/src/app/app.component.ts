@@ -7,4 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Actigo 90';
+  euroStoxx50 = '^STOXX50E';
+  snp500 = '^GSPC';
+  snp200 = '^AXJO';
 }
