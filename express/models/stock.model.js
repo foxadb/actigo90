@@ -4,6 +4,7 @@ const mongoosePaginate = require('mongoose-paginate');
 var StockSchema = new mongoose.Schema({
     symbol: { type: String, maxlength: 24, required: true, unique: true },
     name: { type: String, maxlength: 80 },
+    currency: { type: String, enum: ['eur', 'usd', 'aud'] },
     spots: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Spot' }]
 }, { timestamps: true });
 

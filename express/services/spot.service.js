@@ -5,7 +5,10 @@ exports.getSpots = async function (query, page, limit) {
     var options = { page, limit };
 
     try {
+        // Pagination
         let spots = await Spot.paginate(query, options);
+        
+        // Return the result
         return spots;
     } catch (error) {
         throw Error('Invalid parameters');

@@ -33,7 +33,8 @@ exports.getStock = async function (req, res) {
 exports.createStock = async function (req, res) {
     var stock = {
         symbol: req.body.symbol,
-        name: req.body.name
+        name: req.body.name,
+        currency: req.body.currency
     };
 
     try {
@@ -56,7 +57,8 @@ exports.updateStock = async function (req, res) {
     let stock = {
         id,
         symbol: req.body.symbol,
-        name: req.body.name
+        name: req.body.name,
+        currency: req.body.currency
     };
 
     try {

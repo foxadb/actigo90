@@ -5,7 +5,10 @@ exports.getStocks = async function (query, page, limit) {
     var options = { page, limit };
 
     try {
+        // Pagination
         let stocks = await Stock.paginate(query, options);
+        
+        // Return the result
         return stocks;
     } catch (error) {
         throw Error('Invalid parameters');
@@ -30,7 +33,8 @@ exports.getStock = async function (id) {
 exports.createStock = async function (stock) {
     let newStock = new Stock({
         symbol: stock.symbol,
-        name: stock.name
+        name: stock.name,
+        currency: stock.currency
     });
 
     try {
@@ -60,6 +64,7 @@ exports.updateStock = async function (stock) {
     // Edit the Stock Object
     oldStock.symbol = stock.symbol != null ? stock.symbol : oldStock.symbol;
     oldStock.name = stock.name != null ? stock.name : oldStock.name;
+    oldStock.currency = stock.currency != null ? stock.currency : oldStock.currency;
 
     try {
         // Saving the Stock
