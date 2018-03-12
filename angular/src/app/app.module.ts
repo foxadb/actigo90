@@ -4,7 +4,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
+import { FinanceDataComponent } from './finance-data/finance-data.component';
 import { StockComponent } from './stock/stock.component';
 
 import { StockService } from './services/stock.service';
@@ -13,13 +16,16 @@ import { SpotService } from './services/spot.service';
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
+    FinanceDataComponent,
     StockComponent
   ],
   imports: [
     NgbModule.forRoot(),
     BrowserModule,
     HttpClientModule,
-    ChartsModule
+    ChartsModule,
+    AppRoutingModule
   ],
   providers: [
     StockService,

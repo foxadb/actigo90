@@ -1,0 +1,22 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+import { HomeComponent } from './home/home.component';
+import { FinanceDataComponent } from './finance-data/finance-data.component';
+
+const routes: Routes = [
+  // Home page
+  { path: '', component: HomeComponent },
+
+  // Player stats page
+  { path: 'finance-data', component: FinanceDataComponent },
+
+  // Redirect other path to home
+  { path: '**', redirectTo: '' }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

@@ -1,8 +1,16 @@
-<div class="container">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <app-stock [stockSymbol]="euroStoxx50"></app-stock>
-  <app-stock [stockSymbol]="snp500"></app-stock>
-  <app-stock [stockSymbol]="snp200"></app-stock>
-</div>
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" [routerLink]="['']">Actigo 90</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+        <a class="nav-link" [routerLink]="['']">Home</a>
+      </li>
+      <li class="nav-item" [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['/finance-data']">Finance Data</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<router-outlet></router-outlet>

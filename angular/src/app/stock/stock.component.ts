@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { BaseChartDirective } from 'ng2-charts/ng2-charts';
 
 import Stock from '../models/stock.model';
 import Spot from '../models/spot.model';
@@ -17,6 +18,8 @@ export class StockComponent implements OnInit {
 
   public stock: Stock;
   public spots: Array<Spot>;
+
+  @ViewChild('baseChart') chart: BaseChartDirective;
 
   public spotPrices: Array<Number> = [];
   public chartData: Array<any> = [{ data: this.spotPrices, label: '' }];
@@ -62,6 +65,9 @@ export class StockComponent implements OnInit {
             this.chartLabels.push(new Date(spot.date).toLocaleDateString());
             this.spotPrices.push(spot.price);
           });
+
+          // Refresh chart
+          this.chart.ngOnInit();
         }
       );
     });
