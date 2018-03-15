@@ -129,3 +129,21 @@ exports.removeSpot = async function (stockId, spotId) {
         throw Error('Invalid parameters');
     }
 };
+
+exports.removeAllSpots = async function (stockId) {
+    try {
+        // Find the stock
+        let stock = await Stock.findById(stockId);
+
+        // Remove the spot list
+        stock.spots = [];
+
+        // Save to the database
+        let savedStock = await stock.save();
+
+        // Return the stock
+        return savedStock;
+    } catch (error) {
+        throw Error('Invalid parameters');
+    }
+};
