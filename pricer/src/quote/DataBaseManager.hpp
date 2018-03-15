@@ -8,6 +8,8 @@
 #include <mongocxx/uri.hpp>
 #include "pnl/pnl_vector.h"
 #include <bsoncxx/types.hpp>
+#include "spot.hpp"
+#include <list>
 
 using namespace bsoncxx::types;
 
@@ -19,8 +21,9 @@ using namespace bsoncxx::types;
  class DataBaseManager{
  private:
    static DataBaseManager *dbManager;
-   b_date getDate(const std::string& date);
+   static b_date read_date(const std::string& date, std::int32_t offset_from_utc);
    b_oid get_stock_id(const char* name);
+   double getSpot(b_date date, const char* name);
    DataBaseManager();
 
  public:
@@ -28,7 +31,9 @@ using namespace bsoncxx::types;
    mongocxx::client client{mongocxx::uri{}};
    mongocxx::database db = client["peps"];
    static DataBaseManager* getDbManager();
-   double getSpot(const std::string& date, const char* name);
+   Spot getSpot(const std::string& date, const char* name);
+   std::list<Spot> getSpots(const std::string& startDate, const std::string& endDate, const char* name);
+  
  };
 
  #endif

@@ -21,6 +21,13 @@ public:
     Spot(std::string date, double open, double high, double low, double close);
 
     /**
+    *@brief Spot constructor
+    * @param date Spot date
+    * @param price Price at closing
+    */
+    Spot(std::string date, double price);
+
+    /**
      * @brief Quote destructor
      */
     ~Spot();
