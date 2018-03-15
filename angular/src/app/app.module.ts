@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -14,6 +15,7 @@ import { ContactComponent } from './contact/contact.component';
 
 import { StockService } from './services/stock.service';
 import { SpotService } from './services/spot.service';
+import { YahooFinanceService } from './services/yahoo-finance.service';
 
 @NgModule({
   declarations: [
@@ -28,12 +30,14 @@ import { SpotService } from './services/spot.service';
     NgbModule.forRoot(),
     BrowserModule,
     HttpClientModule,
+    FormsModule,
     ChartsModule,
     AppRoutingModule
   ],
   providers: [
     StockService,
-    SpotService
+    SpotService,
+    YahooFinanceService
   ],
   bootstrap: [AppComponent]
 })

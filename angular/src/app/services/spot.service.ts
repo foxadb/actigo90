@@ -100,6 +100,15 @@ export class SpotService {
       .catch(err => this.handleError(err));
   }
 
+  // Delete all Spots of a Stock from API
+  public deleteStockSpots(id: any): Observable<boolean> {
+    return this.http.delete(`${this.spotUrl}/stock/${id}`, this.options())
+      .map(res => {
+        return true;
+      })
+      .catch(err => this.handleError(err));
+  }
+
   // Error handling method
   private handleError(error: any): Promise<any> {
     console.error('An error occured', error);

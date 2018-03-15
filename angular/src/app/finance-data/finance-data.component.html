@@ -1,25 +1,13 @@
 <div class="container">
-  <div class="row">
-    <div class="col">
-      <app-stock [stockSymbol]="euroStoxx50"></app-stock>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <app-stock [stockSymbol]="snp500"></app-stock>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <app-stock [stockSymbol]="snp200"></app-stock>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <app-stock [stockSymbol]="eurUsd"></app-stock>
-    </div>
-    <div class="col">
-      <app-stock [stockSymbol]="eurAud"></app-stock>
-    </div>
-  </div>
+  <a class="title">
+    Historical Stock Prices
+  </a>
+  <app-stock [stockSymbol]="euroStoxx50"></app-stock>
+  <app-stock [stockSymbol]="snp500"></app-stock>
+  <app-stock [stockSymbol]="snp200"></app-stock>
+  <a class="title">
+    Historical Exchange Rates
+  </a>
+  <app-stock [stockSymbol]="eurUsd"></app-stock>
+  <app-stock [stockSymbol]="eurAud"></app-stock>
 </div>
