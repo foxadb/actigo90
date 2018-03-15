@@ -12,6 +12,14 @@ Spot::Spot(std::string date, double open, double high, double low, double close)
     this->close = close;
 }
 
+Spot::Spot(std::string date, double price){
+  this-> date = date;
+  this->close = price;
+  this->open = price;
+  this->high = price;
+  this->low = price;
+}
+
 Spot::~Spot() {}
 
 std::string Spot::getDate() {
@@ -33,6 +41,7 @@ double Spot::getLow() {
 double Spot::getClose() {
     return this->close;
 }
+
 
 std::string Spot::toString() {
 
