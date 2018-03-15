@@ -22,14 +22,17 @@ export class SpotService {
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
 
-    let params = new HttpParams();
-    params = params.set('page', String(page));
-    params = params.set('limit', String(limit));
-
     const options = {
       headers: headers,
-      params: params
+      params: undefined
     };
+
+    if (page && limit) {
+      let params = new HttpParams();
+      params = params.set('page', String(page));
+      params = params.set('limit', String(limit));
+      options.params = params;
+    }
 
     return options;
   }
