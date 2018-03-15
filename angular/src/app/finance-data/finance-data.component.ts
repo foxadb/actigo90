@@ -10,6 +10,8 @@ export class FinanceDataComponent implements OnInit {
   public euroStoxx50 = '^STOXX50E';
   public snp500 = '^GSPC';
   public snp200 = '^AXJO';
+  public eurUsd = 'EURUSD=X';
+  public eurAud = 'EURAUD=X';
 
   constructor() { }
 

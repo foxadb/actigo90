@@ -1,0 +1,29 @@
+.container {
+    padding-top: 32px;
+    padding-bottom: 32px;
+}
+
+.profile {
+    padding: 32px 8px 32px 8px;
+    text-align: center;
+}
+
+.photo {
+    height: 300px;
+    width: 300px;
+    border-radius: 50%;
+    padding: 30px;
+}
+
+.name {
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.email {
+    font-size: medium;
+}
+
+.fa {
+    padding-right: 10px;
+}

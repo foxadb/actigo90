@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { FinanceDataComponent } from './finance-data/finance-data.component';
 import { StockComponent } from './stock/stock.component';
+import { ContactComponent } from './contact/contact.component';
 
 import { StockService } from './services/stock.service';
 import { SpotService } from './services/spot.service';
@@ -18,7 +19,8 @@ import { SpotService } from './services/spot.service';
     AppComponent,
     HomeComponent,
     FinanceDataComponent,
-    StockComponent
+    StockComponent,
+    ContactComponent
   ],
   imports: [
     NgbModule.forRoot(),
