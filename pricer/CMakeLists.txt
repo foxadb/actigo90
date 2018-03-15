@@ -53,8 +53,8 @@ message(STATUS "Boost include directory ${Boost_INCLUDE_DIR}")
 
 # Set PNL directory
 #set(Pnl_DIR "/matieres/5MMPMP6/pnl/lib/pnl")
-#set(Pnl_DIR "../../pnl/build/lib/cmake/pnl")
-set(Pnl_DIR "../../pnl/build/lib/pnl")
+set(Pnl_DIR "../../pnl/build/lib/cmake/pnl")
+#set(Pnl_DIR "../../pnl/build/lib/pnl")
 
 # Find PNL package
 find_package(Pnl REQUIRED)
@@ -63,6 +63,21 @@ include_directories(${PNL_INCLUDE_DIRS})
 if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
     add_definitions(-DPNL_RANGE_CHECK_OFF)
 endif()
+
+
+# find mongocxx driver
+find_package(libmongocxx REQUIRED)
+find_package(libbsoncxx REQUIRED)
+include_directories(${LIBMONGOCXX_INCLUDE_DIR})
+include_directories(${LIBBSONCXX_INCLUDE_DIR})
+include_directories("/usr/local/include/mongocxx/v_noabi")
+include_directories("/usr/local/include/bsoncxx/v_noabi")
+include_directories("/usr/local/include/libmongoc-1.0")
+include_directories("/usr/local/include/libbson-1.0")
+include_directories("/usr/local/lib")
+
+set(LIBS ${LIBS} ${LIBMONGOCXX_LIBRARIES})
+set(LIBS ${LIBS} ${LIBBSONCXX_LIBRARIES})
 
 # Add math lib
 set(LIBS ${LIBS} m)
