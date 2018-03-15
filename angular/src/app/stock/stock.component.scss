@@ -1,3 +1,14 @@
+.data-panel {
+    padding: 1em 0 1em 0;
+    // columns vertically aligned
+    display: flex;
+    align-items: center;
+}
+
+.date {
+    max-width: 192px;
+}
+
 .chart {
     display: block;
 }

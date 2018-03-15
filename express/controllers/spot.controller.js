@@ -115,3 +115,26 @@ exports.deleteSpot = async function (req, res) {
         return res.status(403).json({ status: 403, message: error.message });
     }
 };
+
+exports.deleteStockSpots = async function (req, res) {
+    // Stock ID
+    let stockId = req.params.id;
+
+    try {
+        let stock = await StockService.getStock(stockId);
+        let spots = stock.spots;
+
+        // Delete all stock spots
+        for (let i = 0; i < spots.length; ++i) {
+            SpotService.deleteSpot(spots[i]);
+        }
+
+        // Delete the spot reference in the stock
+        StockService.removeAllSpots(stockId);
+
+        // Return the result
+        return res.status(204).json({ status: 204, message: 'Successfully spot deleted' });
+    } catch (error) {
+        return res.status(403).json({ status: 403, message: error.message });
+    }
+};
