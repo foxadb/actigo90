@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="portfolio-info">
+        <table class="table">
+          <thead>
+            <tr>
+              <th colspan="2">Portfolio Info</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="align-left">Price</td>
+              <td class="align-right">{{ price }} €</td>
+            </tr>
+            <tr>
+              <td class="align-left">Last rebalancing</td>
+              <td class="align-right">{{ deltas }}</td>
+            </tr>
+            <tr>
+              <td class="align-left">P&L</td>
+              <td class="align-right">{{ pnl }} &#x25;</td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="btn btn-primary" (click)="rebalance()">
+          <i class="fa fa-balance-scale"></i> Rebalance</button>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <a class="delta-title">
+      Deltas
+    </a>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Euro Stoxx 50</th>
+          <th scope="col">S&P 500</th>
+          <th scope="col">S&P/ASX 200</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let delta of deltas">
+          <td>{{ delta.date | date : format : mediumDate }}</td>
+          <td>{{ delta.delta }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
