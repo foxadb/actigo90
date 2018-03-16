@@ -10,11 +10,14 @@
       <label for="startDate">Start Date</label>
       <input id="startDate" type="date" class="form-control" [(ngModel)]="startDate" #ctrl="ngModel">
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-2">
       <button type="button" class="btn btn-success" (click)="downloadStockData()">
         <i class="fa fa-download"></i> Download</button>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-1">
+      <i *ngIf="downloadSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+    </div>
+    <div class="col-sm-2">
       <button type="button" class="btn btn-danger" (click)="deleteStockData()">
         <i class="fa fa-trash"></i> Delete</button>
     </div>

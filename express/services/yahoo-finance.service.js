@@ -11,11 +11,11 @@ exports.getCrumbCookie = async function (symbol) {
     const cookieJar = request.jar();
 
     // HTTP Request to Yahoo Finance
-    return new Promise(resolve => {
+    return new Promise(function (resolve, reject) {
         request({ url: url, jar: cookieJar }, function (error, response, body) {
             if (error) {
-                // Print the status code and error if one occurred
-                throw Error(error);
+                // Reject the error
+                reject(error);
             }
 
             //// Extract Crumb value
@@ -54,11 +54,16 @@ exports.downloadSpotsCsv = async function (symbol, period1, period2, interval, c
     cookieJar.setCookie(cookieValue, url);
 
     // HTTP Request to Yahoo Finance
-    return new Promise(resolve => {
+    return new Promise(function (resolve, reject) {
         request({ url: url, jar: cookieJar }, function (error, response, body) {
             if (error) {
-                // Print the status code and error if one occurred
-                throw Error(error);
+                // Reject the error
+                reject(error);
+            }
+
+            // Check the response status code
+            if (response.statusCode !== 200) {
+                reject('Unauthorized access to Yahoo Finance');
             }
 
             // Resolve the request promise
