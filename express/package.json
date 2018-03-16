@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "NODE_ENV=production nodemon ./bin/www",
+    "test-server": "NODE_ENV=test nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
+    "config": "^1.30.0",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "debug": "~2.6.9",
