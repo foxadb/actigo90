@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
-var StockSchema = new mongoose.Schema({
+const StockSchema = new mongoose.Schema({
     symbol: { type: String, maxlength: 24, required: true, unique: true },
     name: { type: String, maxlength: 80 },
     currency: { type: String, enum: ['AUD', 'EUR', 'USD'] },
