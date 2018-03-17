@@ -12,7 +12,7 @@ int main(int argc, char **argv){
   for (std::vector<Spot>::iterator it = spots.begin(); it != spots.end(); ++it)
     std::cout << ' ' << (*it).toString()<<std::endl;
 
-  dbManager->post_delta(0.05, "2018-01-19", "^GSPC");
-  double delta = dbManager->get_delta("2018-01-19", "^GSPC");
+  dbManager->postDelta(0.05, "2018-01-19", "^GSPC");
+  double delta = dbManager->getDelta("2018-01-19", "^GSPC");
   std::cout << delta << std::endl;
 }

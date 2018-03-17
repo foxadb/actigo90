@@ -23,7 +23,7 @@ DataBaseManager* DataBaseManager::getDbManager(){
 
 DataBaseManager::DataBaseManager(){}
 
-b_oid DataBaseManager::get_stock_id(const char* symbol){
+b_oid DataBaseManager::getStockId(const char* symbol){
   mongocxx::collection coll = db["stocks"];
   auto cursor = coll.find(make_document(kvp("symbol", symbol)));
   for (const bsoncxx::document::view& doc : cursor) {
@@ -42,7 +42,7 @@ Spot DataBaseManager::getSpot(const char* date, const char* symbol){
 
 double DataBaseManager::getSpot(b_date date, const char* symbol){
   mongocxx::collection coll = db["spots"];
-  b_oid id = get_stock_id(symbol);
+  b_oid id = getStockId(symbol);
   double price = 0.0;
 
   auto cursor = coll.find(make_document(kvp("stock", id), kvp("date", date)));
@@ -59,7 +59,7 @@ vector<Spot> DataBaseManager::getSpots(const char *start_date, const char* end_d
   mongocxx::collection coll = db["spots"];
   vector<Spot> *spots = new vector<Spot>();
   std::int32_t offset_from_utc = 1;
-  b_oid id = get_stock_id(symbol);
+  b_oid id = getStockId(symbol);
   bsoncxx::builder::basic::document filter;
 
   filter.append(kvp("stock", id), kvp("date", [start_date, end_date,
@@ -81,8 +81,8 @@ vector<Spot> DataBaseManager::getSpots(const char *start_date, const char* end_d
   return *spots;
 }
 
-void DataBaseManager::post_delta(double delta, const char* date, const char* symbol){
-  b_oid id = get_stock_id(symbol);
+void DataBaseManager::postDelta(double delta, const char* date, const char* symbol){
+  b_oid id = getStockId(symbol);
   b_date bdate = read_date(date, 1);
 
   bsoncxx::document::value doc = make_document(
@@ -91,8 +91,8 @@ void DataBaseManager::post_delta(double delta, const char* date, const char* sym
   auto res = db["deltas"].insert_one(std::move(doc));
 }
 
-double DataBaseManager::get_delta(const char* date, const char* symbol){
-  b_oid id = get_stock_id(symbol);
+double DataBaseManager::getDelta(const char* date, const char* symbol){
+  b_oid id = getStockId(symbol);
   b_date bdate = read_date(date,1);
   mongocxx::collection coll = db["deltas"];
   double delta = 0.0;

@@ -20,7 +20,7 @@ using namespace bsoncxx::types;
  class DataBaseManager{
  private:
    static DataBaseManager *dbManager;
-   b_oid get_stock_id(const char* symbol);
+   b_oid getStockId(const char* symbol);
    double getSpot(b_date date, const char* symbol);
    DataBaseManager();
 
@@ -32,8 +32,8 @@ using namespace bsoncxx::types;
    Spot getSpot(const char *date, const char* symbol);
    std::vector<Spot> getSpots(const char *startDate,
      const char *endDate, const char* symbol);
-   void post_delta(double delta, const char* date, const char* symbol);
-   double get_delta(const char* date, const char* symbol);
+   void postDelta(double delta, const char* date, const char* symbol);
+   double getDelta(const char* date, const char* symbol);
 
  };
 
