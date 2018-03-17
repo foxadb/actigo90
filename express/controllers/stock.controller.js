@@ -79,7 +79,7 @@ exports.deleteStock = async function (req, res) {
 
         // Delete all stock spots
         for (let i = 0; i < spots.length; ++i) {
-            SpotService.deleteSpot(spots[i]);
+            await SpotService.deleteSpot(spots[i]);
         }
 
         // Delete the stock
