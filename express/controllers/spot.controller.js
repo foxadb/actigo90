@@ -57,7 +57,7 @@ exports.createSpot = async function (req, res) {
         let createdSpot = await SpotService.createSpot(spot);
 
         // Add the new spot to its stock
-        StockService.addSpot(createdSpot.stock, createdSpot._id);
+        await StockService.addSpot(createdSpot.stock, createdSpot._id);
 
         // Return success result
         return res.status(201).json({ status: 201, data: createdSpot, message: 'Successfully created spot' });
