@@ -44,6 +44,13 @@ public:
      * @param date Spot date
      * @return spots(date)
      */
+    Spot getSpot(std::time_t date);
+
+    /**
+     * @brief Spot getter by date
+     * @param date Spot date
+     * @return spots(date)
+     */
     Spot getSpot(std::string date);
 
     /**

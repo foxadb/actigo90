@@ -3,8 +3,9 @@
 #include <sstream>
 
 #include "spot.hpp"
+#include "time_utils.hpp"
 
-Spot::Spot(std::string date, double open, double high, double low, double close) {
+Spot::Spot(std::time_t date, double open, double high, double low, double close) {
     this->date = date;
     this->open = open;
     this->high = high;
@@ -12,8 +13,24 @@ Spot::Spot(std::string date, double open, double high, double low, double close)
     this->close = close;
 }
 
+Spot::Spot(std::string date, double open, double high, double low, double close) {
+    this->date = dateToEpoch(date.c_str());
+    this->open = open;
+    this->high = high;
+    this->low = low;
+    this->close = close;
+}
+
+Spot::Spot(std::time_t date, double price){
+  this->date = date;
+  this->close = price;
+  this->open = price;
+  this->high = price;
+  this->low = price;
+}
+
 Spot::Spot(std::string date, double price){
-  this-> date = date;
+  this->date = dateToEpoch(date.c_str());
   this->close = price;
   this->open = price;
   this->high = price;
@@ -22,8 +39,12 @@ Spot::Spot(std::string date, double price){
 
 Spot::~Spot() {}
 
-std::string Spot::getDate() {
+std::time_t Spot::getDate() {
     return this->date;
+}
+
+std::string Spot::getDateToString() {
+    return epochToDate(this->date);
 }
 
 double Spot::getOpen() {
@@ -44,7 +65,6 @@ double Spot::getClose() {
 
 
 std::string Spot::toString() {
-
     std::ostringstream osOpen;
     osOpen << this->open;
     std::ostringstream osHigh;
@@ -53,7 +73,7 @@ std::string Spot::toString() {
     osLow << this->low;
     std::ostringstream osClose;
     osClose << this->close;
-    return "{ date: " + this->date
+    return "{ date: " + this->getDateToString()
             + " open: " + osOpen.str()
             + " high: " + osHigh.str()
             + " low: " + osLow.str()
