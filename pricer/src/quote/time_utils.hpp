@@ -31,9 +31,6 @@ std::string epochToDate(const std::time_t epoch);
  */
 bool before(const char *date1, const char *date2);
 
-/**
-* @brief Converts a date to a type recognizable by mongocxx
-* @param epoch POSIX timestamp
-* @return a bsoncxx::types::b_date
-*/
-bsoncxx::types::b_date read_date(const std::time_t epoch, std::int32_t offset_from_utc);
+bsoncxx::types::b_date read_date(const char *date, std::int32_t offset_from_utc);
+
+std::string bDateToDate(bsoncxx::types::b_date date);
