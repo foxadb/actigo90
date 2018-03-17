@@ -1,4 +1,7 @@
 #include <ctime>
+#include <bsoncxx/types.hpp>
+
+
 
 /**
  * @brief Current Epoch time (POSIX timestamp)
@@ -27,3 +30,7 @@ std::string epochToDate(const std::time_t epoch);
  * @return True if date1 <= date2, False otherwise
  */
 bool before(const char *date1, const char *date2);
+
+bsoncxx::types::b_date read_date(const char *date, std::int32_t offset_from_utc);
+
+std::string bDateToDate(bsoncxx::types::b_date date);

@@ -4,6 +4,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstring>
+#include <bsoncxx/types.hpp>
+#include <chrono>
+
+
 
 std::time_t currentEpoch() {
     return std::time(NULL);
@@ -56,4 +60,17 @@ bool before(const char *date1, const char *date2) {
     std::time_t epoch2 = dateToEpoch(date2);
 
     return epoch1 < epoch2;
+}
+
+bsoncxx::types::b_date read_date(const char* date, std::int32_t offset_from_utc)
+{
+  std::time_t epoch = dateToEpoch(date);
+  std::chrono::system_clock::time_point time_point = std::chrono::system_clock::from_time_t(epoch);
+  return bsoncxx::types::b_date(time_point + std::chrono::hours{offset_from_utc});
+}
+
+std::string bDateToDate(bsoncxx::types::b_date date){
+  std::chrono::system_clock::time_point time_point = std::chrono::system_clock::time_point(date);
+  std::time_t time = std::chrono::system_clock::to_time_t(time_point);
+  return epochToDate(time);
 }
