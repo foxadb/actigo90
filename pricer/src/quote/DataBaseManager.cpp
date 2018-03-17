@@ -68,12 +68,15 @@ vector<Spot> DataBaseManager::getSpots(const char *start_date, const char* end_d
           sd.append(kvp("$lte", read_date(end_date, offset_from_utc)));
       }));
 
-  for (auto&& doc : coll.find(filter.view())) {
+ for (auto&& doc : coll.find(filter.view())) {
     bsoncxx::document::element price_ele = doc["price"];
     bsoncxx::document::element date_ele = doc["date"];
-    std::string date = bDateToDate(date_ele.get_date());
-    Spot *spot = new Spot(date, double(price_ele.get_double()));
-    spots->push_back(*spot);
+    if (date_ele.type() == type::k_date && price_ele.type() == type::k_double){
+      b_date date = date_ele.get_date();
+      double price = price_ele.get_double();
+      Spot *spot = new Spot(bDateToDate(date), double(price));
+      spots->push_back(*spot);
+    }
   }
   return *spots;
 }
