@@ -98,7 +98,7 @@ list<Spot> DataBaseManager::getSpots(const std::string& start_date, const std::s
 void DataBaseManager::post_delta(double delta, const char* date, const char* stock){
   b_oid id = get_stock_id(stock);
   b_date bdate = read_date(date, 1);
-  
+
   bsoncxx::document::value doc = make_document(
         kvp("stock", id), kvp("date", bdate), kvp("delta", delta));
 
