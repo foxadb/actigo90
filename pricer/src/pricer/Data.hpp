@@ -99,5 +99,7 @@ public:
       void getDataAtRebalancingDates(PnlMat* path, int rebalancingFrequency);
 
       void getZeroCoupon(PnlVect *exchangeRate, double r, double maturity);
+
+      //void vectorToPnlVect(vector<spot> spots, PnlVect* spotsVect);
 };
 #endif

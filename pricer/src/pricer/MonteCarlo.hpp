@@ -67,18 +67,20 @@ public:
      * @brief Computes the P&L
      * @param[in] delta contains the past deltas
      * @param data contains path of spots
+     * @param semestrialData contains data at semester dates
      * @param priceAtZero actigo price at t = 0
      */
-    double pAndL(PnlMat *delta, PnlMat *data, double priceAtZero);
+    double pAndL(PnlMat *delta, PnlMat *data, PnlMat* semestrialData, double priceAtZero);
 
 
     /**
-     * @brief rebalance Portfolio at a specific date
+     * @brief rebalance Portfolio at a specific date with calculating deltas and price at date
      * @param[in] past contains spots data till date
      * @param date the date
+     * @param price actigo's price at date
      * @param delta delta's vector to calculate
      */
-    void rebalanceAtSpecificDate(PnlMat *past, double date, PnlVect *delta);
+    void rebalanceAtSpecificDate(PnlMat *past, double date, PnlVect *delta, double &price);
 
 
     /**

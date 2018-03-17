@@ -27,11 +27,19 @@ Data::Data(PnlMat *matrixData){
    historicalDataMatrix = pnl_mat_new();
    historicalDataMatrixEuro = pnl_mat_new();
    completeDataMatrix = pnl_mat_new();
+   historicalDataMatrix = matrixData;
    pnl_mat_get_col(euroStoxSpots, matrixData, 0);
    pnl_mat_get_col(spUsdSpots, matrixData, 1);
    pnl_mat_get_col(spAudSpots, matrixData, 2);
    pnl_mat_get_col(eurUsd, matrixData, 3);
    pnl_mat_get_col(eurAud, matrixData, 4);
+   //converting everyting to euro
+   pnl_vect_mult_vect_term (spUsdSpots, eurUsd);
+   pnl_vect_mult_vect_term (spAudSpots, eurAud);
+
+   //constructing zero coupons
+   getZeroCoupon(eurUsd, rUsd, 8.0);
+   getZeroCoupon(eurAud, rAud, 8.0);
    rEur = 0.05;
    rUsd = 0.05;
    rAud = 0.05;
@@ -160,3 +168,11 @@ void Data::getZeroCoupon(PnlVect *exchangeRate, double r, double maturity){
       LET(exchangeRate, i) *= exp(-r * (maturity - i * step));
     }
 }
+
+/*void Data::vectorToPnlVect(vector<spot> spots, PnlVect* spotsVect){
+  spotsVect = pnl_vect_create_from_scalar(spots.size(), 0.);
+  int count = 0;
+  for (std::vector<Spot>::iterator it = spots.begin(); it != spots.end(); ++it){
+     MLET(spotsVect, count) = it.getClose();
+  }
+}*/

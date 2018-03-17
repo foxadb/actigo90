@@ -156,7 +156,7 @@ void MonteCarlo::updatePast(PnlMat *past, PnlMat *data, int i) {
     pnl_vect_free(&tmpVect);
 }
 
-double MonteCarlo::pAndL(PnlMat *delta, PnlMat* data, double priceAtZero){
+double MonteCarlo::pAndL(PnlMat *delta, PnlMat* data, PnlMat* semestrialData, double priceAtZero){
   PnlVect *currentDelta = pnl_vect_create_from_scalar(5, 0.);
   PnlVect *pastDelta = pnl_vect_create_from_scalar(5, 0.);
   PnlVect *currentSpots = pnl_vect_create_from_scalar(5, 0.);
@@ -172,7 +172,7 @@ double MonteCarlo::pAndL(PnlMat *delta, PnlMat* data, double priceAtZero){
     v = v * actuParam + pnl_vect_scalar_prod(pastDelta, currentSpots);
   }
   double lastDeltaPrice = pnl_vect_scalar_prod(currentDelta, currentSpots);
-  v = v + lastDeltaPrice;
+  v = v + lastDeltaPrice - opt_->payoff(semestrialData);
   //substract payoff
   pnl_vect_free(&currentDelta);
   pnl_vect_free(&currentSpots);
@@ -180,6 +180,8 @@ double MonteCarlo::pAndL(PnlMat *delta, PnlMat* data, double priceAtZero){
   return v;
 }
 
-void MonteCarlo::rebalanceAtSpecificDate(PnlMat *past, double date, PnlVect *delta){
+void MonteCarlo::rebalanceAtSpecificDate(PnlMat *past, double date, PnlVect *delta, double &price){
+  double ic;
   this->delta(past, date, delta);
+  this->price(past, date, price, ic);
 }
