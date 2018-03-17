@@ -33,6 +33,7 @@ using namespace bsoncxx::types;
    std::vector<Spot> getSpots(const char *startDate,
      const char *endDate, const char* stock);
    void post_delta(double delta, const char* date, const char* stock);
+   double get_delta(const char* date, const char* stock);
 
  };
 
