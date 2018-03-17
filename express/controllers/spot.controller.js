@@ -50,7 +50,7 @@ exports.createSpot = async function (req, res) {
     let spot = {
         stock: req.body.stock,
         date: req.body.date,
-        price: req.body.player2
+        price: req.body.price
     };
 
     try {

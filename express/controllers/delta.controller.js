@@ -50,14 +50,11 @@ exports.createDelta = async function (req, res) {
     let delta = {
         stock: req.body.stock,
         date: req.body.date,
-        delta: req.body.player2
+        delta: req.body.delta
     };
 
     try {
         let createdDelta = await DeltaService.createDelta(delta);
-
-        // Add the new delta to its stock
-        StockService.addDelta(createdDelta.stock, createdDelta._id);
 
         // Return success result
         return res.status(201).json({ status: 201, data: createdDelta, message: 'Successfully created delta' });

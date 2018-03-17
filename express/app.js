@@ -18,12 +18,14 @@ const mongodbUrl = 'mongodb://'
 mongoose.connect(mongodbUrl).then(
     res => {
         console.log(`Successfully connected to the MongoDB Database at: ${mongodbUrl}`);
-
-        // Drop database in test mode
-        if (process.env.NODE_ENV === 'test') {
-            console.log('Reset test database');
-            mongoose.connection.db.dropDatabase();
+        
+        if (process.env.NODE_ENV === 'production') {
+            // Initialize Database
+            require('./config/db-init');
         }
+
+        // App started signal
+        app.emit('appStarted');
     },
     err => {
         console.log(`Error Connecting to the MongoDB Database at: ${mongodbUrl}`);
@@ -33,9 +35,6 @@ mongoose.connect(mongodbUrl).then(
 // API
 const index = require('./routes/index.route');
 const api = require('./routes/api.route');
-
-// Config Init
-require('./config/db-init');
 
 // Enable CORS
 var corsWhitelist = [
