@@ -20,8 +20,8 @@ using namespace bsoncxx::types;
  class DataBaseManager{
  private:
    static DataBaseManager *dbManager;
-   b_oid get_stock_id(const char* stock);
-   double getSpot(b_date date, const char* stock);
+   b_oid getStockId(const char* symbol);
+   double getSpot(b_date date, const char* symbol);
    DataBaseManager();
 
  public:
@@ -29,10 +29,11 @@ using namespace bsoncxx::types;
    mongocxx::client client{mongocxx::uri{}};
    mongocxx::database db = client["peps"];
    static DataBaseManager* getDbManager();
-   Spot getSpot(const char *date, const char* stock);
+   Spot getSpot(const char *date, const char* symbol);
    std::vector<Spot> getSpots(const char *startDate,
-     const char *endDate, const char* stock);
-   void post_delta(double delta, const char* date, const char* stock);
+     const char *endDate, const char* symbol);
+   void postDelta(double delta, const char* date, const char* symbol);
+   double getDelta(const char* date, const char* symbol);
 
  };
 
