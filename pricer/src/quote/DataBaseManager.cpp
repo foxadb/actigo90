@@ -5,11 +5,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <mongocxx/options/find.hpp>
-#include <chrono>
-#include <ctime>
-#include <iomanip>
-#include <sstream>
-
+#include "time_utils.hpp"
 
 using namespace std;
 using bsoncxx::builder::basic::kvp;
@@ -36,24 +32,9 @@ b_oid DataBaseManager::get_stock_id(const char* stock){
      }
 }
 
-b_date DataBaseManager::read_date(const std::string& date, std::int32_t offset_from_utc){
-  tm utc_tm{};
-  istringstream ss{date};
 
-  // Read time into std::tm.
-  ss >> get_time(&utc_tm, "%Y-%m-%d");
-
-  // Convert std::tm to std::time_t.
-  time_t utc_time = mktime(&utc_tm);
-
-  // Convert std::time_t std::chrono::systemclock::time_point.
-  chrono::system_clock::time_point time_point = chrono::system_clock::from_time_t(utc_time);
-  return b_date{time_point + chrono::hours{offset_from_utc}};
- }
-
-
-Spot DataBaseManager::getSpot(const std::string& date, const char* stock){
-  b_date bdate = read_date(date, 1);
+Spot DataBaseManager::getSpot(const char* date, const char* stock){
+  b_date bdate = read_date(date, 0);
   double price = getSpot(bdate, stock);
   Spot *spot = new Spot(date, price);
   return *spot;
@@ -73,9 +54,9 @@ double DataBaseManager::getSpot(b_date date, const char* stock){
   return price;
 }
 
-list<Spot> DataBaseManager::getSpots(const std::string& start_date, const std::string& end_date, const char* stock){
+vector<Spot> DataBaseManager::getSpots(const char *start_date, const char* end_date, const char* stock){
   mongocxx::collection coll = db["spots"];
-  list<Spot> *spots = new list<Spot>();
+  vector<Spot> *spots = new vector<Spot>();
   std::int32_t offset_from_utc = 1;
   b_oid id = get_stock_id(stock);
   bsoncxx::builder::basic::document filter;
@@ -87,9 +68,8 @@ list<Spot> DataBaseManager::getSpots(const std::string& start_date, const std::s
   for (auto&& doc : coll.find(filter.view())) {
     bsoncxx::document::element price_ele = doc["price"];
     bsoncxx::document::element date_ele = doc["date"];
-    chrono::system_clock::time_point time_point = chrono::system_clock::time_point(date_ele.get_date());
-    time_t time = chrono::system_clock::to_time_t(time_point);
-    Spot *spot = new Spot(ctime(&time), double(price_ele.get_double()));
+    std::string date = bDateToDate(date_ele.get_date());
+    Spot *spot = new Spot(date, double(price_ele.get_double()));
     spots->push_back(*spot);
   }
   return *spots;
