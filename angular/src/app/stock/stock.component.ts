@@ -40,6 +40,8 @@ export class StockComponent implements OnInit {
   public chartLegend = false;
   public chartType = 'line';
 
+  public downloadSpinner = false;
+
   constructor(
     private stockService: StockService,
     private spotService: SpotService,
@@ -92,11 +94,21 @@ export class StockComponent implements OnInit {
         interval: '1d'
       };
 
+      // Start loading spinner
+      this.downloadSpinner = true;
+
       this.yahooFinanceService.downloadStockData(data).subscribe(
         res => {
           // Get Spots
-          this.getStockSpots(this.stock._id, 1, 500);
-        });
+          this.getStockSpots(this.stock._id, 1, 1000);
+
+          // Stop loading spinner
+          this.downloadSpinner = false;
+        },
+        err => {
+          // Retrying to download data
+          this.downloadStockData();
+      });
     }
   }
 

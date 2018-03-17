@@ -33,11 +33,23 @@ Spot Quote::getSpot(size_t i) {
     throw std::invalid_argument(error);
 }
 
-Spot Quote::getSpot(std::string date) {
+Spot Quote::getSpot(std::time_t date) {
     for (std::vector<Spot>::iterator it = this->spots.begin();
          it != this->spots.end();
          ++it) {
         if (it->getDate() == date) {
+            return *it;
+        }
+    }
+    std::string error = "ERROR getSpot(date) - There is not spot at " + date;
+    throw std::invalid_argument(error);
+}
+
+Spot Quote::getSpot(std::string date) {
+    for (std::vector<Spot>::iterator it = this->spots.begin();
+         it != this->spots.end();
+         ++it) {
+        if (it->getDateToString() == date) {
             return *it;
         }
     }

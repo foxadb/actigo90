@@ -1,6 +1,7 @@
 #ifndef SPOT_HPP
 #define SPOT_HPP
 
+#include <ctime>
 #include <string>
 
 /**
@@ -18,7 +19,24 @@ public:
      * @param low Lowest price value
      * @param close Price at closing
      */
+    Spot(std::time_t date, double open, double high, double low, double close);
+
+    /**
+     * @brief Spot constructor
+     * @param date Spot date
+     * @param open Price at opening
+     * @param high Highest price value
+     * @param low Lowest price value
+     * @param close Price at closing
+     */
     Spot(std::string date, double open, double high, double low, double close);
+
+    /**
+    *@brief Spot constructor
+    * @param date Spot date
+    * @param price Price at closing
+    */
+    Spot(std::time_t date, double price);
 
     /**
     *@brief Spot constructor
@@ -36,7 +54,13 @@ public:
      * @brief Date getter
      * @return Spot date
      */
-    std::string getDate();
+    std::time_t getDate();
+
+    /**
+     * @brief Date getter
+     * @return Spot date
+     */
+    std::string getDateToString();
 
     /**
      * @brief Open price getter
@@ -76,9 +100,9 @@ public:
 private:
 
     /**
-     * @brief Spot date in yyyy-MM-dd format (ignore hour)
+     * @brief Spot date in epoch format
      */
-    std::string date;
+    std::time_t date;
 
     /**
      * @brief Price at opening

@@ -116,6 +116,7 @@ double MonteCarlo::pAndL(PnlMat *data) {
 
     cout << "P&L computation..." << endl;
     for (int i = 1; i < data->m; i++) {
+        //cout << i << endl;
         updatePast(past, data, i);
         pnl_vect_clone(pastDelta, delta);
         temps = temps + pas;
@@ -153,4 +154,32 @@ void MonteCarlo::updatePast(PnlMat *past, PnlMat *data, int i) {
     pnl_mat_get_row(tmpVect, data, i);
     pnl_mat_set_row(past, tmpVect, (i - 1) / step + 1);
     pnl_vect_free(&tmpVect);
+}
+
+double MonteCarlo::pAndL(PnlMat *delta, PnlMat* data, double priceAtZero){
+  PnlVect *currentDelta = pnl_vect_create_from_scalar(5, 0.);
+  PnlVect *pastDelta = pnl_vect_create_from_scalar(5, 0.);
+  PnlVect *currentSpots = pnl_vect_create_from_scalar(5, 0.);
+  pnl_mat_get_row(currentDelta, delta, 0);
+  pnl_mat_get_row(currentSpots, data, 0);
+  double actuParam = exp(mod_->r_*opt_->T_ / data->m);
+  double v = priceAtZero - pnl_vect_scalar_prod(currentDelta, currentSpots);
+  for ( int i = 1; i < data->m ; i++){
+    pnl_vect_clone(pastDelta, currentDelta);
+    pnl_mat_get_row(currentDelta, delta, i);
+    pnl_mat_get_row(currentSpots, data, i);
+    pnl_vect_minus_vect(pastDelta, currentDelta);
+    v = v * actuParam + pnl_vect_scalar_prod(pastDelta, currentSpots);
+  }
+  double lastDeltaPrice = pnl_vect_scalar_prod(currentDelta, currentSpots);
+  v = v + lastDeltaPrice;
+  //substract payoff
+  pnl_vect_free(&currentDelta);
+  pnl_vect_free(&currentSpots);
+  pnl_vect_free(&pastDelta);
+  return v;
+}
+
+void MonteCarlo::rebalanceAtSpecificDate(PnlMat *past, double date, PnlVect *delta){
+  this->delta(past, date, delta);
 }

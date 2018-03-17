@@ -4,7 +4,7 @@ const SpotService = require('../services/spot.service');
 exports.getStocks = async function (req, res) {
     // Check the existence of the query parameters, If the exists doesn't exists assign a default value
     var page = req.query.page ? +req.query.page : 1;
-    var limit = req.query.limit ? +req.query.limit : 30;
+    var limit = req.query.limit ? +req.query.limit : 10;
 
     if (limit > 50) {
         return res.status(403).json({ status: 403, message: 'Limit can not be higher than 50' });

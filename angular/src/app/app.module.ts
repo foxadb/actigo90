@@ -8,7 +8,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { FinanceDataComponent } from './finance-data/finance-data.component';
+import { FinancialDataComponent } from './financial-data/financial-data.component';
 import { StockComponent } from './stock/stock.component';
 import { PricingComponent } from './pricing/pricing.component';
 import { ContactComponent } from './contact/contact.component';
@@ -21,7 +21,7 @@ import { YahooFinanceService } from './services/yahoo-finance.service';
   declarations: [
     AppComponent,
     HomeComponent,
-    FinanceDataComponent,
+    FinancialDataComponent,
     StockComponent,
     PricingComponent,
     ContactComponent

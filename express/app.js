@@ -1,24 +1,40 @@
-var express = require('express');
-var path = require('path');
-//var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var cors = require('cors');
+const express = require('express');
+const path = require('path');
+// const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const config = require('config');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
-var index = require('./routes/index.route');
-var api = require('./routes/api.route');
-
-var app = express();
+const app = express();
 
 // MongoDB
-//mongoose.Promise = bluebird;
-var mongodbUrl = 'mongodb://localhost:27017/peps';
+const mongodbUrl = 'mongodb://'
+    + config.get('mongodb.host') + ':'
+    + config.get('mongodb.port') + '/'
+    + config.get('mongodb.name');
 mongoose.connect(mongodbUrl).then(
-    res => console.log(`Successfully connected to the MongoDB Database at: ${mongodbUrl}\n`),
-    err => console.log(`Error Connecting to the MongoDB Database at: ${mongodbUrl}\n`)
+    res => {
+        console.log(`Successfully connected to the MongoDB Database at: ${mongodbUrl}`);
+        
+        if (process.env.NODE_ENV === 'production') {
+            // Initialize Database
+            require('./config/db-init');
+        }
+
+        // App started signal
+        app.emit('appStarted');
+    },
+    err => {
+        console.log(`Error Connecting to the MongoDB Database at: ${mongodbUrl}`);
+    }
 );
+
+// API
+const index = require('./routes/index.route');
+const api = require('./routes/api.route');
 
 // Enable CORS
 var corsWhitelist = [

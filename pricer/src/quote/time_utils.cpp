@@ -30,13 +30,23 @@ std::time_t dateToEpoch(const char *date) {
 
 std::string epochToDate(const std::time_t epoch) {
     struct std::tm * ptm = std::localtime(&epoch);
+    std::stringstream osYear;
+    osYear << ptm->tm_year + 1900;
 
-    std::stringstream osYear; 
-    osYear << ptm->tm_year;
-    std::stringstream osMonth; 
-    osMonth << ptm->tm_mon;
-    std::stringstream osDay; 
-    osDay << ptm->tm_mday;
+    std::stringstream osMonth;
+    if (ptm->tm_mon < 9) {
+        osMonth << 0 << ptm->tm_mon + 1;
+    } else {
+        osMonth << ptm->tm_mon + 1;
+    }
+
+    std::stringstream osDay;
+    if (ptm->tm_mday < 10) {
+        osDay << 0 << ptm->tm_mday;
+    } else {
+        osDay << ptm->tm_mday;
+    }
+
     std::string date = osYear.str()+ "-" + osMonth.str() + "-" + osDay.str();
     return date;
 }

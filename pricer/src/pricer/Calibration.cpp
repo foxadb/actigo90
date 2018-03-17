@@ -55,16 +55,28 @@ Calibration::Calibration(Data *data, double step){
     MLET(correlations, 4, 3) = rho;
 
    //volatilities estimation
+    PnlVect* tmpSpot = pnl_vect_create_from_scalar(data->euroStoxSpots->size, 0.);
     volatilities = pnl_vect_create(5);
     double sigma_1 = estimate_volatility(data->euroStoxSpots);
-    double sigma_2 = estimate_volatility(data->spUsdSpots);
-    double sigma_3 = estimate_volatility(data->spAudSpots);
-    double sigma_x1 = estimate_volatility(data->eurUsd);
-    double sigma_x2 = estimate_volatility(data->eurAud);
+    pnl_mat_get_col(tmpSpot, data->historicalDataMatrix, 1);
+    double sigma_2 = estimate_volatility(tmpSpot);
+    pnl_mat_get_col(tmpSpot, data->historicalDataMatrix, 2);
+    double sigma_3 = estimate_volatility(tmpSpot);
+    pnl_mat_get_col(tmpSpot, data->historicalDataMatrix, 3);
+    double sigma_x1 = estimate_volatility(tmpSpot);
+    pnl_mat_get_col(tmpSpot, data->historicalDataMatrix, 4);
+    double sigma_x2 = estimate_volatility(tmpSpot);
 
+    PnlVect* tmpForex = pnl_vect_create_from_scalar(data->euroStoxSpots->size, 0.);
+    pnl_mat_get_col(tmpSpot, data->historicalDataMatrix, 1);
+    pnl_mat_get_col(tmpForex, data->historicalDataMatrix, 3);
+    rho = estimate_correlation(tmpSpot, tmpForex);
     LET(volatilities, 0) = sigma_1;
-    LET(volatilities, 1) = sqrt(pow(sigma_2,2)+pow(sigma_x1,2)+2*MGET(correlations, 1, 3)*sigma_2 * sigma_x1);
-    LET(volatilities, 2) = sqrt(pow(sigma_3,2)+pow(sigma_x2,2)+2*MGET(correlations, 2, 4)*sigma_3 * sigma_x2);
+    LET(volatilities, 1) = sqrt(pow(sigma_2,2)+pow(sigma_x1,2)+2*rho*sigma_2 * sigma_x1);
+    pnl_mat_get_col(tmpSpot, data->historicalDataMatrix, 2);
+    pnl_mat_get_col(tmpForex, data->historicalDataMatrix, 4);
+    rho = estimate_correlation(tmpSpot, tmpForex);
+    LET(volatilities, 2) = sqrt(pow(sigma_3,2)+pow(sigma_x2,2)+2*rho*sigma_3 * sigma_x2);
     LET(volatilities, 3) = sigma_x1;
     LET(volatilities, 4) = sigma_x2;
 
@@ -139,7 +151,6 @@ double Calibration::estimate_volatility(PnlVect *x) {
   double biais = 0.0;
   double mean = 0.0;
   int n = x->size;
-  double step = 1.0 / 365.0;
   for (int i = 1 ; i < n; ++i){
     biais += pow(log(GET(x, i) / GET(x, i - 1)) / sqrt(step), 2);
     mean += log(GET(x, i) / GET(x, i - 1)) / sqrt(step);

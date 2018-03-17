@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
 import { PricingComponent } from './pricing/pricing.component';
-import { FinanceDataComponent } from './finance-data/finance-data.component';
+import { FinancialDataComponent } from './financial-data/financial-data.component';
 import { ContactComponent } from './contact/contact.component';
 
 const routes: Routes = [
@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: 'pricing', component: PricingComponent },
 
   // Player stats page
-  { path: 'finance-data', component: FinanceDataComponent },
+  { path: 'financial-data', component: FinancialDataComponent },
 
   // Contact page
   { path: 'contact', component: ContactComponent },

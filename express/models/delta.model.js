@@ -1,25 +1,25 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
-const SpotSchema = new mongoose.Schema({
+const DeltaSchema = new mongoose.Schema({
     stock: { type: mongoose.Schema.Types.ObjectId, ref: 'Stock', required: true },
     date: { type: Date, required: true },
-    price: { type: Number, default: 0 }
+    delta: { type: Number, default: 0 }
 }, { timestamps: true });
 
 // Avoid spot duplication
-SpotSchema.index({ stock: 1, date: 1}, { unique: true });
+DeltaSchema.index({ stock: 1, date: 1}, { unique: true });
 
-SpotSchema.methods.toDto = function () {
+DeltaSchema.methods.toDto = function () {
     return {
         id: this._id,
         stock: this.stock,
         date: this.date,
-        price: this.price
+        delta: this.delta
     };
 };
 
-SpotSchema.plugin(mongoosePaginate);
-const Spot = mongoose.model('Spot', SpotSchema);
+DeltaSchema.plugin(mongoosePaginate);
+const Delta = mongoose.model('Delta', DeltaSchema);
 
-module.exports = Spot;
+module.exports = Delta;

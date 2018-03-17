@@ -119,7 +119,7 @@ void Data::getInitialSpots(PnlVect *initialSpots){
 }
 
 void Data::getInitialSpotsEuro(PnlVect *initialSpotsEuro){
-  pnl_mat_get_row(initialSpotsEuro, historicalDataMatrix, 0);
+  pnl_mat_get_row(initialSpotsEuro, historicalDataMatrixEuro, 0);
 }
 
 void Data::getTodaySpots(PnlVect *todaySpots){

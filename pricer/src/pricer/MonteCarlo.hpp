@@ -64,6 +64,24 @@ public:
 
 
     /**
+     * @brief Computes the P&L
+     * @param[in] delta contains the past deltas
+     * @param data contains path of spots
+     * @param priceAtZero actigo price at t = 0
+     */
+    double pAndL(PnlMat *delta, PnlMat *data, double priceAtZero);
+
+
+    /**
+     * @brief rebalance Portfolio at a specific date
+     * @param[in] past contains spots data till date
+     * @param date the date
+     * @param delta delta's vector to calculate
+     */
+    void rebalanceAtSpecificDate(PnlMat *past, double date, PnlVect *delta);
+
+
+    /**
      *  @brief MonteCarlo Constructor
      *  @param mod       : A BlackScholesModel to generate the underlying assets path
      *  @param opt       : Option to price/hedge

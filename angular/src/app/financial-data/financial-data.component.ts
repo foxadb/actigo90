@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-finance-data',
-  templateUrl: './finance-data.component.html',
-  styleUrls: ['./finance-data.component.scss']
+  selector: 'app-financial-data',
+  templateUrl: './financial-data.component.html',
+  styleUrls: ['./financial-data.component.scss']
 })
-export class FinanceDataComponent implements OnInit {
+export class FinancialDataComponent implements OnInit {
 
   public euroStoxx50 = '^STOXX50E';
   public snp500 = '^GSPC';
