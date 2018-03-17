@@ -17,6 +17,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src/quote)
 add_executable(quoteTests
     quote/TestAllQuote.cpp
     quote/QuoteTest.cpp
+    quote/DataBaseManagerTest.cpp
     )
 
 add_executable(pricerTests
