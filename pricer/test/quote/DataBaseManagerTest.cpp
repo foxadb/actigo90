@@ -21,8 +21,8 @@ class DataBaseManagerTest : public ::testing::Test {
 TEST_F(DataBaseManagerTest, get_delta) {
   DataBaseManager *dbManager = DataBaseManager::getDbManager();
   double posted_delta = 0.02;
-  dbManager->post_delta(posted_delta, "2018-01-01", "S&P 500");
-  double returned_delta = dbManager->get_delta("2018-01-01", "S&P 500");
+  dbManager->post_delta(posted_delta, "2018-01-01", "^GSPC");
+  double returned_delta = dbManager->get_delta("2018-01-01", "^GSPC");
 
   EXPECT_EQ(posted_delta, returned_delta);
 }

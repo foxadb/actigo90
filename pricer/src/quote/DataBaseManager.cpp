@@ -23,9 +23,9 @@ DataBaseManager* DataBaseManager::getDbManager(){
 
 DataBaseManager::DataBaseManager(){}
 
-b_oid DataBaseManager::get_stock_id(const char* stock){
+b_oid DataBaseManager::get_stock_id(const char* symbol){
   mongocxx::collection coll = db["stocks"];
-  auto cursor = coll.find(make_document(kvp("name", stock)));
+  auto cursor = coll.find(make_document(kvp("symbol", symbol)));
   for (const bsoncxx::document::view& doc : cursor) {
        bsoncxx::document::element id_ele = doc["_id"];
        return id_ele.get_oid();
@@ -33,16 +33,16 @@ b_oid DataBaseManager::get_stock_id(const char* stock){
 }
 
 
-Spot DataBaseManager::getSpot(const char* date, const char* stock){
+Spot DataBaseManager::getSpot(const char* date, const char* symbol){
   b_date bdate = read_date(date, 1);
-  double price = getSpot(bdate, stock);
+  double price = getSpot(bdate, symbol);
   Spot *spot = new Spot(date, price);
   return *spot;
 }
 
-double DataBaseManager::getSpot(b_date date, const char* stock){
+double DataBaseManager::getSpot(b_date date, const char* symbol){
   mongocxx::collection coll = db["spots"];
-  b_oid id = get_stock_id(stock);
+  b_oid id = get_stock_id(symbol);
   double price = 0.0;
 
   auto cursor = coll.find(make_document(kvp("stock", id), kvp("date", date)));
@@ -55,11 +55,11 @@ double DataBaseManager::getSpot(b_date date, const char* stock){
   return price;
 }
 
-vector<Spot> DataBaseManager::getSpots(const char *start_date, const char* end_date, const char* stock){
+vector<Spot> DataBaseManager::getSpots(const char *start_date, const char* end_date, const char* symbol){
   mongocxx::collection coll = db["spots"];
   vector<Spot> *spots = new vector<Spot>();
   std::int32_t offset_from_utc = 1;
-  b_oid id = get_stock_id(stock);
+  b_oid id = get_stock_id(symbol);
   bsoncxx::builder::basic::document filter;
 
   filter.append(kvp("stock", id), kvp("date", [start_date, end_date,
@@ -81,8 +81,8 @@ vector<Spot> DataBaseManager::getSpots(const char *start_date, const char* end_d
   return *spots;
 }
 
-void DataBaseManager::post_delta(double delta, const char* date, const char* stock){
-  b_oid id = get_stock_id(stock);
+void DataBaseManager::post_delta(double delta, const char* date, const char* symbol){
+  b_oid id = get_stock_id(symbol);
   b_date bdate = read_date(date, 1);
 
   bsoncxx::document::value doc = make_document(
@@ -91,11 +91,11 @@ void DataBaseManager::post_delta(double delta, const char* date, const char* sto
   auto res = db["deltas"].insert_one(std::move(doc));
 }
 
-double DataBaseManager::get_delta(const char* date, const char* stock){
-  b_oid id = get_stock_id(stock);
+double DataBaseManager::get_delta(const char* date, const char* symbol){
+  b_oid id = get_stock_id(symbol);
   b_date bdate = read_date(date,1);
   mongocxx::collection coll = db["deltas"];
-  double delta = 1.0;
+  double delta = 0.0;
 
   auto cursor = coll.find(make_document(kvp("stock", id), kvp("date", bdate)));
   for (const bsoncxx::document::view& doc : cursor) {
