@@ -1,14 +1,16 @@
 <div class="container">
-  <div class="row">
-    <div class="col">
-      <h1>{{ stock?.name }}</h1>
-      <h2>{{ stock?.symbol }} {{ stock?.currency }}</h2>
-    </div>
+  <div class="stock-info">
+    <div class="title">{{ stock?.name }}</div>
+    <div class="symbol">{{ stock?.symbol }} {{ stock?.currency }}</div>
   </div>
   <div class="row justify-content-center data-panel">
     <div class="col-sm-3 date">
       <label for="startDate">Start Date</label>
-      <input id="startDate" type="date" class="form-control" [(ngModel)]="startDate" #ctrl="ngModel">
+      <input id="startDate" type="date" class="form-control" [ngModel]="startDate | date: 'yyyy-MM-dd'" (ngModelChange)="startDate = $event">
+    </div>
+    <div class="col-sm-3 date">
+      <label for="endDate">End Date</label>
+      <input id="endDate" type="date" class="form-control" [ngModel]="endDate | date: 'yyyy-MM-dd'" (ngModelChange)="endDate = $event">
     </div>
     <div class="col-sm-2">
       <button type="button" class="btn btn-success" (click)="downloadStockData()">

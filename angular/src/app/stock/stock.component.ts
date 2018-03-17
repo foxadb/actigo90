@@ -21,7 +21,8 @@ export class StockComponent implements OnInit {
   public stock: Stock;
   public spots: Array<Spot>;
 
-  public startDate: any;
+  public startDate: Date;
+  public endDate = Date.now();
 
   @ViewChild('baseChart') chart: BaseChartDirective;
 
@@ -86,11 +87,11 @@ export class StockComponent implements OnInit {
   }
 
   public downloadStockData(): void {
-    if (this.startDate) {
+    if (this.startDate && this.endDate) {
       const data = {
         stock: this.stock._id,
         period1: Math.round(new Date(this.startDate).getTime() / 1000),
-        period2: Math.round(new Date().getTime() / 1000),
+        period2: Math.round(new Date(this.endDate).getTime() / 1000),
         interval: '1d'
       };
 
