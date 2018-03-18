@@ -15,17 +15,18 @@ const mongodbUrl = 'mongodb://'
     + config.get('mongodb.host') + ':'
     + config.get('mongodb.port') + '/'
     + config.get('mongodb.name');
+
+const dbInit = require('./config/db-init');
+
 mongoose.connect(mongodbUrl).then(
     res => {
         console.log(`Successfully connected to the MongoDB Database at: ${mongodbUrl}`);
         
-        if (process.env.NODE_ENV === 'production') {
-            // Initialize Database
-            require('./config/db-init');
-        }
-
-        // App started signal
-        app.emit('appStarted');
+        // Initialize Database
+        dbInit.stockInit(done => {
+            // App started signal
+            app.emit('appStarted');
+        });
     },
     err => {
         console.log(`Error Connecting to the MongoDB Database at: ${mongodbUrl}`);

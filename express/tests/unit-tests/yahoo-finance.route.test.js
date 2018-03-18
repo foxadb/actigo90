@@ -6,11 +6,11 @@ const yahooFinanceRoute = '/api/yahoo-finance';
 
 var stockId;
 
-it('Create Euro Stoxx 50 stock', function (done) {
+it('Create Dow Jones stock', function (done) {
     const stock = {
-        symbol: '^STOXX50E',
-        name: 'Euro Stoxx 50',
-        currency: 'EUR'
+        symbol: '^DJI',
+        name: 'Dow Jones Industrial Average',
+        currency: 'USD'
     };
 
     request(app)
@@ -38,8 +38,8 @@ it('POST: Download historical spots', function (done) {
         .expect(201, done);
 });
 
-it('Delete Euro Stoxx 50 stock', function (done) {
+it('Delete Dow Jones stock', function (done) {
     request(app)
         .delete(`${stockRoute}/${stockId}`)
         .expect(204, done);
-    });
+});

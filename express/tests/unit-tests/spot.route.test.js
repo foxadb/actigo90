@@ -92,4 +92,4 @@ it('Delete the test stock', function (done) {
     request(app)
         .delete(`${stockRoute}/${stockId}`)
         .expect(204, done);
-    });
+});
