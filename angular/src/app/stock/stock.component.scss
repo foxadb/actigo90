@@ -12,6 +12,14 @@
     align-items: center;
 }
 
+.button-section {
+    padding: 16px 0;
+}
+
+.button-section button {
+    width: 50%;
+}
+
 .stock-info {
     padding: 8px 0 8px 0;
     background: #e0e0e0;
@@ -23,8 +31,12 @@
     font-size: 36px;
 }
 
-.symbol {
+.infos {
     font-size: 24px;
+}
+
+.infos span {
+    padding-left: 24px;
 }
 
 .date {

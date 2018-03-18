@@ -20,6 +20,7 @@ export class StockComponent implements OnInit {
 
   public stock: Stock;
   public spots: Array<Spot>;
+  public lastSpot: Spot;
 
   public startDate: Date;
   public endDate = Date.now();
@@ -67,6 +68,7 @@ export class StockComponent implements OnInit {
     this.spotService.getStockSpots(stock, page, limit).subscribe(
       spots => {
         this.spots = spots;
+        this.lastSpot = spots[spots.length - 1];
       },
       error => console.error('Error: ', error),
       () => {
