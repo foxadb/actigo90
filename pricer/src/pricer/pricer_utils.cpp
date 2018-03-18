@@ -29,7 +29,6 @@ void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> d
   PnlVect* eurAudSpots = pnl_vect_create_from_scalar(dates.size(), 0.);
   for (std::vector<time_t>::iterator it = dates.begin(); it != dates.end(); ++it){
       const char* currDate = epochToDate((*it)).c_str();
-      std::cout << currDate << std::endl;
       LET(euroStoxSpots, count) = dbManager->getSpot(currDate, "^STOXX50E").getClose();
       LET(spUsdSpots, count) = dbManager->getSpot(currDate, "^GSPC").getClose();
       LET(spAudSpots, count) = dbManager->getSpot(currDate, "^AXJO").getClose();

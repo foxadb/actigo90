@@ -98,12 +98,10 @@ dateToEpoch("2021-10-11"), dateToEpoch("2022-04-11"), dateToEpoch("2022-10-10"),
   getPastData(dbManager, past, rightDates);
 
   time_t dateDifference = epochDate - dateToEpoch("2015-04-08");
-  std::cout << dateDifference << std::endl;
   double convertedDate = (double)dateDifference/(365*24*3600);
-  std::cout << convertedDate << std::endl;
   if ( convertedDate > 8.0)
     convertedDate = 8. ;
   mc->rebalanceAtSpecificDate(past,  convertedDate, delta, price);
   pnl_vect_print(delta);
-  std::cout << price << std::endl;
+  std::cout << price << std::endl; 
 }
