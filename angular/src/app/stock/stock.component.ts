@@ -103,7 +103,7 @@ export class StockComponent implements OnInit {
       this.yahooFinanceService.downloadStockData(data).subscribe(
         res => {
           // Get Spots
-          this.getStockSpots(this.stock._id, 1, 1000);
+          this.getStockSpots(this.stock._id, 1, 5000);
 
           // Stop loading spinner
           this.downloadSpinner = false;

@@ -16,6 +16,7 @@ import { ContactComponent } from './contact/contact.component';
 import { StockService } from './services/stock.service';
 import { SpotService } from './services/spot.service';
 import { YahooFinanceService } from './services/yahoo-finance.service';
+import { PricerService } from './services/pricer.service';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { YahooFinanceService } from './services/yahoo-finance.service';
   providers: [
     StockService,
     SpotService,
-    YahooFinanceService
+    YahooFinanceService,
+    PricerService
   ],
   bootstrap: [AppComponent]
 })
