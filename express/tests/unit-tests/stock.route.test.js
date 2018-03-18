@@ -67,4 +67,4 @@ it('DELETE', function (done) {
     request(app)
         .delete(`${stockRoute}/${stockId}`)
         .expect(204, done);
-    });
+});

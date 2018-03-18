@@ -1,26 +1,36 @@
 <div class="container">
-  <div class="row">
-    <div class="col">
-      <h1>{{ stock?.name }}</h1>
-      <h2>{{ stock?.symbol }} {{ stock?.currency }}</h2>
+  <div class="stock-info">
+    <div class="title">
+      {{ stock?.name }}
+    </div>
+    <div class="infos">
+      <a href="https://fr.finance.yahoo.com/quote/{{ stock?.symbol }}?p={{ stock?.symbol }}">
+      {{ stock?.symbol }}</a>
+      <span>Last price ({{ stock?.currency }}): {{ lastSpot?.price }}</span>
     </div>
   </div>
   <div class="row justify-content-center data-panel">
-    <div class="col-sm-3 date">
+    <div class="col-sm-4 date">
       <label for="startDate">Start Date</label>
-      <input id="startDate" type="date" class="form-control" [(ngModel)]="startDate" #ctrl="ngModel">
+      <input id="startDate" type="date" class="form-control" [ngModel]="startDate | date: 'yyyy-MM-dd'" (ngModelChange)="startDate = $event">
     </div>
-    <div class="col-sm-2">
-      <button type="button" class="btn btn-success" (click)="downloadStockData()">
-        <i class="fa fa-download"></i> Download</button>
+    <div class="col-sm-4 date">
+      <label for="endDate">End Date</label>
+      <input id="endDate" type="date" class="form-control" [ngModel]="endDate | date: 'yyyy-MM-dd'" (ngModelChange)="endDate = $event">
     </div>
-    <div class="col-sm-1">
-      <i *ngIf="downloadSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+    <div class="col-md-3">
+      <div class="row justify-content-center button-section">
+        <button type="button" class="btn btn-success" (click)="downloadStockData()">
+          <i class="fa fa-download"></i> Download</button>
+      </div>
+            <div class="row justify-content-center button-section">
+        <button type="button" class="btn btn-danger" (click)="deleteStockData()">
+          <i class="fa fa-trash"></i> Delete</button>
+      </div>
     </div>
-    <div class="col-sm-2">
-      <button type="button" class="btn btn-danger" (click)="deleteStockData()">
-        <i class="fa fa-trash"></i> Delete</button>
-    </div>
+    <div class="col-md-1">
+    <i *ngIf="downloadSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+      </div>
   </div>
   <div class="row justify-content-center">
     <div class="col">

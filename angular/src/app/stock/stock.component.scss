@@ -1,8 +1,42 @@
+.container {
+    margin: 64px 0 64px 0;
+    padding: 0;
+    background: #f3f3f3;
+    border-radius: 25px;
+}
+
 .data-panel {
-    padding: 1em 0 1em 0;
+    padding: 24px 0 24px 0;
     // columns vertically aligned
     display: flex;
     align-items: center;
+}
+
+.button-section {
+    padding: 16px 0;
+}
+
+.button-section button {
+    width: 50%;
+}
+
+.stock-info {
+    padding: 8px 0 8px 0;
+    background: #e0e0e0;
+    border-top-right-radius: 25px;
+    border-top-left-radius: 25px;
+}
+
+.title {
+    font-size: 36px;
+}
+
+.infos {
+    font-size: 24px;
+}
+
+.infos span {
+    padding-left: 24px;
 }
 
 .date {
@@ -11,4 +45,5 @@
 
 .chart {
     display: block;
+    padding: 24px 8px 24px 8px;
 }
