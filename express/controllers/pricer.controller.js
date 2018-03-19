@@ -1,8 +1,11 @@
 const PricerService = require('../services/pricer.service');
 
-exports.getPricing = function (req, res) {
+exports.actigoDelta = function (req, res) {
+    // Get date
+    const date = req.body.date;
+
     try {
-        PricerService.getPricing(pricing => {
+        PricerService.actigoDelta(date, pricing => {
             res.status(200).json({ status: 200, data: pricing, message: 'Pricing data successfully received' });
         });
     } catch (error) {

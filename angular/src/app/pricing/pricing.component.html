@@ -28,6 +28,55 @@
       </div>
     </div>
   </div>
+  <div class="row justify-content-center pricing">
+    <div class="col-md-3">
+      <form class="form" (ngSubmit)="actigoDelta()" #f="ngForm" novalidate>
+        <div class="form-group">
+          <label for="pricingDate">Pricing date</label>
+          <input id="pricingDate" type="date" class="form-control" name="pricingDate" [ngModel]="pricingDate | date: 'yyyy-MM-dd'" (ngModelChange)="pricingDate = $event">
+        </div>
+        <div class="form-group">
+          <button type="submit" arial-label="Pricing" class="btn btn-success">
+            <i class="fa fa-money fa-lg"></i> Pricing</button>
+        </div>
+      </form>
+      <i *ngIf="pricingSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+    </div>
+    <div class="col-md-6">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td>Date</td>
+            <td>{{ pricingDate }}</td>
+          </tr>
+          <tr>
+            <td>Euro Stoxx 50</td>
+            <td>{{ pricing?.euroStoxx50 }}</td>
+          </tr>
+          <tr>
+            <td>S&P 500</td>
+            <td>{{ pricing?.snp500 }}</td>
+          </tr>
+          <tr>
+            <td>S&P ASX/200</td>
+            <td>{{ pricing?.snp200 }}</td>
+          </tr>
+          <tr>
+            <td>EUR/USD</td>
+            <td>{{ pricing?.eurUsd }}</td>
+          </tr>
+          <tr>
+            <td>EUR/AUD</td>
+            <td>{{ pricing?.eurAud }}</td>
+          </tr>
+          <tr>
+            <td>Price</td>
+            <td>{{ pricing?.price }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
   <div class="row justify-content-center">
     <a class="delta-title">
       Deltas

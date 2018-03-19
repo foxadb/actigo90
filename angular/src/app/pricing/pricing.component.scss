@@ -15,6 +15,22 @@
     text-align: right;
 }
 
+.pricing {
+    padding: 32px 0;
+    // columns vertically aligned
+    display: flex;
+    align-items: center;
+}
+
+.pricing form {
+    max-width: 156px;
+    text-align: center;
+}
+
+.pricing .fa-spinner {
+    margin: 16px 52px;
+}
+
 .delta-title {
     padding: 1em 0 0.5em 0;
     font-size: 48px;
