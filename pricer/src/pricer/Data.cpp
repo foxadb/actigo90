@@ -38,11 +38,12 @@ Data::Data(PnlMat *matrixData){
    pnl_vect_mult_vect_term (spAudSpots, eurAud);
 
    //constructing zero coupons
-   getZeroCoupon(eurUsd, rUsd, 8.0);
-   getZeroCoupon(eurAud, rAud, 8.0);
    rEur = 0.05;
    rUsd = 0.05;
    rAud = 0.05;
+   getZeroCoupon(eurUsd, rUsd, 8.0);
+   getZeroCoupon(eurAud, rAud, 8.0);
+
 }
 
 Data::Data(const char* startDate, const char* currentDate){
