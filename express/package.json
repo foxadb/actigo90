@@ -8,6 +8,7 @@
     "unit-tests": "NODE_ENV=test mocha tests/unit-tests.js --exit"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "~1.18.2",
     "config": "^1.30.0",
     "cookie-parser": "~1.4.3",
@@ -15,6 +16,7 @@
     "debug": "~2.6.9",
     "ejs": "~2.5.7",
     "express": "~4.15.5",
+    "jsonwebtoken": "^8.2.0",
     "mongoose": "^5.0.9",
     "mongoose-paginate": "^5.0.3",
     "morgan": "~1.9.0",

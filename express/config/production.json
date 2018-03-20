@@ -3,5 +3,6 @@
         "host": "localhost",
         "port": 27017,
         "name": "peps"
-    }
+    },
+    "jwtsecret": "CHANGE THIS ON PRODUCTION"
 }

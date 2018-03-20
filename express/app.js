@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const config = require('config');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const cors = require('cors');
 
 const app = express();
@@ -21,7 +22,7 @@ const dbInit = require('./config/db-init');
 mongoose.connect(mongodbUrl).then(
     res => {
         console.log(`Successfully connected to the MongoDB Database at: ${mongodbUrl}`);
-        
+
         // Initialize Database
         dbInit.stockInit(done => {
             // App started signal
@@ -66,6 +67,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Authentication with JSON Web Token
+app.use(function (req, res, next) {
+    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+        jwt.verify(req.headers.authorization.split(' ')[1], config.get('jwtsecret'), function (err, decode) {
+            if (err) {
+                req.user = undefined;
+            } else {
+                req.user = decode;
+            }
+            next();
+        });
+    } else {
+        req.user = undefined;
+        next();
+    }
+});
 
 // API routes
 app.use('/', index);
