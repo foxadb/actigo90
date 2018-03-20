@@ -24,9 +24,12 @@ mongoose.connect(mongodbUrl).then(
         console.log(`Successfully connected to the MongoDB Database at: ${mongodbUrl}`);
 
         // Initialize Database
-        dbInit.stockInit(done => {
-            // App started signal
-            app.emit('appStarted');
+        dbInit.adminInit(done => {
+            console.log('Default admin credentials:\n', done);
+            dbInit.stockInit(done => {
+                // App started signal
+                app.emit('appStarted');
+            });
         });
     },
     err => {

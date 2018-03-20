@@ -1,4 +1,25 @@
+const UserService = require('../services/user.service');
 const StockService = require('../services/stock.service');
+
+
+// Create a default admin user
+exports.adminInit = function (done) {
+    const admin = {
+        username: 'admin',
+        password: 'password',
+        role: 'admin'
+    };
+
+    UserService.registerUser(admin).then(
+        user => {
+            console.log('You should create a new admin account ASAP and delete the default one');
+            done(admin);
+        },
+        error => {
+            done(admin);
+        }
+    );
+};
 
 // Stocks initialization
 exports.stockInit = function (done) {
