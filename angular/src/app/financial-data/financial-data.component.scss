@@ -2,6 +2,29 @@
     text-align: center;
 }
 
+.main-data-panel {
+    padding: 24px 0 24px 0;
+    // columns vertically aligned
+    display: flex;
+    align-items: center;
+}
+
+.main-data-panel .panel-title {
+    font-size: 28px;
+}
+
+.main-data-panel .date {
+    max-width: 178px;
+}
+
+.button-section {
+    padding: 16px 0;
+}
+
+.button-section button {
+    width: 50%;
+}
+
 .title {
     margin: 64px 0 64px 0;
     font-size: 48px;
