@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const config = require('config');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const helmet = require('helmet');
 const cors = require('cors');
 
 const app = express();
@@ -40,6 +41,9 @@ mongoose.connect(mongodbUrl).then(
 // API
 const index = require('./routes/index.route');
 const api = require('./routes/api.route');
+
+// Helmet Security Headers
+app.use(helmet());
 
 // Enable CORS
 var corsWhitelist = [
