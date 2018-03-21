@@ -33,8 +33,8 @@ b_oid DataBaseManager::getStockId(const char* symbol){
 }
 
 
-Spot DataBaseManager::getSpot(const char* date, const char* symbol){
-  b_date bdate = read_date(date, 1);
+Spot DataBaseManager::getSpot(std::time_t date, const char* symbol){
+  b_date bdate = read_date(date, 0);
   double price = getSpot(bdate, symbol);
   Spot *spot = new Spot(date, price);
   return *spot;
@@ -55,7 +55,7 @@ double DataBaseManager::getSpot(b_date date, const char* symbol){
   return price;
 }
 
-vector<Spot> DataBaseManager::getSpots(const char *start_date, const char* end_date, const char* symbol){
+vector<Spot> DataBaseManager::getSpots(std::time_t start_date, std::time_t end_date, const char* symbol){
   mongocxx::collection coll = db["spots"];
   vector<Spot> *spots = new vector<Spot>();
   std::int32_t offset_from_utc = 1;
@@ -74,14 +74,14 @@ vector<Spot> DataBaseManager::getSpots(const char *start_date, const char* end_d
     if (date_ele.type() == type::k_date && price_ele.type() == type::k_double){
       b_date date = date_ele.get_date();
       double price = price_ele.get_double();
-      Spot *spot = new Spot(bDateToDate(date), double(price));
+      Spot *spot = new Spot(bDateToEpoch(date), double(price));
       spots->push_back(*spot);
     }
   }
   return *spots;
 }
 
-void DataBaseManager::postDelta(double delta, const char* date, const char* symbol){
+void DataBaseManager::postDelta(double delta, std::time_t date, const char* symbol){
   b_oid id = getStockId(symbol);
   b_date bdate = read_date(date, 1);
 
@@ -91,7 +91,7 @@ void DataBaseManager::postDelta(double delta, const char* date, const char* symb
   auto res = db["deltas"].insert_one(std::move(doc));
 }
 
-double DataBaseManager::getDelta(const char* date, const char* symbol){
+double DataBaseManager::getDelta(std::time_t date, const char* symbol){
   b_oid id = getStockId(symbol);
   b_date bdate = read_date(date,1);
   mongocxx::collection coll = db["deltas"];
@@ -106,4 +106,8 @@ double DataBaseManager::getDelta(const char* date, const char* symbol){
   }
 
   return delta;
+}
+
+void DataBaseManager::clearDeltas(){
+   db["deltas"].delete_many({});
 }

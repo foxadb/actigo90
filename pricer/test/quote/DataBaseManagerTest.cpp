@@ -22,14 +22,14 @@ class DataBaseManagerTest : public ::testing::Test {
 TEST_F(DataBaseManagerTest, getDelta) {
   DataBaseManager *dbManager = DataBaseManager::getDbManager();
   double posted_delta = 0.02;
-  dbManager->postDelta(posted_delta, "2018-01-01", "^GSPC");
-  double returned_delta = dbManager->getDelta("2018-01-01", "^GSPC");
-
+  dbManager->postDelta(posted_delta, 1514764800, "^GSPC");
+  double returned_delta = dbManager->getDelta(1514764800, "^GSPC");
+  dbManager->clearDeltas();
   EXPECT_EQ(posted_delta, returned_delta);
 }
 
 TEST_F(DataBaseManagerTest, getSpot) {
   DataBaseManager *dbManager = DataBaseManager::getDbManager();
-  Spot spot = dbManager->getSpot("2017-01-03", "^GSPC");
+  Spot spot = dbManager->getSpot(1483401600, "^GSPC");
   EXPECT_EQ(spot.getClose(), 2257.830078);
 }

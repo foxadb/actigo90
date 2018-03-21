@@ -29,12 +29,12 @@ public:
     mongocxx::client client{mongocxx::uri{}};
     mongocxx::database db = client["peps"];
     static DataBaseManager* getDbManager();
-    Spot getSpot(const char *date, const char* symbol);
-    std::vector<Spot> getSpots(const char *startDate,
-                               const char *endDate, const char* symbol);
-    void postDelta(double delta, const char* date, const char* symbol);
-    double getDelta(const char* date, const char* symbol);
-
+    Spot getSpot(std::time_t date, const char* symbol);
+    std::vector<Spot> getSpots(std::time_t startDate,
+                               std::time_t endDate, const char* symbol);
+    void postDelta(double delta, std::time_t date, const char* symbol);
+    double getDelta(std::time_t date, const char* symbol);
+    void clearDeltas();
 };
 
 #endif /* DATABASEMANAGER_H */
