@@ -26,12 +26,11 @@ void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> d
     PnlVect* eurUsdSpots = pnl_vect_create_from_scalar(dates.size(), 0.);
     PnlVect* eurAudSpots = pnl_vect_create_from_scalar(dates.size(), 0.);
     for (std::vector<time_t>::iterator it = dates.begin(); it != dates.end(); ++it){
-        const char* currDate = epochToDate((*it)).c_str();
-        LET(euroStoxSpots, count) = dbManager->getSpot(currDate, "^STOXX50E").getClose();
-        LET(spUsdSpots, count) = dbManager->getSpot(currDate, "^GSPC").getClose();
-        LET(spAudSpots, count) = dbManager->getSpot(currDate, "^AXJO").getClose();
-        LET(eurUsdSpots, count) = dbManager->getSpot(currDate, "EURUSD=X").getClose();
-        LET(eurAudSpots, count) = dbManager->getSpot(currDate, "EURAUD=X").getClose();
+        LET(euroStoxSpots, count) = dbManager->getSpot(*it, "^STOXX50E").getClose();
+        LET(spUsdSpots, count) = dbManager->getSpot(*it, "^GSPC").getClose();
+        LET(spAudSpots, count) = dbManager->getSpot(*it, "^AXJO").getClose();
+        LET(eurUsdSpots, count) = dbManager->getSpot(*it, "EURUSD=X").getClose();
+        LET(eurAudSpots, count) = dbManager->getSpot(*it, "EURAUD=X").getClose();
         count++;
     }
     pnl_vect_mult_vect_term (spUsdSpots, eurUsdSpots);
@@ -48,13 +47,15 @@ void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> d
     pnl_mat_set_col(past, eurAudSpots, 4);
 }
 
-std::vector<time_t> getRightDates(time_t today, std::vector<time_t> dates){
+std::vector<time_t> getRightDates(time_t todayDate, std::vector<time_t> &semesterDates){
     std::vector<time_t> rightDates;
-    for (std::vector<time_t>::iterator it = dates.begin(); it != dates.end(); ++it){
-        if ( (*it) >= today)
+    for (std::vector<time_t>::iterator it = (semesterDates).begin(); it != (semesterDates).end(); ++it){
+      std::cout << "date " << epochToDate(*it) << std::endl;
+        if ( (*it) >= todayDate)
             break;
         rightDates.push_back((*it));
+      //  std::cout << "date" << epochToDate(*it) << std::endl;
     }
-    rightDates.push_back(today);
+    rightDates.push_back(todayDate);
     return rightDates;
 }
