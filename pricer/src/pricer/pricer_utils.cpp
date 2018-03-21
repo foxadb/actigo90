@@ -47,14 +47,12 @@ void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> d
     pnl_mat_set_col(past, eurAudSpots, 4);
 }
 
-std::vector<time_t> getRightDates(time_t todayDate, std::vector<time_t> &semesterDates){
+std::vector<time_t> getRightDates(time_t todayDate, std::vector<time_t> semesterDates){
     std::vector<time_t> rightDates;
     for (std::vector<time_t>::iterator it = (semesterDates).begin(); it != (semesterDates).end(); ++it){
-      std::cout << "date " << epochToDate(*it) << std::endl;
         if ( (*it) >= todayDate)
             break;
         rightDates.push_back((*it));
-      //  std::cout << "date" << epochToDate(*it) << std::endl;
     }
     rightDates.push_back(todayDate);
     return rightDates;

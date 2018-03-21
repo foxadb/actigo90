@@ -1,7 +1,8 @@
+#ifndef TIME_UTILS_H
+#define TIME_UTILS_H
+
 #include <ctime>
 #include <bsoncxx/types.hpp>
-
-
 
 /**
  * @brief Current Epoch time (POSIX timestamp)
@@ -31,6 +32,8 @@ std::string epochToDate(const std::time_t epoch);
  */
 bool before(const char *date1, const char *date2);
 
-bsoncxx::types::b_date read_date(const char *date, std::int32_t offset_from_utc);
+bsoncxx::types::b_date read_date(std::time_t date, std::int32_t offset_from_utc);
 
-std::string bDateToDate(bsoncxx::types::b_date date);
+std::time_t bDateToEpoch(bsoncxx::types::b_date date);
+
+#endif /* TIME_UTILS_H */

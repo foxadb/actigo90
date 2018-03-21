@@ -1,15 +1,7 @@
-/**
- * @file Actigo.hpp
- * @version 0.1
- * @date 01 janvier 2018
- *
- *
- */
-
-#include "Option.hpp"
-
 #ifndef ACTIGO_H
 #define	ACTIGO_H
+
+#include "Option.hpp"
 
 /**
  * @brief Actigo class

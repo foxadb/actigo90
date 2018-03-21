@@ -1,4 +1,5 @@
-#pragma once
+#ifndef OPTION_H
+#define	OPTION_H
 
 #include "pnl/pnl_vector.h"
 #include "pnl/pnl_matrix.h"
@@ -23,3 +24,5 @@ public:
      */
     virtual double payoff(const PnlMat *path) = 0;
 };
+
+#endif /* OPTION_H */

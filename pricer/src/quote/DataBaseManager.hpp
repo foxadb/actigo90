@@ -17,24 +17,24 @@ using namespace bsoncxx::types;
  * @brief DataBaseManager class
  */
 
- class DataBaseManager{
- private:
-   static DataBaseManager *dbManager;
-   b_oid getStockId(const char* symbol);
-   double getSpot(b_date date, const char* symbol);
-   DataBaseManager();
+class DataBaseManager{
+private:
+    static DataBaseManager *dbManager;
+    b_oid getStockId(const char* symbol);
+    double getSpot(b_date date, const char* symbol);
+    DataBaseManager();
 
- public:
-   mongocxx::instance instance{};
-   mongocxx::client client{mongocxx::uri{}};
-   mongocxx::database db = client["peps"];
-   static DataBaseManager* getDbManager();
-   Spot getSpot(const char *date, const char* symbol);
-   std::vector<Spot> getSpots(const char *startDate,
-     const char *endDate, const char* symbol);
-   void postDelta(double delta, const char* date, const char* symbol);
-   double getDelta(const char* date, const char* symbol);
+public:
+    mongocxx::instance instance{};
+    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::database db = client["peps"];
+    static DataBaseManager* getDbManager();
+    Spot getSpot(std::time_t date, const char* symbol);
+    std::vector<Spot> getSpots(std::time_t startDate,
+                               std::time_t endDate, const char* symbol);
+    void postDelta(double delta, std::time_t date, const char* symbol);
+    double getDelta(std::time_t date, const char* symbol);
 
- };
+};
 
- #endif
+#endif /* DATABASEMANAGER_H */

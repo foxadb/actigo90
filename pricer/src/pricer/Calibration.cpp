@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
-#include "../quote/quote.hpp"
 
 using namespace std;
 
