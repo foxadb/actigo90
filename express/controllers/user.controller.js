@@ -54,7 +54,7 @@ exports.loginUser = async function (req, res) {
             let token = await jwt.sign(
                 { _id: loggedUser._id, username: loggedUser.username, role: loggedUser.role },
                 config.get('jwtsecret'), // private key
-                { expiresIn: 7200 } // 2 hours
+                { expiresIn: 86400 } // 1 day
             );
             return res.status(200).json({ status: 200, token: token, message: 'Authentication successfull' });
         }
