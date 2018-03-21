@@ -6,8 +6,9 @@ import { AuthenticationService } from '../services/authentication.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
 
+  private jwtHelper = new JwtHelperService();
+
   constructor(
-    private jwtHelper: JwtHelperService,
     private auth: AuthenticationService,
     private router: Router) { }
 

@@ -13,11 +13,9 @@ import { environment } from '../../environments/environment';
 export class AuthenticationService {
 
   private loginUrl = `${environment.apiUrl}/user/login`;
+  private jwtHelper = new JwtHelperService();
 
-  constructor(
-    private jwtHelper: JwtHelperService,
-    private http: Http
-  ) { }
+  constructor(private http: Http) { }
 
   public isAuthenticated(): boolean {
     // Get the token
