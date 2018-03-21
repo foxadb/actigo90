@@ -1,7 +1,6 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-
 #include "pnl/pnl_matrix.h"
 #include <iostream>
 #include <map>
@@ -167,4 +166,4 @@ private:
     char type_rdelim;
 };
 
-#endif
+#endif /* PARSER_H */

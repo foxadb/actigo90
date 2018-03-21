@@ -1,7 +1,7 @@
-#include "Option.hpp"
-
 #ifndef BASKET_H
 #define	BASKET_H
+
+#include "Option.hpp"
 
 /// \brief Classe pour option panier
 class Basket : public Option {

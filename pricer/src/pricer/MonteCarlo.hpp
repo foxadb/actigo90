@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MONTECARLO_H
+#define	MONTECARLO_H
 
 #include "Option.hpp"
 #include "BlackScholesModel.hpp"
@@ -100,3 +101,5 @@ public:
 
     void updatePast(PnlMat *past, PnlMat *data, int i);
 };
+
+#endif /* MONTECARLO_H */

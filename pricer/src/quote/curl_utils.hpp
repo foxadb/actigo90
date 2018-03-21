@@ -1,5 +1,5 @@
-#ifndef UTILS_HPP
-#define UTILS_HPP
+#ifndef CURL_UTILS_HPP
+#define CURL_UTILS_HPP
 
 #include <string>
 #include <ctime>
@@ -86,4 +86,4 @@ std::string downloadYahooCsv(std::string symbol,
                              std::string *crumb,
                              std::string *cookie);
 
-#endif /* UTILS_HPP */
+#endif /* CURL_UTILS_HPP */

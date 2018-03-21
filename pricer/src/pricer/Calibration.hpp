@@ -1,14 +1,10 @@
-/**
- * @file Calibration.hpp
- * @version 0.1
- * @date 26 janvier 2018
- *
- *
- */
-#include <cstdio>
+#ifndef CALIBRATION_H
+#define	CALIBRATION_H
+
 #include "Data.hpp"
 #include "pnl/pnl_vector.h"
 #include "pnl/pnl_matrix.h"
+#include <cstdio>
 
 /**
  * @brief Calibration class
@@ -83,3 +79,5 @@ public:
   */
   PnlVect* getTrends();
 };
+
+#endif /* CALIBRATION_H */

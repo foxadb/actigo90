@@ -1,6 +1,7 @@
 #include "DataBaseManager.hpp"
-#include <vector>
 #include "spot.hpp"
+
+#include <vector>
 #include <iostream>
 
 int main(int argc, char **argv){

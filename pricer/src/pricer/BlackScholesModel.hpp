@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLACKSCHOLESMODEL_H
+#define	BLACKSCHOLESMODEL_H
 
 #include "pnl/pnl_random.h"
 #include "pnl/pnl_vector.h"
@@ -98,3 +99,5 @@ public:
      */
     void simul_market(PnlMat* path, int nbDates, double T, PnlRng* rng);
 };
+
+#endif /* BLACKSCHOLESMODEL_H */
