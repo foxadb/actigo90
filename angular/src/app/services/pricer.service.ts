@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 
+import { AuthenticationService } from './authentication.service';
+
 import { environment } from '../../environments/environment';
 
 import 'rxjs/add/operator/map';
@@ -12,11 +14,15 @@ export class PricerService {
 
   private pricerUrl = `${environment.apiUrl}/pricer`;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private auth: AuthenticationService
+  ) { }
 
   // Requests options
   public options(): any {
     let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + this.auth.getToken());
     headers = headers.set('Content-Type', 'application/json');
 
     const options = {

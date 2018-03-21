@@ -7,6 +7,8 @@ import { PricingComponent } from './pricing/pricing.component';
 import { FinancialDataComponent } from './financial-data/financial-data.component';
 import { ContactComponent } from './contact/contact.component';
 
+import { AuthGuard } from './services/auth.guard';
+
 const routes: Routes = [
   // Home page
   { path: '', component: HomeComponent },
@@ -15,10 +17,20 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
 
   // Pricing page
-  { path: 'pricing', component: PricingComponent },
+  {
+    path: 'pricing',
+    component: PricingComponent,
+    canActivate: [AuthGuard],
+    data: { expectedRole: 'user' }
+  },
 
-  // Player stats page
-  { path: 'financial-data', component: FinancialDataComponent },
+  // Financial data page
+  {
+    path: 'financial-data',
+    component: FinancialDataComponent,
+    canActivate: [AuthGuard],
+    data: { expectedRole: 'user' }
+  },
 
   // Contact page
   { path: 'contact', component: ContactComponent },

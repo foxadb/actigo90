@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 
+import { AuthenticationService } from './authentication.service';
+
 import { environment } from '../../environments/environment';
 
 import 'rxjs/add/operator/map';
@@ -15,11 +17,15 @@ export class SpotService {
 
   private spotUrl = `${environment.apiUrl}/spot`;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private auth: AuthenticationService
+  ) { }
 
   // Requests options
   public options(page?: number, limit?: number): any {
     let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + this.auth.getToken());
     headers = headers.set('Content-Type', 'application/json');
 
     const options = {
@@ -54,7 +60,7 @@ export class SpotService {
 
   // Get a Spot from API by ID
   public getSpot(id: string): Observable<Spot> {
-    return this.http.get(`${this.spotUrl}/${id}`)
+    return this.http.get(`${this.spotUrl}/${id}`, this.options())
       .map(res => {
         return new Spot(res['data']);
       })

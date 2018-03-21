@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 
+import { AuthenticationService } from './authentication.service';
+
 import { environment } from '../../environments/environment';
 
 import 'rxjs/add/operator/map';
@@ -14,11 +16,15 @@ export class StockService {
 
   private stockUrl = `${environment.apiUrl}/stock`;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private auth: AuthenticationService
+  ) { }
 
   // Requests options
   public options(): any {
     let headers = new HttpHeaders();
+    headers = headers.set('Authorization', 'Bearer ' + this.auth.getToken());
     headers = headers.set('Content-Type', 'application/json');
 
     const options = {
@@ -30,7 +36,7 @@ export class StockService {
 
   // Get Stocks from API
   public getStocks(): Observable<Array<Stock>> {
-    return this.http.get(this.stockUrl)
+    return this.http.get(this.stockUrl, this.options())
       .map(res => {
         const stocks: Array<Stock> = [];
         res['data'].docs.forEach(stock => {
@@ -43,7 +49,7 @@ export class StockService {
 
   // Get a Stock from API by ID
   public getStock(id: string): Observable<Stock> {
-    return this.http.get(`${this.stockUrl}/${id}`)
+    return this.http.get(`${this.stockUrl}/${id}`, this.options())
       .map(res => {
         return new Stock(res['data']);
       })

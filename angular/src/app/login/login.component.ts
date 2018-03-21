@@ -29,12 +29,12 @@ export class LoginComponent implements OnInit {
         // login successful
         if (result === true) {
           switch (this.auth.getRole()) {
-            case 'manager': {
-              this.router.navigate(['manager']);
+            case 'user': {
+              this.router.navigate(['pricing']);
               break;
             }
             case 'admin': {
-              this.router.navigate(['admin']);
+              this.router.navigate(['pricing']);
               break;
             }
           }
