@@ -95,12 +95,13 @@ std::vector<time_t> semesterDates {1428451200, 1444608000, 1460332800, 147605760
                                             calibration->getVolatilities(), initialSpotsEuro);
   PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
   pnl_rng_sseed(rng, time(NULL));
-  MonteCarlo *mc = new MonteCarlo(bsm, actigo, rng, 0.01, 50000);
+  MonteCarlo *mc = new MonteCarlo(bsm, actigo, rng, 0.01, 5);
   PnlVect *delta = pnl_vect_create_from_scalar(actigoSize, 0.);
   double price = 0.;
   std::vector<time_t> rightDates = getRightDates(date, semesterDates);
   PnlMat* past = pnl_mat_create_from_scalar(rightDates.size(), actigoSize, 0.);
   getPastData(dbManager, past, rightDates);
+  pnl_mat_print(past);
 
   time_t dateDifference = date - 1428451200;
   double convertedDate = (double)dateDifference/(365*24*3600);
