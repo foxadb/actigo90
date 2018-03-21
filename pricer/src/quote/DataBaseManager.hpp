@@ -34,7 +34,7 @@ public:
                                std::time_t endDate, const char* symbol);
     void postDelta(double delta, std::time_t date, const char* symbol);
     double getDelta(std::time_t date, const char* symbol);
-
+    void clearDeltas();
 };
 
 #endif /* DATABASEMANAGER_H */

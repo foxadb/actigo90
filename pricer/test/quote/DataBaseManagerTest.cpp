@@ -24,7 +24,7 @@ TEST_F(DataBaseManagerTest, getDelta) {
   double posted_delta = 0.02;
   dbManager->postDelta(posted_delta, 1514764800, "^GSPC");
   double returned_delta = dbManager->getDelta(1514764800, "^GSPC");
-
+  dbManager->clearDeltas();
   EXPECT_EQ(posted_delta, returned_delta);
 }
 

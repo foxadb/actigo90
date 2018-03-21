@@ -12,4 +12,5 @@ int main(int argc, char **argv){
   std::vector<Spot> spots = dbManager->getSpots(1453161600, 1484784000, "^GSPC");
   for (std::vector<Spot>::iterator it = spots.begin(); it != spots.end(); ++it)
     std::cout << ' ' << (*it).toString()<<std::endl;
+  dbManager->clearDeltas();
 }
