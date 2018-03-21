@@ -13,6 +13,8 @@ import { StockComponent } from './stock/stock.component';
 import { PricingComponent } from './pricing/pricing.component';
 import { ContactComponent } from './contact/contact.component';
 
+import { AuthGuard } from './services/auth.guard';
+import { AuthenticationService } from './services/authentication.service';
 import { StockService } from './services/stock.service';
 import { SpotService } from './services/spot.service';
 import { YahooFinanceService } from './services/yahoo-finance.service';
@@ -36,6 +38,8 @@ import { PricerService } from './services/pricer.service';
     AppRoutingModule
   ],
   providers: [
+    AuthGuard,
+    AuthenticationService,
     StockService,
     SpotService,
     YahooFinanceService,
