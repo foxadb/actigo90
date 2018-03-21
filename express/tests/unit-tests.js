@@ -14,6 +14,7 @@ function importTest(name, path) {
 
 describe('API Unit tests', function () {
 
+    importTest('User', './unit-tests/user.route.test');
     importTest('Stock', './unit-tests/stock.route.test');
     importTest('Spot', './unit-tests/spot.route.test');
     importTest('Delta', './unit-tests/delta.route.test');

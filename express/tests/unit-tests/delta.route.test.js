@@ -1,8 +1,27 @@
 const app = require('../../app');
 const request = require('supertest');
 
+const userRoute = '/api/user';
 const deltaRoute = '/api/delta';
 const stockRoute = '/api/stock';
+
+var token;
+
+it('AUTHENTICATION', function (done) {
+    let body = {
+        username: 'admin',
+        password: 'password'
+    };
+
+    request(app)
+        .post(`${userRoute}/login`)
+        .send(body)
+        .expect('Content-Type', /json/)
+        .expect(function (res) {
+            token = 'Bearer ' + res.body.token;
+        })
+        .expect(200, done);
+});
 
 var stockId;
 
@@ -15,6 +34,7 @@ it('Create a Stock', function (done) {
 
     request(app)
         .post(stockRoute)
+        .set('Authorization', token)
         .send(stock)
         .expect('Content-Type', /json/)
         .expect(function (res) {
@@ -26,6 +46,7 @@ it('Create a Stock', function (done) {
 it('GET', function (done) {
     request(app)
         .get(deltaRoute)
+        .set('Authorization', token)
         .expect('Content-Type', /json/)
         .expect(200, done);
 });
@@ -41,6 +62,7 @@ it('POST', function (done) {
 
     request(app)
         .post(deltaRoute)
+        .set('Authorization', token)
         .send(body)
         .expect('Content-Type', /json/)
         .expect(function (res) {
@@ -58,6 +80,7 @@ it('POST an already existing date', function (done) {
 
     request(app)
         .post(deltaRoute)
+        .set('Authorization', token)
         .send(body)
         .expect('Content-Type', /json/)
         .expect(400, done);
@@ -70,6 +93,7 @@ it('PUT', function (done) {
 
     request(app)
         .put(`${deltaRoute}/${deltaId}`)
+        .set('Authorization', token)
         .send(body)
         .expect('Content-Type', /json/)
         .expect(200, done);
@@ -78,6 +102,7 @@ it('PUT', function (done) {
 it('GET/:id', function (done) {
     request(app)
         .get(`${deltaRoute}/${deltaId}`)
+        .set('Authorization', token)
         .expect('Content-Type', /json/)
         .expect(200, done);
 });
@@ -85,11 +110,13 @@ it('GET/:id', function (done) {
 it('DELETE', function (done) {
     request(app)
         .delete(`${deltaRoute}/${deltaId}`)
+        .set('Authorization', token)
         .expect(204, done);
 });
 
 it('Delete the test stock', function (done) {
     request(app)
         .delete(`${stockRoute}/${stockId}`)
+        .set('Authorization', token)
         .expect(204, done);
 });

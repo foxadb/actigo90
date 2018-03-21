@@ -64,12 +64,13 @@ exports.loginUser = async function (req, res) {
 };
 
 exports.updateUser = async function (req, res) {
+    // Get user id
+    const id = req.params.id;
+    
     // Id is necessary for the update
-    if (!req.body._id) {
+    if (!id) {
         return res.status(400).json({ status: 400., message: 'Id must be present' });
     }
-
-    const id = req.body._id;
 
     const user = {
         id,

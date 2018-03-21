@@ -1,11 +1,31 @@
 const app = require('../../app');
 const request = require('supertest');
 
+const userRoute = '/api/user';
 const stockRoute = '/api/stock';
+
+var token;
+
+it('AUTHENTICATION', function (done) {
+    let body = {
+        username: 'admin',
+        password: 'password'
+    };
+
+    request(app)
+        .post(`${userRoute}/login`)
+        .send(body)
+        .expect('Content-Type', /json/)
+        .expect(function (res) {
+            token = 'Bearer ' + res.body.token;
+        })
+        .expect(200, done);
+});
 
 it('GET', function (done) {
     request(app)
         .get(stockRoute)
+        .set('Authorization', token)
         .expect('Content-Type', /json/)
         .expect(200, done);
 });
@@ -21,6 +41,7 @@ it('POST', function (done) {
 
     request(app)
         .post(stockRoute)
+        .set('Authorization', token)
         .send(body)
         .expect('Content-Type', /json/)
         .expect(function (res) {
@@ -38,6 +59,7 @@ it('POST an already existing stock', function (done) {
 
     request(app)
         .post(stockRoute)
+        .set('Authorization', token)
         .send(body)
         .expect('Content-Type', /json/)
         .expect(400, done);
@@ -51,6 +73,7 @@ it('PUT', function (done) {
 
     request(app)
         .put(`${stockRoute}/${stockId}`)
+        .set('Authorization', token)
         .send(body)
         .expect('Content-Type', /json/)
         .expect(200, done);
@@ -59,6 +82,7 @@ it('PUT', function (done) {
 it('GET/:id', function (done) {
     request(app)
         .get(`${stockRoute}/${stockId}`)
+        .set('Authorization', token)
         .expect('Content-Type', /json/)
         .expect(200, done);
 });
@@ -66,5 +90,6 @@ it('GET/:id', function (done) {
 it('DELETE', function (done) {
     request(app)
         .delete(`${stockRoute}/${stockId}`)
+        .set('Authorization', token)
         .expect(204, done);
 });
