@@ -62,15 +62,14 @@ bool before(const char *date1, const char *date2) {
     return epoch1 < epoch2;
 }
 
-bsoncxx::types::b_date read_date(const char* date, std::int32_t offset_from_utc)
+bsoncxx::types::b_date read_date(std::time_t date, std::int32_t offset_from_utc)
 {
-  std::time_t epoch = dateToEpoch(date);
-  std::chrono::system_clock::time_point time_point = std::chrono::system_clock::from_time_t(epoch);
+  std::chrono::system_clock::time_point time_point = std::chrono::system_clock::from_time_t(date);
   return bsoncxx::types::b_date(time_point + std::chrono::hours{offset_from_utc});
 }
 
-std::string bDateToDate(bsoncxx::types::b_date date){
+std::time_t bDateToEpoch(bsoncxx::types::b_date date){
   std::chrono::system_clock::time_point time_point = std::chrono::system_clock::time_point(date);
   std::time_t time = std::chrono::system_clock::to_time_t(time_point);
-  return epochToDate(time);
+  return time;
 }
