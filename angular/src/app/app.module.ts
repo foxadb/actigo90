@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
@@ -35,7 +34,6 @@ import { PricerService } from './services/pricer.service';
   imports: [
     NgbModule.forRoot(),
     BrowserModule,
-    HttpModule,
     HttpClientModule,
     FormsModule,
     ChartsModule,

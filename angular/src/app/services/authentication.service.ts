@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs/Observable';
 
@@ -15,7 +15,7 @@ export class AuthenticationService {
   private loginUrl = `${environment.apiUrl}/user/login`;
   private jwtHelper = new JwtHelperService();
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
   public isAuthenticated(): boolean {
     // Get the token
@@ -44,9 +44,9 @@ export class AuthenticationService {
   public login(username: string, password: string): Observable<boolean> {
     const body = { username: username, password: password };
     return this.http.post(this.loginUrl, body)
-      .map((response: Response) => {
+      .map(response => {
         // login successful if there's a jwt token in the response
-        const token = response.json() && response.json().token;
+        const token = response['token'];
 
         if (token) {
           // store username and jwt token in local storage to keep user logged in between page refreshes
