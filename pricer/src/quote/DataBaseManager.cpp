@@ -111,3 +111,10 @@ double DataBaseManager::getDelta(std::time_t date, const char* symbol){
 void DataBaseManager::clearDeltas(){
    db["deltas"].delete_many({});
 }
+
+void DataBaseManager::postPrice(std::time_t date, double price, double portfolioValue){
+  b_date bdate = read_date(date, 1);
+  bsoncxx::document::value doc = make_document(
+    kvp("date", bdate), kvp("actigo", price), kvp("hedging", portfolioValue));
+  auto res = db["prices"].insert_one(std::move(doc));
+}

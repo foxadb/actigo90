@@ -34,7 +34,9 @@ public:
                                std::time_t endDate, const char* symbol);
     void postDelta(double delta, std::time_t date, const char* symbol);
     double getDelta(std::time_t date, const char* symbol);
+    double getPreviousDelta(std::time_t current, const char* symbol, double &previous_delta, std::time_t &previous_date);
     void clearDeltas();
+    void postPrice(std::time_t date, double price, double portfolioValue);
 };
 
 #endif /* DATABASEMANAGER_H */
