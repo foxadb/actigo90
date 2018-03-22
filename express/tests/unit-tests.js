@@ -18,6 +18,7 @@ describe('API Unit tests', function () {
     importTest('Stock', './unit-tests/stock.route.test');
     importTest('Spot', './unit-tests/spot.route.test');
     importTest('Delta', './unit-tests/delta.route.test');
+    importTest('Price', './unit-tests/price.route.test');
     importTest('Yahoo Finance', './unit-tests/yahoo-finance.route.test');
 
     after(function (done) {

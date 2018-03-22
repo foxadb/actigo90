@@ -1,5 +1,4 @@
 const DeltaService = require('../services/delta.service');
-const StockService = require('../services/stock.service');
 
 exports.getDeltas = async function (req, res) {
     // Check the existence of the query parameters, If the exists doesn't exists assign a default value
