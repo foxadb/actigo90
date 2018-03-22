@@ -12,7 +12,7 @@ exports.getSpots = async function (req, res) {
 
     try {
         let spots = await SpotService.getSpots({}, page, limit);
-        return res.status(200).json({ status: 200, data: spots, message: 'Successfully spotes received' });
+        return res.status(200).json({ status: 200, data: spots, message: 'Successfully spots received' });
     } catch (error) {
         return res.status(400).json({ status: 400, message: error.message });
     }
@@ -40,7 +40,7 @@ exports.getStockSpots = async function (req, res) {
 
     try {
         let spots = await SpotService.getSpots({ stock: id }, page, limit);
-        return res.status(200).json({ status: 200, data: spots, message: 'Successfully spot received' });
+        return res.status(200).json({ status: 200, data: spots, message: 'Successfully spots received' });
     } catch (error) {
         return res.status(404).json({ status: 404, message: error.message });
     }

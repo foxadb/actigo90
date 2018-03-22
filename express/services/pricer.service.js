@@ -1,7 +1,7 @@
 const exec = require('child_process').exec;
 
 exports.actigoDelta = function (date, callback) {
-    const pricer = exec(`~/Projets3A/peps/pricer/build/test/computeActigoDelta ${date}`, { timeout: 10000 });
+    const pricer = exec(`../pricer/build/test/computeActigoDelta ${date}`, { timeout: 10000 });
 
     let json;
     pricer.stdout.on('data', (data) => {
