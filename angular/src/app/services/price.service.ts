@@ -46,7 +46,7 @@ export class PriceService {
   public getPrices(page: number, limit: number): Observable<Array<Price>> {
     const options = this.options(page, limit);
 
-    return this.http.get(this.priceUrl, this.options())
+    return this.http.get(this.priceUrl, options)
       .map(res => {
         const prices: Array<Price> = [];
         res['data'].docs.forEach(price => {

@@ -6,10 +6,6 @@ exports.getSpots = async function (req, res) {
     let page = req.query.page ? +req.query.page : 1;
     let limit = req.query.limit ? +req.query.limit : 30;
 
-    if (limit > 50) {
-        return res.status(403).json({ status: 403, message: 'Limit can not be higher than 50' });
-    }
-
     try {
         let spots = await SpotService.getSpots({}, page, limit);
         return res.status(200).json({ status: 200, data: spots, message: 'Successfully spots received' });

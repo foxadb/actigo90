@@ -6,10 +6,6 @@ exports.getStocks = async function (req, res) {
     var page = req.query.page ? +req.query.page : 1;
     var limit = req.query.limit ? +req.query.limit : 10;
 
-    if (limit > 50) {
-        return res.status(403).json({ status: 403, message: 'Limit can not be higher than 50' });
-    }
-
     try {
         var stocks = await StockService.getStocks({}, page, limit);
         return res.status(200).json({ status: 200, data: stocks, message: 'Successfully stocks received' });
