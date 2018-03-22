@@ -107,3 +107,7 @@ double DataBaseManager::getDelta(std::time_t date, const char* symbol){
 
   return delta;
 }
+
+void DataBaseManager::clearDeltas(){
+   db["deltas"].delete_many({});
+}

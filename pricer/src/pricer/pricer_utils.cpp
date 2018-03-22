@@ -26,11 +26,11 @@ void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> d
     PnlVect* eurUsdSpots = pnl_vect_create_from_scalar(dates.size(), 0.);
     PnlVect* eurAudSpots = pnl_vect_create_from_scalar(dates.size(), 0.);
     for (std::vector<time_t>::iterator it = dates.begin(); it != dates.end(); ++it){
-        LET(euroStoxSpots, count) = dbManager->getSpot(*it, "^STOXX50E").getClose();
-        LET(spUsdSpots, count) = dbManager->getSpot(*it, "^GSPC").getClose();
-        LET(spAudSpots, count) = dbManager->getSpot(*it, "^AXJO").getClose();
-        LET(eurUsdSpots, count) = dbManager->getSpot(*it, "EURUSD=X").getClose();
-        LET(eurAudSpots, count) = dbManager->getSpot(*it, "EURAUD=X").getClose();
+        LET(euroStoxSpots, count) = getLastAvailableSpot(dbManager, "^STOXX50E", *it);
+        LET(spUsdSpots, count) = getLastAvailableSpot(dbManager, "^GSPC", *it);
+        LET(spAudSpots, count) = getLastAvailableSpot(dbManager, "^AXJO", *it);
+        LET(eurUsdSpots, count) = getLastAvailableSpot(dbManager, "EURUSD=X", *it);
+        LET(eurAudSpots, count) = getLastAvailableSpot(dbManager, "EURAUD=X", *it);
         count++;
     }
     pnl_vect_mult_vect_term (spUsdSpots, eurUsdSpots);
@@ -56,4 +56,15 @@ std::vector<time_t> getRightDates(time_t todayDate, std::vector<time_t> semester
     }
     rightDates.push_back(todayDate);
     return rightDates;
+}
+
+double getLastAvailableSpot(DataBaseManager *dbm, const char* stock, time_t date){
+    double availablePrice = dbm->getSpot(date, stock).getClose();
+    time_t oneDay = 86400;
+    time_t currDate = date;
+    while (availablePrice == 0){
+      currDate = currDate - oneDay;
+      availablePrice = dbm->getSpot(currDate, stock).getClose();
+    }
+    return availablePrice;
 }

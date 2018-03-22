@@ -27,7 +27,7 @@ std::time_t dateToEpoch(const char *date) {
     time.tm_mon = std::atoi(month) - 1;
     time.tm_mday = std::atoi(day);
 
-    std::time_t epochTime = mktime(&time);
+    std::time_t epochTime = timegm(&time);
 
     return epochTime;
 }

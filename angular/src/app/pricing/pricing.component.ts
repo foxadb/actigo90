@@ -31,8 +31,10 @@ export class PricingComponent implements OnInit {
 
   public actigoDelta(): void {
     const body = {
-      date: this.pricingDate
+      date: new Date(this.pricingDate).getTime() / 1000
     };
+
+    console.log(body);
 
     // Loading spinner
     this.pricingSpinner = true;

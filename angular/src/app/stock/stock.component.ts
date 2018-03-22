@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts/ng2-charts';
+import { Subscription } from 'rxjs/Subscription';
 
 import Stock from '../models/stock.model';
 import Spot from '../models/spot.model';
@@ -8,6 +9,7 @@ import Spot from '../models/spot.model';
 import { StockService } from '../services/stock.service';
 import { SpotService } from '../services/spot.service';
 import { YahooFinanceService } from '../services/yahoo-finance.service';
+import { FinancialDataService } from '../services/financial-data.service';
 
 @Component({
   selector: 'app-stock',
@@ -44,13 +46,18 @@ export class StockComponent implements OnInit {
 
   public downloadSpinner = false;
 
+  private parentDownloadSubscription: Subscription;
+  private parentDeleteSubscription: Subscription;
+
   constructor(
     private stockService: StockService,
     private spotService: SpotService,
-    private yahooFinanceService: YahooFinanceService
+    private yahooFinanceService: YahooFinanceService,
+    private financialDataService: FinancialDataService
   ) { }
 
   public ngOnInit(): void {
+    // Stock subscription
     this.stockService.getStocks().subscribe(stocks => {
       // Find stock
       this.stock = stocks.find(stock => stock.symbol === this.stockSymbol);
@@ -58,6 +65,28 @@ export class StockComponent implements OnInit {
       // Get Spots
       this.getStockSpots(this.stock._id, 1, 500);
     });
+
+    // Parent download data request subscription
+    this.parentDownloadSubscription = this.financialDataService.downloadObservable.subscribe(
+      res => {
+        // Set start and end date
+        this.startDate = res.startDate;
+        this.endDate = res.endDate;
+
+        // Download data
+        this.downloadStockData();
+      }
+    );
+
+    // Parend delete data request subscription
+    this.parentDeleteSubscription = this.financialDataService.deleteObservable.subscribe(
+      res => {
+        if (res === true) {
+          // Delete data
+          this.deleteStockData();
+        }
+      }
+    );
   }
 
   public getStockSpots(stock: string, page: number, limit: number): void {

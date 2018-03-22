@@ -20,6 +20,7 @@ import { StockService } from './services/stock.service';
 import { SpotService } from './services/spot.service';
 import { YahooFinanceService } from './services/yahoo-finance.service';
 import { PricerService } from './services/pricer.service';
+import { FinancialDataService } from './services/financial-data.service';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { PricerService } from './services/pricer.service';
     StockService,
     SpotService,
     YahooFinanceService,
-    PricerService
+    PricerService,
+    FinancialDataService
   ],
   bootstrap: [AppComponent]
 })
