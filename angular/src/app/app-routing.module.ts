@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { PricingComponent } from './pricing/pricing.component';
+import { TrackingComponent } from './tracking/tracking.component';
 import { FinancialDataComponent } from './financial-data/financial-data.component';
 import { ContactComponent } from './contact/contact.component';
 
@@ -15,6 +16,14 @@ const routes: Routes = [
 
   // Login page
   { path: 'login', component: LoginComponent },
+
+  // Tracking page
+  {
+    path: 'tracking',
+    component: TrackingComponent,
+    canActivate: [AuthGuard],
+    data: { expectedRole: 'user' }
+  },
 
   // Pricing page
   {

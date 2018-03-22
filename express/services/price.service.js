@@ -33,7 +33,7 @@ exports.getPrice = async function (id) {
 exports.createPrice = async function (price) {
     let newPrice = new Price({
         date: price.date,
-        portfolio: price.portfolio,
+        actigo: price.actigo,
         hedging: price.hedging
     });
 
@@ -63,7 +63,7 @@ exports.updatePrice = async function (price) {
 
     // Edit the Price Object
     oldPrice.date = price.date != null ? price.date : oldPrice.date;
-    oldPrice.portfolio = price.portfolio != null ? price.portfolio : oldPrice.portfolio;
+    oldPrice.actigo = price.actigo != null ? price.actigo : oldPrice.actigo;
     oldPrice.hedging = price.hedging != null ? price.hedging : oldPrice.hedging;
 
     try {

@@ -34,8 +34,6 @@ export class PricingComponent implements OnInit {
       date: new Date(this.pricingDate).getTime() / 1000
     };
 
-    console.log(body);
-
     // Loading spinner
     this.pricingSpinner = true;
 

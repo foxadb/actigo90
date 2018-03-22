@@ -12,12 +12,14 @@ import { LoginComponent } from './login/login.component';
 import { FinancialDataComponent } from './financial-data/financial-data.component';
 import { StockComponent } from './stock/stock.component';
 import { PricingComponent } from './pricing/pricing.component';
+import { TrackingComponent } from './tracking/tracking.component';
 import { ContactComponent } from './contact/contact.component';
 
 import { AuthGuard } from './services/auth.guard';
 import { AuthenticationService } from './services/authentication.service';
 import { StockService } from './services/stock.service';
 import { SpotService } from './services/spot.service';
+import { PriceService } from './services/price.service';
 import { YahooFinanceService } from './services/yahoo-finance.service';
 import { PricerService } from './services/pricer.service';
 import { FinancialDataService } from './services/financial-data.service';
@@ -30,7 +32,8 @@ import { FinancialDataService } from './services/financial-data.service';
     FinancialDataComponent,
     StockComponent,
     PricingComponent,
-    ContactComponent
+    TrackingComponent,
+    ContactComponent,
   ],
   imports: [
     NgbModule.forRoot(),
@@ -45,6 +48,7 @@ import { FinancialDataService } from './services/financial-data.service';
     AuthenticationService,
     StockService,
     SpotService,
+    PriceService,
     YahooFinanceService,
     PricerService,
     FinancialDataService

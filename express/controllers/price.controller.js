@@ -32,7 +32,7 @@ exports.getPrice = async function (req, res) {
 exports.createPrice = async function (req, res) {
     let price = {
         date: req.body.date,
-        portfolio: req.body.portfolio,
+        actigo: req.body.actigo,
         hedging: req.body.hedging
     };
 
@@ -58,7 +58,7 @@ exports.updatePrice = async function (req, res) {
     let price = {
         id,
         date: req.body.date,
-        portfolio: req.body.portfolio,
+        actigo: req.body.actigo,
         hedging: req.body.hedging
     };
 
