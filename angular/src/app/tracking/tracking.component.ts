@@ -46,7 +46,7 @@ export class TrackingComponent implements OnInit {
       prices => {
         this.prices = prices;
       },
-      error => console.error('Error: ', error),
+      error => console.error('Error:', error),
       () => {
         // Sort spot by date
         this.prices.sort((a, b) =>
@@ -66,21 +66,27 @@ export class TrackingComponent implements OnInit {
   }
 
   public computeTrackingError(): void {
-    // Find the current price
-    const currentPrice = this.prices.find(price => {
-      const date = new Date(price.date).setHours(0, 0, 0);
-      const trackingDate = new Date(this.trackingDate).setHours(0, 0, 0);
-      return date === trackingDate;
-    });
-
-    // Compute the tracking error
-    if (currentPrice) {
-      this.trackingError = Math.abs(currentPrice.hedging - currentPrice.actigo);
-
-      // Convert into percent
-      this.trackingError *= 100;
-      this.trackingError = Math.round(this.trackingError * 100) / 100;
+    // Compute error serie and average error
+    const errorsSerie = [];
+    let averageError = 0;
+    let i = 0;
+    while (new Date(this.prices[i].date).getTime()
+      <= new Date(this.trackingDate).getTime()) {
+      const price = this.prices[i];
+      const error = price.hedging - price.actigo;
+      errorsSerie.push(error);
+      averageError += error;
+      ++i;
     }
+    averageError /= i;
+
+    // Compute tracking error (std dev)
+    let trackingError = 0;
+    errorsSerie.forEach(error => trackingError += error ** 2);
+    trackingError -= averageError ** 2;
+    trackingError = Math.sqrt(trackingError);
+
+    this.trackingError = Math.round(trackingError * 1000) / 1000;
   }
 
   public chartClicked(event: any): void {
