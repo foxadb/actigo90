@@ -83,10 +83,12 @@ export class TrackingComponent implements OnInit {
     // Compute tracking error (std dev)
     let trackingError = 0;
     errorsSerie.forEach(error => trackingError += error ** 2);
+    trackingError /= i;
     trackingError -= averageError ** 2;
     trackingError = Math.sqrt(trackingError);
 
-    this.trackingError = Math.round(trackingError * 1000) / 1000;
+    // Tracking error in percent
+    this.trackingError = trackingError * 100;
   }
 
   public chartClicked(event: any): void {
