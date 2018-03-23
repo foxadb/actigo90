@@ -10,16 +10,16 @@
           </thead>
           <tbody>
             <tr>
-              <td class="align-left">Price</td>
-              <td class="align-right">{{ price }} €</td>
-            </tr>
-            <tr>
               <td class="align-left">Last rebalancing</td>
-              <td class="align-right">{{ deltas }}</td>
+              <td class="align-right">{{ prices[0].date | date : format : mediumDate }}</td>
             </tr>
             <tr>
-              <td class="align-left">P&L</td>
-              <td class="align-right">{{ pnl }} &#x25;</td>
+              <td class="align-left">Actigo Price</td>
+              <td class="align-right">{{ prices[0].actigo | number : '1.8-8' }} €</td>
+            </tr>
+            <tr>
+              <td class="align-left">Hedging Price</td>
+              <td class="align-right">{{ prices[0].hedging | number : '1.8-8' }} €</td>
             </tr>
           </tbody>
         </table>
@@ -85,6 +85,8 @@
       <thead>
         <tr>
           <th scope="col"></th>
+          <th scope="col">Actigo</th>
+          <th scope="col">Hedging</th>
           <th scope="col">Euro Stoxx 50</th>
           <th scope="col">S&P 500</th>
           <th scope="col">S&P/ASX 200</th>
@@ -93,9 +95,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let delta of deltas">
-          <td>{{ delta.date | date : format : mediumDate }}</td>
-          <td>{{ delta.delta }}</td>
+        <tr *ngFor="let price of prices | slice : 0:50; let i = index">
+          <td>{{ price.date | date : format : mediumDate }}</td>
+          <td>{{ price.actigo | number : '1.5-5' }} €</td>
+          <td>{{ price.hedging | number : '1.5-5' }} €</td>
+          <td>{{ euroStoxx50Deltas[i].delta | number : '1.8-8' }}</td>
+          <td>{{ snp500Deltas[i].delta | number : '1.8-8' }}</td>
+          <td>{{ snp200Deltas[i].delta | number : '1.8-8' }}</td>
+          <td>{{ eurUsdDeltas[i].delta | number : '1.8-8' }}</td>
+          <td>{{ eurAudDeltas[i].delta | number : '1.8-8' }}</td>
         </tr>
       </tbody>
     </table>

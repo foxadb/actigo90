@@ -19,6 +19,7 @@ import { AuthGuard } from './services/auth.guard';
 import { AuthenticationService } from './services/authentication.service';
 import { StockService } from './services/stock.service';
 import { SpotService } from './services/spot.service';
+import { DeltaService } from './services/delta.service';
 import { PriceService } from './services/price.service';
 import { YahooFinanceService } from './services/yahoo-finance.service';
 import { PricerService } from './services/pricer.service';
@@ -48,6 +49,7 @@ import { FinancialDataService } from './services/financial-data.service';
     AuthenticationService,
     StockService,
     SpotService,
+    DeltaService,
     PriceService,
     YahooFinanceService,
     PricerService,
