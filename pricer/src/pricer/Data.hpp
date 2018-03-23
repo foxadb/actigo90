@@ -17,12 +17,12 @@ public:
     PnlVect* spAudSpots; // S&P 200 spots
     PnlVect* eurUsd; // USD/EUR rates
     PnlVect* eurAud; // AUD/EUR rates
-    double rEur; //european free rate
-    double rUsd; //american free rate
-    double rAud; //australian free rate
-    PnlMat* historicalDataMatrix; //Matrix containing hsitorical extrracted Data from the begenning of Actigo to current Day
+    double rEur; // European free rate
+    double rUsd; // American free rate
+    double rAud; // Australian free rate
+    PnlMat* historicalDataMatrix; // Matrix containing hsitorical extrracted Data from the begenning of Actigo to current Day
     PnlMat* historicalDataMatrixEuro;
-    PnlMat* completeDataMatrix; //Matrix containing historical data plus simulated Data
+    PnlMat* completeDataMatrix; // Matrix containing historical data plus simulated Data
 
     /**
       * @brief Calibration constructor

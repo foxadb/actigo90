@@ -1,12 +1,13 @@
+#include "MonteCarlo.hpp"
+
 #include <cstdio>
 #include <cmath>
 #include <iostream>
 
-#include "MonteCarlo.hpp"
-
 using namespace std;
 
-MonteCarlo::MonteCarlo(BlackScholesModel *mod, Option *opt, PnlRng *rng, double fdStep, int nbSamples) {
+MonteCarlo::MonteCarlo(BlackScholesModel *mod, Option *opt,
+                       PnlRng *rng, double fdStep, int nbSamples) {
     mod_ = mod;
     opt_ = opt;
     rng_ = pnl_rng_create(PNL_RNG_MERSENNE);
@@ -23,8 +24,9 @@ void MonteCarlo::price(double &prix, double &ic) {
     pnl_mat_set_row(path, mod_->spot_, 0);
     int nb = opt_->nbTimeSteps_;
     double mat = opt_->T_;
+
     for (int i = 0; i < nbSamples_; i++) {
-        mod_->asset(path, mat, nb,rng_);
+        mod_->asset(path, mat, nb, rng_);
         payOff = opt_->payoff(path);
         prix += payOff;
         variance += pow(payOff, 2);
@@ -32,17 +34,17 @@ void MonteCarlo::price(double &prix, double &ic) {
 
     double esperance = prix / nbSamples_;
     prix = exp(-mod_->r_ * opt_->T_) * prix / nbSamples_;
-    variance = exp(-2.0 * mod_->r_ * opt_->T_) * (variance / nbSamples_ - pow(esperance, 2.0));
+    variance = exp(-2.0 * mod_->r_ * opt_->T_)
+            * (variance / nbSamples_ - pow(esperance, 2));
     ic = sqrt(variance / nbSamples_);
 }
 
 void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta) {
     double payOffDifference;
 
-    for (int j = 0; j < nbSamples_; j++) {
+    for (int j = 0; j < nbSamples_; ++j) {
         mod_->asset(path, t, opt_->T_, opt_->nbTimeSteps_, rng_, past);
-        payOffDifference = 0.0;
-        for (int d = 0; d < opt_->size_; d++) {
+        for (int d = 0; d < opt_->size_; ++d) {
             mod_->shiftAsset(shiftPath, path, d, fdStep_, t, opt_->T_ / opt_->nbTimeSteps_);
             payOffDifference = opt_->payoff(shiftPath);
             mod_->shiftAsset(shiftPath, path, d, -fdStep_, t, opt_->T_ / opt_->nbTimeSteps_);
@@ -51,13 +53,14 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta) {
         }
     }
 
-    PnlVect *scalar = pnl_vect_create_from_scalar(opt_->size_, exp(mod_->r_ * (t - opt_->T_))
+    PnlVect* scalar = pnl_vect_create_from_scalar(opt_->size_, exp(mod_->r_ * (t - opt_->T_))
                                                   / (2.0 * fdStep_ * nbSamples_));
 
-    PnlVect *lastPrices = pnl_vect_create(opt_->size_);
+    PnlVect* lastPrices = pnl_vect_create(opt_->size_);
     double x;
     int vect = past->m - 1;
-    for (int i = 1; i < past->m; i++) {
+
+    for (int i = 1; i < past->m; ++i) {
         x = pnl_mat_get(past, i, 0);
         if (x == 0) {
             vect = i - 1;
@@ -68,6 +71,8 @@ void MonteCarlo::delta(const PnlMat *past, double t, PnlVect *delta) {
     pnl_mat_get_row(lastPrices, past, vect);
     pnl_vect_div_vect_term(scalar, lastPrices);
     pnl_vect_mult_vect_term(delta, scalar);
+
+    // Free memory
     pnl_vect_free(&scalar);
     pnl_vect_free(&lastPrices);
 }
@@ -115,8 +120,7 @@ double MonteCarlo::pAndL(PnlMat *data) {
     double param = mod_->r_ * opt_->T_ / data->m;
 
     cout << "P&L computation..." << endl;
-    for (int i = 1; i < data->m; i++) {
-        //cout << i << endl;
+    for (int i = 1; i < data->m; ++i) {
         updatePast(past, data, i);
         pnl_vect_clone(pastDelta, delta);
         temps = temps + pas;
@@ -142,6 +146,7 @@ double MonteCarlo::pAndL(PnlMat *data) {
         pnl_mat_set_row(dataAtNbTimeSteps, vect, count);
         ++count;
     }
+
     PnlVect* vectfinal = pnl_vect_create_from_scalar(5,0.);
     pnl_mat_get_row(vectfinal, data, data->m-1);
     pnl_mat_set_row(dataAtNbTimeSteps, vectfinal, dataAtNbTimeSteps->m-1);
@@ -156,32 +161,38 @@ void MonteCarlo::updatePast(PnlMat *past, PnlMat *data, int i) {
     pnl_vect_free(&tmpVect);
 }
 
-double MonteCarlo::pAndL(PnlMat *delta, PnlMat* data, PnlMat* semestrialData, double priceAtZero){
-  PnlVect *currentDelta = pnl_vect_create_from_scalar(5, 0.);
-  PnlVect *pastDelta = pnl_vect_create_from_scalar(5, 0.);
-  PnlVect *currentSpots = pnl_vect_create_from_scalar(5, 0.);
-  pnl_mat_get_row(currentDelta, delta, 0);
-  pnl_mat_get_row(currentSpots, data, 0);
-  double actuParam = exp(mod_->r_*opt_->T_ / data->m);
-  double v = priceAtZero - pnl_vect_scalar_prod(currentDelta, currentSpots);
-  for ( int i = 1; i < data->m ; i++){
-    pnl_vect_clone(pastDelta, currentDelta);
-    pnl_mat_get_row(currentDelta, delta, i);
-    pnl_mat_get_row(currentSpots, data, i);
-    pnl_vect_minus_vect(pastDelta, currentDelta);
-    v = v * actuParam + pnl_vect_scalar_prod(pastDelta, currentSpots);
-  }
-  double lastDeltaPrice = pnl_vect_scalar_prod(currentDelta, currentSpots);
-  v = v + lastDeltaPrice - opt_->payoff(semestrialData);
-  //substract payoff
-  pnl_vect_free(&currentDelta);
-  pnl_vect_free(&currentSpots);
-  pnl_vect_free(&pastDelta);
-  return v;
+double MonteCarlo::pAndL(PnlMat *delta, PnlMat* data,
+                         PnlMat* semestrialData, double priceAtZero) {
+    PnlVect *currentDelta = pnl_vect_create_from_scalar(5, 0.);
+    PnlVect *pastDelta = pnl_vect_create_from_scalar(5, 0.);
+    PnlVect *currentSpots = pnl_vect_create_from_scalar(5, 0.);
+    pnl_mat_get_row(currentDelta, delta, 0);
+    pnl_mat_get_row(currentSpots, data, 0);
+    double actuParam = exp(mod_->r_*opt_->T_ / data->m);
+    double v = priceAtZero - pnl_vect_scalar_prod(currentDelta, currentSpots);
+
+    for ( int i = 1; i < data->m ; ++i){
+        pnl_vect_clone(pastDelta, currentDelta);
+        pnl_mat_get_row(currentDelta, delta, i);
+        pnl_mat_get_row(currentSpots, data, i);
+        pnl_vect_minus_vect(pastDelta, currentDelta);
+        v = v * actuParam + pnl_vect_scalar_prod(pastDelta, currentSpots);
+    }
+
+    double lastDeltaPrice = pnl_vect_scalar_prod(currentDelta, currentSpots);
+    v += lastDeltaPrice - opt_->payoff(semestrialData);
+
+    // Substract payoff
+    pnl_vect_free(&currentDelta);
+    pnl_vect_free(&currentSpots);
+    pnl_vect_free(&pastDelta);
+
+    return v;
 }
 
-void MonteCarlo::rebalanceAtSpecificDate(PnlMat *past, double date, PnlVect *delta, double &price){
-  double ic;
-  this->delta(past, date, delta);
-  this->price(past, date, price, ic);
+void MonteCarlo::rebalanceAtSpecificDate(PnlMat *past, double date,
+                                         PnlVect *delta, double &price) {
+    double ic;
+    this->delta(past, date, delta);
+    this->price(past, date, price, ic);
 }

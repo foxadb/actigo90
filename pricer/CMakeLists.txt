@@ -11,15 +11,15 @@ enable_testing()
 
 ## Download GoogleTest
 configure_file(CMakeLists.txt.in
-        googletest-download/CMakeLists.txt)
+    googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download)
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download)
 execute_process(COMMAND ${CMAKE_COMMAND} --build .
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download)
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download)
 
 # Add GoogleTest during compilation step
 add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
-        ${CMAKE_BINARY_DIR}/googletest-build)
+    ${CMAKE_BINARY_DIR}/googletest-build)
 
 include_directories(${gtest_SOURCE_DIR}/src)
 
@@ -62,8 +62,7 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "Release")
     add_definitions(-DPNL_RANGE_CHECK_OFF)
 endif()
 
-
-# find mongocxx driver
+# Find MongoCXX driver
 find_package(libmongocxx REQUIRED)
 find_package(libbsoncxx REQUIRED)
 include_directories(${LIBMONGOCXX_INCLUDE_DIR})
