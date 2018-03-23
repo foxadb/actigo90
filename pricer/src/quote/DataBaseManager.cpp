@@ -36,8 +36,8 @@ b_oid DataBaseManager::getStockId(const char* symbol){
 Spot DataBaseManager::getSpot(std::time_t date, const char* symbol){
   b_date bdate = read_date(date, 0);
   double price = getSpot(bdate, symbol);
-  Spot *spot = new Spot(date, price);
-  return *spot;
+  Spot spot = Spot(date, price);
+  return spot;
 }
 
 double DataBaseManager::getSpot(b_date date, const char* symbol){
@@ -57,7 +57,7 @@ double DataBaseManager::getSpot(b_date date, const char* symbol){
 
 vector<Spot> DataBaseManager::getSpots(std::time_t start_date, std::time_t end_date, const char* symbol){
   mongocxx::collection coll = db["spots"];
-  vector<Spot> *spots = new vector<Spot>();
+  vector<Spot> spots = vector<Spot>();
   std::int32_t offset_from_utc = 1;
   b_oid id = getStockId(symbol);
   bsoncxx::builder::basic::document filter;
@@ -74,11 +74,11 @@ vector<Spot> DataBaseManager::getSpots(std::time_t start_date, std::time_t end_d
     if (date_ele.type() == type::k_date && price_ele.type() == type::k_double){
       b_date date = date_ele.get_date();
       double price = price_ele.get_double();
-      Spot *spot = new Spot(bDateToEpoch(date), double(price));
-      spots->push_back(*spot);
+      Spot spot = Spot(bDateToEpoch(date), double(price));
+      spots.push_back(spot);
     }
   }
-  return *spots;
+  return spots;
 }
 
 void DataBaseManager::postDelta(double delta, std::time_t date, const char* symbol){

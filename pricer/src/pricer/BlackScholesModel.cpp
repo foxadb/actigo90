@@ -79,9 +79,7 @@ void BlackScholesModel::asset(PnlMat *path, double T, int nbTimeSteps, PnlRng *r
 }
 
 void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps, PnlRng *rng, const PnlMat *past) {
-
-
-  double step = T / nbTimeSteps;
+    double step = T / nbTimeSteps;
 
     double size = past->m - 1;
     double x;
@@ -102,7 +100,7 @@ void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps,
     size = vect;
     double newStartingPoint = tSuiv - t;
     if (newStartingPoint < 0)
-      newStartingPoint = 0;
+        newStartingPoint = 0;
     pnl_vect_rng_normal(g, size_, rng);
     pnl_mat_mult_vect_inplace(produit, gamma, g);
     pnl_vect_clone(coeff, sigmaCarre);
@@ -112,21 +110,21 @@ void BlackScholesModel::asset(PnlMat *path, double t, double T, int nbTimeSteps,
     pnl_vect_plus_vect(produit, coeff);
     pnl_vect_map_inplace(produit, ptr);
     pnl_vect_mult_vect_term(produit, pastVect);
-    pnl_mat_set_row(path, produit, size); //+1
+    pnl_mat_set_row(path, produit, size); // +1
     pnl_vect_clone(pastVect,produit);
 
-    for (int i = size+1; i < path->m; i++) { //+2
-      pnl_vect_rng_normal(g, size_, rng);
-      pnl_mat_get_row(pastVect, path, i - 1);
-      pnl_mat_mult_vect_inplace(produit, gamma, g);
-      pnl_vect_clone(coeff, sigmaCarre);
-      pnl_vect_mult_scalar(coeff,  step);
-      pnl_vect_mult_vect_term(produit, sigma_);
-      pnl_vect_mult_scalar(produit, sqrt(step));
-      pnl_vect_plus_vect(produit, coeff);
-      pnl_vect_map_inplace(produit, ptr);
-      pnl_vect_mult_vect_term(produit, pastVect);
-      pnl_mat_set_row(path, produit, i);
+    for (int i = size + 1; i < path->m; ++i) { // +2
+        pnl_vect_rng_normal(g, size_, rng);
+        pnl_mat_get_row(pastVect, path, i - 1);
+        pnl_mat_mult_vect_inplace(produit, gamma, g);
+        pnl_vect_clone(coeff, sigmaCarre);
+        pnl_vect_mult_scalar(coeff,  step);
+        pnl_vect_mult_vect_term(produit, sigma_);
+        pnl_vect_mult_scalar(produit, sqrt(step));
+        pnl_vect_plus_vect(produit, coeff);
+        pnl_vect_map_inplace(produit, ptr);
+        pnl_vect_mult_vect_term(produit, pastVect);
+        pnl_mat_set_row(path, produit, i);
     }
 }
 
@@ -137,9 +135,9 @@ void BlackScholesModel::shiftAsset(PnlMat *shift_path, const PnlMat *path, int d
     int indice = intVerif + 1;
     if (intVerif == verif) {
         indice--;
-	}
-     for (int i = indice; i < path->m; i++) {
-    pnl_mat_set(shift_path, i, d, pnl_mat_get(path, i, d)* (1.0 + h));
+    }
+    for (int i = indice; i < path->m; i++) {
+        pnl_mat_set(shift_path, i, d, pnl_mat_get(path, i, d)* (1.0 + h));
     }
 
 }
@@ -176,7 +174,8 @@ void BlackScholesModel::simul_market(PnlMat* path, int nbDates, double T, PnlRng
 BlackScholesModel::~BlackScholesModel() {
     pnl_vect_free(&sigma_);
     pnl_vect_free(&spot_);
-    pnl_vect_free(&trend_);
+    // TODO ce free provoque une segfault
+    // pnl_vect_free(&trend_);
     pnl_vect_free(&sigmaCarre);
     pnl_mat_free(&gamma);
     pnl_vect_free(&g);

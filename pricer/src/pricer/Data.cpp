@@ -12,43 +12,42 @@ Data::~Data() {
     pnl_vect_free(&euroStoxSpots);
     pnl_vect_free(&spUsdSpots);
     pnl_vect_free(&spAudSpots);
-    pnl_vect_free(&eurAud);
     pnl_vect_free(&eurUsd);
+    pnl_vect_free(&eurAud);
     pnl_mat_free(&historicalDataMatrix);
     pnl_mat_free(&historicalDataMatrixEuro);
     pnl_mat_free(&completeDataMatrix);
 }
 
 Data::Data(PnlMat *matrixData){
-    euroStoxSpots = pnl_vect_new();
-    spUsdSpots = pnl_vect_new();
-    spAudSpots = pnl_vect_new();
-    eurUsd = pnl_vect_new();
-    eurAud = pnl_vect_new();
-    historicalDataMatrix = pnl_mat_new();
-    historicalDataMatrixEuro = pnl_mat_new();
-    completeDataMatrix = pnl_mat_new();
-    historicalDataMatrix = matrixData;
+    this->euroStoxSpots = pnl_vect_new();
+    this->spUsdSpots = pnl_vect_new();
+    this->spAudSpots = pnl_vect_new();
+    this->eurUsd = pnl_vect_new();
+    this->eurAud = pnl_vect_new();
+    this->historicalDataMatrixEuro = pnl_mat_new();
+    this->completeDataMatrix = pnl_mat_new();
+    this->historicalDataMatrix = matrixData;
+
     pnl_mat_get_col(euroStoxSpots, matrixData, 0);
     pnl_mat_get_col(spUsdSpots, matrixData, 1);
     pnl_mat_get_col(spAudSpots, matrixData, 2);
     pnl_mat_get_col(eurUsd, matrixData, 3);
     pnl_mat_get_col(eurAud, matrixData, 4);
-    //converting everyting to euro
-    pnl_vect_mult_vect_term (spUsdSpots, eurUsd);
-    pnl_vect_mult_vect_term (spAudSpots, eurAud);
 
-    //constructing zero coupons
+    // Converting everyting to euro
+    pnl_vect_mult_vect_term(spUsdSpots, eurUsd);
+    pnl_vect_mult_vect_term(spAudSpots, eurAud);
+
+    // Building zero coupons
     rEur = 0.05;
     rUsd = 0.05;
     rAud = 0.05;
     getZeroCoupon(eurUsd, rUsd, 8.0);
     getZeroCoupon(eurAud, rAud, 8.0);
-
 }
 
 Data::Data(const char* startDate, const char* currentDate){
-
     rEur = 0.05;
     rUsd = 0.05;
     rAud = 0.05;
@@ -58,43 +57,44 @@ Data::Data(const char* startDate, const char* currentDate){
     euroStoxSpots = pnl_vect_new();
     pnl_vect_clone(euroStoxSpots, quote1->getCloseSpots());
 
-    // spots for S&P 500
+    // Spots for S&P 500
     Quote *quote2 = new Quote("^GSPC");
     quote2->getHistoricalSpots(startDate, currentDate, "1d");
     spUsdSpots = pnl_vect_new();
     pnl_vect_clone(spUsdSpots, quote2->getCloseSpots());
 
-    // spots for S&P ASX 200
+    // Spots for S&P ASX/200
     Quote *quote3 = new Quote("^AXJO");
     quote3->getHistoricalSpots(startDate, currentDate, "1d");
     spAudSpots = pnl_vect_new();
     pnl_vect_clone(spAudSpots, quote3->getCloseSpots());
 
-    // rates for USD/EUR
+    // Rates for USD/EUR
     Quote *quote4 = new Quote("USDEUR=X");
     quote4->getHistoricalSpots(startDate, currentDate, "1d");
     eurUsd = pnl_vect_new();
     pnl_vect_clone(eurUsd, quote4->getCloseSpots());
 
-    // rates for AUD/EUR
+    // Rates for AUD/EUR
     Quote *quote5 = new Quote("AUDEUR=X");
     quote5->getHistoricalSpots(startDate, currentDate, "1d");
     eurAud = pnl_vect_new();
     pnl_vect_clone(eurAud, quote5->getCloseSpots());
 
-    //Recuperate the minimumSize of spots
+    // Recuperate the minimum size of spots
     double minSize = MIN(euroStoxSpots->size, spUsdSpots->size);
     minSize = MIN(minSize, spAudSpots->size);
     minSize = MIN(minSize, eurUsd->size);
     minSize = MIN(minSize, eurAud->size);
-    //resize spots
+
+    // Resize spots
     pnl_vect_resize(euroStoxSpots, minSize);
     pnl_vect_resize(spUsdSpots, minSize);
     pnl_vect_resize(spAudSpots, minSize);
     pnl_vect_resize(eurUsd, minSize);
     pnl_vect_resize(eurAud, minSize);
 
-    //put spots vectors in dataMatrix
+    // Put spots vectors in dataMatrix
     historicalDataMatrix = pnl_mat_create(euroStoxSpots->size, 5);
     pnl_mat_set_col(historicalDataMatrix, euroStoxSpots, 0);
     pnl_mat_set_col(historicalDataMatrix, spUsdSpots, 1);
@@ -102,11 +102,11 @@ Data::Data(const char* startDate, const char* currentDate){
     pnl_mat_set_col(historicalDataMatrix, eurUsd, 3);
     pnl_mat_set_col(historicalDataMatrix, eurAud, 4);
 
-    //converting everyting to euro
+    // Converting everyting to euro
     pnl_vect_mult_vect_term (spUsdSpots, eurUsd);
     pnl_vect_mult_vect_term (spAudSpots, eurAud);
 
-    //constructing zero coupons
+    // Building zero coupons
     getZeroCoupon(eurUsd, rUsd, 8.0);
     getZeroCoupon(eurAud, rAud, 8.0);
 
@@ -116,8 +116,6 @@ Data::Data(const char* startDate, const char* currentDate){
     pnl_mat_set_col(historicalDataMatrixEuro, spAudSpots, 2);
     pnl_mat_set_col(historicalDataMatrixEuro, eurUsd, 3);
     pnl_mat_set_col(historicalDataMatrixEuro, eurAud, 4);
-    //pnl_mat_print(historicalDataMatrixEuro);
-
 
     completeDataMatrix = pnl_mat_new();
 

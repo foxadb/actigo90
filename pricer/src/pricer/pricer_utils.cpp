@@ -20,11 +20,12 @@ void getZeroCoupon(PnlVect *exchangeRate, double r, double maturity){
 
 void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> dates){
     int count = 0;
-    PnlVect* euroStoxSpots = pnl_vect_create_from_scalar(dates.size(), 0.);
-    PnlVect* spUsdSpots = pnl_vect_create_from_scalar(dates.size(), 0.);
-    PnlVect* spAudSpots = pnl_vect_create_from_scalar(dates.size(), 0.);
-    PnlVect* eurUsdSpots = pnl_vect_create_from_scalar(dates.size(), 0.);
-    PnlVect* eurAudSpots = pnl_vect_create_from_scalar(dates.size(), 0.);
+    PnlVect* euroStoxSpots = pnl_vect_create_from_scalar(dates.size(), 0);
+    PnlVect* spUsdSpots = pnl_vect_create_from_scalar(dates.size(), 0);
+    PnlVect* spAudSpots = pnl_vect_create_from_scalar(dates.size(), 0);
+    PnlVect* eurUsdSpots = pnl_vect_create_from_scalar(dates.size(), 0);
+    PnlVect* eurAudSpots = pnl_vect_create_from_scalar(dates.size(), 0);
+
     for (std::vector<time_t>::iterator it = dates.begin(); it != dates.end(); ++it){
         LET(euroStoxSpots, count) = getLastAvailableSpot(dbManager, "^STOXX50E", *it);
         LET(spUsdSpots, count) = getLastAvailableSpot(dbManager, "^GSPC", *it);
@@ -36,7 +37,7 @@ void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> d
     pnl_vect_mult_vect_term (spUsdSpots, eurUsdSpots);
     pnl_vect_mult_vect_term (spAudSpots, eurAudSpots);
 
-    //constructing zero coupons
+    // Building zero coupons
     getZeroCoupon(eurUsdSpots, 0.05, 8.0);
     getZeroCoupon(eurAudSpots, 0.05, 8.0);
 
@@ -45,6 +46,13 @@ void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> d
     pnl_mat_set_col(past, spAudSpots, 2);
     pnl_mat_set_col(past, eurUsdSpots, 3);
     pnl_mat_set_col(past, eurAudSpots, 4);
+
+    // Free memory
+    pnl_vect_free(&euroStoxSpots);
+    pnl_vect_free(&spUsdSpots);
+    pnl_vect_free(&spAudSpots);
+    pnl_vect_free(&eurUsdSpots);
+    pnl_vect_free(&eurAudSpots);
 }
 
 std::vector<time_t> getRightDates(time_t todayDate, std::vector<time_t> semesterDates){
