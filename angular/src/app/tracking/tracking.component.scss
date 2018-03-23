@@ -7,3 +7,20 @@
     font-size: 48px;
     text-align: center;
 }
+
+.tracking-panel {
+    padding: 24px 0 24px 0;
+    // columns vertically aligned
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.tracking-panel .btn {
+    height: 72px;
+}
+
+.tracking-error {
+    font-size: 28px;
+    text-align: center;
+}

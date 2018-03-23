@@ -2,6 +2,26 @@
   <div class="title">
     Portfolio Tracking Error
   </div>
+  <form class="form" (ngSubmit)="computeTrackingError()" #f="ngForm" novalidate>
+    <div class="row justify-content-center tracking-panel">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="trackingDate">Tracking date</label>
+          <input id="trackingDate" type="date" class="form-control" name="trackingDate" [ngModel]="trackingDate | date : 'yyyy-MM-dd'"
+            (ngModelChange)="trackingDate = $event">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <button type="submit" arial-label="Tracking Error" class="btn btn-primary">
+            <i class="fa fa-bullseye fa-lg"></i> Tracking Error</button>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <a class="tracking-error">{{ trackingError }} &#x25;</a>
+      </div>
+    </div>
+  </form>
   <div class="chart">
     <canvas baseChart #baseChart="base-chart" [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [legend]="chartLegend"
       [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">

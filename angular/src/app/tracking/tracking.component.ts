@@ -12,6 +12,9 @@ import { PriceService } from '../services/price.service';
 })
 export class TrackingComponent implements OnInit {
 
+  public trackingDate: Date;
+  public trackingError: number;
+
   public prices: Array<Price>;
 
   @ViewChild('baseChart') chart: BaseChartDirective;
@@ -60,6 +63,24 @@ export class TrackingComponent implements OnInit {
         this.chart.ngOnInit();
       }
     );
+  }
+
+  public computeTrackingError(): void {
+    // Find the current price
+    const currentPrice = this.prices.find(price => {
+      const date = new Date(price.date).setHours(0, 0, 0);
+      const trackingDate = new Date(this.trackingDate).setHours(0, 0, 0);
+      return date === trackingDate;
+    });
+
+    // Compute the tracking error
+    if (currentPrice) {
+      this.trackingError = Math.abs(currentPrice.hedging - currentPrice.actigo);
+
+      // Convert into percent
+      this.trackingError *= 100;
+      this.trackingError = Math.round(this.trackingError * 100) / 100;
+    }
   }
 
   public chartClicked(event: any): void {
