@@ -39,6 +39,24 @@ export class StockComponent implements OnInit {
       point: {
         radius: 0
       }
+    },
+    scales: {
+      xAxes: [{
+        type: 'time',
+        time: {
+          displayFormats: {
+            quarter: 'MMM YYYY'
+          }
+        }
+      }]
+    },
+    pan: {
+      enabled: true,
+      mode: 'x'
+    },
+    zoom: {
+      enabled: true,
+      mode: 'x',
     }
   };
   public chartLegend = false;
@@ -107,7 +125,7 @@ export class StockComponent implements OnInit {
 
         // Fill chart data
         this.spots.forEach(spot => {
-          this.chartLabels.push(new Date(spot.date).toLocaleDateString());
+          this.chartLabels.push(new Date(spot.date));
           this.spotPrices.push(spot.price);
         });
 

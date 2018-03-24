@@ -33,6 +33,24 @@ export class TrackingComponent implements OnInit {
       point: {
         radius: 0
       }
+    },
+    scales: {
+      xAxes: [{
+        type: 'time',
+        time: {
+          displayFormats: {
+            quarter: 'MMM YYYY'
+          }
+        }
+      }]
+    },
+    pan: {
+      enabled: true,
+      mode: 'x'
+    },
+    zoom: {
+      enabled: true,
+      mode: 'x',
     }
   };
   public chartLegend = true;
@@ -54,7 +72,7 @@ export class TrackingComponent implements OnInit {
 
         // Fill chart data
         this.prices.forEach(price => {
-          this.chartLabels.push(new Date(price.date).toLocaleDateString());
+          this.chartLabels.push(new Date(price.date));
           this.actigoPrices.push(price.actigo);
           this.hedgingPrices.push(price.hedging);
         });

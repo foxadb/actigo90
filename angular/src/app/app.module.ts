@@ -25,6 +25,9 @@ import { YahooFinanceService } from './services/yahoo-finance.service';
 import { PricerService } from './services/pricer.service';
 import { FinancialDataService } from './services/financial-data.service';
 
+import 'hammerjs';
+import 'chartjs-plugin-zoom';
+
 @NgModule({
   declarations: [
     AppComponent,
