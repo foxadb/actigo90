@@ -32,7 +32,6 @@ b_oid DataBaseManager::getStockId(const char* symbol){
      }
 }
 
-
 Spot DataBaseManager::getSpot(std::time_t date, const char* symbol){
   b_date bdate = read_date(date, 0);
   double price = getSpot(bdate, symbol);

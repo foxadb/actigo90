@@ -28,6 +28,7 @@ public:
     mongocxx::instance instance{};
     mongocxx::client client{mongocxx::uri{}};
     mongocxx::database db = client["peps"];
+
     static DataBaseManager* getDbManager();
     Spot getSpot(std::time_t date, const char* symbol);
     std::vector<Spot> getSpots(std::time_t startDate,

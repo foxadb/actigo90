@@ -49,12 +49,8 @@ find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
 message(STATUS "Boost include directory ${Boost_INCLUDE_DIR}")
 
-## Detect PNL
-
-# Set PNL directory
-set(Pnl_DIR "../../pnl/build/lib/cmake/pnl")
-
 # Find PNL package
+set(Pnl_DIR "../../pnl/build/lib/cmake/pnl")
 find_package(Pnl REQUIRED)
 set(LIBS ${LIBS} ${PNL_LIBRARIES})
 include_directories(${PNL_INCLUDE_DIRS})
