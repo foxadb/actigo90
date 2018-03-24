@@ -63,7 +63,7 @@ export class StockComponent implements OnInit {
       this.stock = stocks.find(stock => stock.symbol === this.stockSymbol);
 
       // Get Spots
-      this.getStockSpots(this.stock._id, 1, 500);
+      this.getStockSpots(this.stock._id, 1, 5000);
     });
 
     // Parent download data request subscription
@@ -140,7 +140,7 @@ export class StockComponent implements OnInit {
         err => {
           // Retrying to download data
           this.downloadStockData();
-      });
+        });
     }
   }
 

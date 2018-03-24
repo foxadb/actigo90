@@ -69,26 +69,37 @@ export class TrackingComponent implements OnInit {
     // Compute error serie and average error
     const errorsSerie = [];
     let averageError = 0;
-    let i = 0;
+    let i = 1;
     while (new Date(this.prices[i].date).getTime()
       <= new Date(this.trackingDate).getTime()) {
-      const price = this.prices[i];
-      const error = price.hedging - price.actigo;
+      // Get current and previous prices
+      const currentPrice = this.prices[i];
+      const previousPrice = this.prices[i - 1];
+
+      // Compute porfolio performances (percent)
+      const perfActigo = 100 * (currentPrice.actigo / previousPrice.actigo - 1);
+      const perfHedging = 100 * (currentPrice.hedging / previousPrice.hedging - 1);
+
+      // Compute current error and add it to the list
+      const error = perfHedging - perfActigo;
       errorsSerie.push(error);
+
+      // Add error to average
       averageError += error;
+
+      // Skip to next day
       ++i;
     }
-    averageError /= i;
+
+    // Compute average error
+    averageError /= i - 1;
 
     // Compute tracking error (std dev)
     let trackingError = 0;
-    errorsSerie.forEach(error => trackingError += error ** 2);
-    trackingError /= i;
-    trackingError -= averageError ** 2;
+    errorsSerie.forEach(error => trackingError += (error - averageError) ** 2);
+    trackingError /= i - 1;
     trackingError = Math.sqrt(trackingError);
-
-    // Tracking error in percent
-    this.trackingError = trackingError * 100;
+    this.trackingError = trackingError;
   }
 
   public chartClicked(event: any): void {
