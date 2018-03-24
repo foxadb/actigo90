@@ -4,6 +4,7 @@ import { BaseChartDirective } from 'ng2-charts/ng2-charts';
 import Price from '../models/price.model';
 
 import { PriceService } from '../services/price.service';
+import { PricerService } from '../services/pricer.service';
 
 @Component({
   selector: 'app-tracking',
@@ -11,6 +12,9 @@ import { PriceService } from '../services/price.service';
   styleUrls: ['./tracking.component.scss']
 })
 export class TrackingComponent implements OnInit {
+
+  public hedgingDate: Date;
+  public hedgingSpinner = false;
 
   public trackingDate: Date;
   public trackingError: number;
@@ -56,7 +60,10 @@ export class TrackingComponent implements OnInit {
   public chartLegend = true;
   public chartType = 'line';
 
-  constructor(private priceService: PriceService) { }
+  constructor(
+    private priceService: PriceService,
+    private pricerService: PricerService
+  ) { }
 
   public ngOnInit(): void {
     // Price subscription
@@ -81,6 +88,24 @@ export class TrackingComponent implements OnInit {
         this.chart.ngOnInit();
       }
     );
+  }
+
+  public hedging(): void {
+    const body = {
+      date: new Date(this.hedgingDate).getTime() / 1000
+    };
+
+    // Loading spinner
+    this.hedgingSpinner = true;
+
+    // Compute Actigo Delta
+    this.pricerService.hedging(body).subscribe(
+      res => {
+        this.hedgingSpinner = false;
+      },
+      err => console.error('Error', err)
+    );
+
   }
 
   public computeTrackingError(): void {

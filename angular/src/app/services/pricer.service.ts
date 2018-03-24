@@ -32,9 +32,18 @@ export class PricerService {
     return options;
   }
 
-  // Get a Actigo Delta from API by date
+  // Actigo Delta from API by date
   public actigoDelta(body: any): Observable<any> {
     return this.http.post(this.pricerUrl, body, this.options())
+      .map(res => {
+        return res['data'];
+      })
+      .catch(err => this.handleError(err));
+  }
+
+  // Portfolio value from API by date
+  public hedging(body: any): Observable<any> {
+    return this.http.post(`${this.pricerUrl}/hedging`, body, this.options())
       .map(res => {
         return res['data'];
       })

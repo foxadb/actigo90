@@ -14,7 +14,9 @@
 #include <string>
 #include <ctime>
 
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
+    int mcSamplesNb = 50000; // Monte Carlo samples number
+
     DataBaseManager *dbManager = DataBaseManager::getDbManager();
 
     std::vector<time_t> semesterDatesT {
@@ -56,8 +58,9 @@ int main(int argc, char **argv){
         1665360000,
         1681171200
     };
-    time_t date = atoi(argv[1]);
-    time_t oneYearBeforeDate = date -  365*24*3600;
+
+    time_t date = std::atoi(argv[1]);
+    time_t oneYearBeforeDate = date -  365 * 24 * 3600;
 
     std::vector<Spot> euroStoxSpotspots = dbManager->getSpots(oneYearBeforeDate, date, "^STOXX50E");
     PnlVect* euroStoxSpots = pnl_vect_create_from_scalar(euroStoxSpotspots.size(), 0.);
@@ -93,10 +96,10 @@ int main(int argc, char **argv){
     pnl_vect_resize(eurAudSpots, minSize);
     int dataSize = euroStoxSpots->size;
     int actigoSize = 5;
-    double calibrationMaturity = 1.0;
+    double calibrationMaturity = 1;
 
     // Maturity to modify
-    PnlMat* calibrationDataMatrix = pnl_mat_create_from_scalar(dataSize, actigoSize, 0.);
+    PnlMat* calibrationDataMatrix = pnl_mat_create_from_scalar(dataSize, actigoSize, 0);
     pnl_mat_set_col(calibrationDataMatrix, euroStoxSpots, 0);
     pnl_mat_set_col(calibrationDataMatrix, spUsdSpots, 1);
     pnl_mat_set_col(calibrationDataMatrix, spAudSpots, 2);
@@ -120,12 +123,13 @@ int main(int argc, char **argv){
     double eurUsdInitialPrice = eurUsdInitialSpot.getClose();
     double eurAudInitialPrice = eurAudInitialSpot.getClose();
 
-    double maturity = 8.0;
+    double maturity = 8;
 
-    Actigo *actigo = new Actigo(maturity, 16, actigoSize,
-                                euroStoxInitialPrice, spUsdInitialPrice, spAudInitialPrice);
+    Actigo *actigo = new Actigo(
+                maturity, 16, actigoSize,
+                euroStoxInitialPrice, spUsdInitialPrice, spAudInitialPrice);
 
-    //Create the BlackScholesModel
+    // Create the BlackScholesModel
     double rEur = 0.04;
 
     double actuParam = exp(-rEur*maturity);
@@ -140,31 +144,30 @@ int main(int argc, char **argv){
     LET(initialPricesEuro, 3) = eurUsdInitialPrice;
     LET(initialPricesEuro, 4) = eurAudInitialPrice;
 
-    BlackScholesModel *bsm = new BlackScholesModel(actigoSize, rEur, calibration->getCorrelationsMatrix(),
-                                                   calibration->getVolatilities(), initialPricesEuro);
+    BlackScholesModel *bsm = new BlackScholesModel(
+                actigoSize, rEur, calibration->getCorrelationsMatrix(),
+                calibration->getVolatilities(), initialPricesEuro);
+
     PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
     pnl_rng_sseed(rng, time(NULL));
-    MonteCarlo *mc = new MonteCarlo(bsm, actigo, rng, 0.01, 50000);
-    PnlVect *delta = pnl_vect_create_from_scalar(actigoSize, 0.);
-    double price = 0.;
+    MonteCarlo *mc = new MonteCarlo(bsm, actigo, rng, 0.01, mcSamplesNb);
+    PnlVect *delta = pnl_vect_create_from_scalar(actigoSize, 0);
+    double price = 0;
     std::vector<time_t> rightDates = getRightDates(date, semesterDates);
-    PnlMat* past = pnl_mat_create_from_scalar(rightDates.size(), actigoSize, 0.);
+    PnlMat* past = pnl_mat_create_from_scalar(rightDates.size(), actigoSize, 0);
     getPastData(dbManager, past, rightDates);
 
     time_t dateDifference = date - 1428451200;
-    double convertedDate = (double)dateDifference/(365*24*3600);
-    if ( convertedDate > 8.0)
-        convertedDate = 8. ;
+    double convertedDate = (double)dateDifference/(365 * 24 * 3600);
+
+    if ( convertedDate > 8)
+        convertedDate = 8;
+
     mc->rebalanceAtSpecificDate(past,  convertedDate, delta, price);
     pnl_vect_print(delta);
     std::cout << price << std::endl;
 
     // Free memory
-    //delete &euroStoxInitialSpot;
-    //delete &spUsdInitialSpot;
-    //delete &spAudInitialSpot;
-    //delete &eurUsdInitialSpot;
-    //delete &eurAudInitialSpot;
     delete data;
     delete calibration;
     delete actigo;

@@ -12,3 +12,16 @@ exports.actigoDelta = function (req, res) {
         res.status(400).json({ status: 400, message: error.message });
     }
 };
+
+exports.hedging = function (req, res) {
+    // Get date
+    const date = req.body.date;
+
+    try {
+        PricerService.hedging(date, code => {
+            res.status(200).json({ status: 200, data: code, message: 'Hedging portfolio successfully computed' });
+        });
+    } catch (error) {
+        res.status(400).json({ status: 400, message: error.message });
+    }
+};

@@ -2,11 +2,31 @@
   <div class="title">
     Portfolio Tracking Error
   </div>
+  <form class="form" (ngSubmit)="hedging()" #f="ngForm" novalidate>
+    <div class="row justify-content-center tracking-panel">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="hedgingDate">Hedging end date</label>
+          <input id="hedgingDate" type="date" class="form-control" name="hedgingDate" [ngModel]="hedgingDate | date : 'yyyy-MM-dd'"
+            (ngModelChange)="hedgingDate = $event">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <button type="submit" arial-label="Hedging" class="btn btn-success">
+            <i class="fa fa-money fa-lg"></i> Hedging</button>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <i *ngIf="hedgingSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+      </div>
+    </div>
+  </form>
   <form class="form" (ngSubmit)="computeTrackingError()" #f="ngForm" novalidate>
     <div class="row justify-content-center tracking-panel">
       <div class="col-md-3">
         <div class="form-group">
-          <label for="trackingDate">Tracking date</label>
+          <label for="trackingDate">Tracking end date</label>
           <input id="trackingDate" type="date" class="form-control" name="trackingDate" [ngModel]="trackingDate | date : 'yyyy-MM-dd'"
             (ngModelChange)="trackingDate = $event">
         </div>
@@ -14,7 +34,7 @@
       <div class="col-md-3">
         <div class="form-group">
           <button type="submit" arial-label="Tracking Error" class="btn btn-primary">
-            <i class="fa fa-bullseye fa-lg"></i> Tracking Error</button>
+            <i class="fa fa-bullseye fa-lg"></i> Tracking error</button>
         </div>
       </div>
       <div class="col-md-2">

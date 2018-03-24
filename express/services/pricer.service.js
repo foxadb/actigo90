@@ -25,3 +25,16 @@ exports.actigoDelta = function (date, callback) {
         callback(json);
     });
 };
+
+exports.hedging = function (date, callback) {
+    const pricer = exec(`../pricer/build/test/portfolioValue ${date}`);
+
+    pricer.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    pricer.on('close', (code) => {
+        console.log(`computeActigoDelta process exited with code ${code}`);
+        callback(code);
+    });
+};
