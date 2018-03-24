@@ -22,7 +22,7 @@ export class PricingComponent implements OnInit {
   public eurUsd: Stock;
   public eurAud: Stock;
 
-  public prices: Array<Price>;
+  public prices: Array<Price> = [];
 
   public deltas: Array<Delta>;
   public euroStoxx50Deltas: Array<Delta> = [];
@@ -83,7 +83,6 @@ export class PricingComponent implements OnInit {
 
             // Divide delta list into each stock
             this.deltas.forEach(delta => {
-              console.log(delta);
               switch (delta.stock) {
                 case this.euroStoxx50._id:
                   this.euroStoxx50Deltas.push(delta);

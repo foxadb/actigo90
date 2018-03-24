@@ -11,15 +11,15 @@
           <tbody>
             <tr>
               <td class="align-left">Last rebalancing</td>
-              <td class="align-right">{{ prices[0].date | date : 'mediumDate' }}</td>
+              <td class="align-right">{{ prices[0]?.date | date : 'mediumDate' }}</td>
             </tr>
             <tr>
               <td class="align-left">Actigo Price</td>
-              <td class="align-right">{{ prices[0].actigo | number : '1.8-8' }} €</td>
+              <td class="align-right">{{ prices[0]?.actigo | number : '1.8-8' }} €</td>
             </tr>
             <tr>
               <td class="align-left">Hedging Price</td>
-              <td class="align-right">{{ prices[0].hedging | number : '1.8-8' }} €</td>
+              <td class="align-right">{{ prices[0]?.hedging | number : '1.8-8' }} €</td>
             </tr>
           </tbody>
         </table>
@@ -99,11 +99,11 @@
           <td>{{ price.date | date : 'mediumDate' }}</td>
           <td>{{ price.actigo | number : '1.5-5' }} €</td>
           <td>{{ price.hedging | number : '1.5-5' }} €</td>
-          <td>{{ euroStoxx50Deltas[i].delta | number : '1.8-8' }}</td>
-          <td>{{ snp500Deltas[i].delta | number : '1.8-8' }}</td>
-          <td>{{ snp200Deltas[i].delta | number : '1.8-8' }}</td>
-          <td>{{ eurUsdDeltas[i].delta | number : '1.8-8' }}</td>
-          <td>{{ eurAudDeltas[i].delta | number : '1.8-8' }}</td>
+          <td>{{ euroStoxx50Deltas[i]?.delta | number : '1.8-8' }}</td>
+          <td>{{ snp500Deltas[i]?.delta | number : '1.8-8' }}</td>
+          <td>{{ snp200Deltas[i]?.delta | number : '1.8-8' }}</td>
+          <td>{{ eurUsdDeltas[i]?.delta | number : '1.8-8' }}</td>
+          <td>{{ eurAudDeltas[i]?.delta | number : '1.8-8' }}</td>
         </tr>
       </tbody>
     </table>
