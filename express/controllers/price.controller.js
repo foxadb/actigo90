@@ -83,3 +83,15 @@ exports.deletePrice = async function (req, res) {
         return res.status(403).json({ status: 403, message: error.message });
     }
 };
+
+exports.deleteAllPrices = async function (req, res) {
+    try {
+        // Delete all prices
+        await PriceService.deleteAllPrices();
+
+        // Return the result
+        return res.status(204).json({ status: 204, message: 'Successfully prices deleted' });
+    } catch (error) {
+        return res.status(403).json({ status: 403, message: error.message });
+    }
+};

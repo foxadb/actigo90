@@ -7,7 +7,7 @@ exports.getPrices = async function (query, page, limit) {
     try {
         // Pagination
         let prices = await Price.paginate(query, options);
-        
+
         // Return the result
         return prices;
     } catch (error) {
@@ -69,7 +69,7 @@ exports.updatePrice = async function (price) {
     try {
         // Saving the Price 
         var savedPrice = await oldPrice.save();
-        
+
         // Return the result
         return savedPrice;
     } catch (e) {
@@ -80,15 +80,24 @@ exports.updatePrice = async function (price) {
 exports.deletePrice = async function (id) {
     try {
         let deleted = await Price.remove({ _id: id });
-        
+
         // Check if deletion passed correctly
         if (deleted.n === 0) {
             throw Error('Price could not be deleted');
         }
-        
+
         // Return the result
         return deleted;
     } catch (error) {
         throw Error('Error occured while deleting the price');
+    }
+};
+
+exports.deleteAllPrices = async function () {
+    try {
+        let deleted = await Price.remove({});
+        return deleted;
+    } catch (error) {
+        throw Error('Error occured while deleting all prices');
     }
 };

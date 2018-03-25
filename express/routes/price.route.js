@@ -8,6 +8,7 @@ router.get('/', UserController.userOnly, PriceController.getPrices);
 router.get('/:id', UserController.userOnly, PriceController.getPrice);
 router.post('/', UserController.userOnly, PriceController.createPrice);
 router.put('/:id', UserController.userOnly, PriceController.updatePrice);
+router.delete('/', UserController.userOnly, PriceController.deleteAllPrices);
 router.delete('/:id', UserController.userOnly, PriceController.deletePrice);
 
 // Export the Router

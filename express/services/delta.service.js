@@ -91,3 +91,12 @@ exports.deleteDelta = async function (id) {
         throw Error('Error occured while deleting the delta');
     }
 };
+
+exports.deleteAllDeltas = async function () {
+    try {
+        let deleted = await Delta.remove({});
+        return deleted;
+    } catch (error) {
+        throw Error('Error occured while deleting all deltas');
+    }
+};

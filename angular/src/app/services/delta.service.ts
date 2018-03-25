@@ -93,6 +93,15 @@ export class DeltaService {
       .catch(err => this.handleError(err));
   }
 
+  // Delete all Deltas from API
+  public deleteAllDeltas(): Observable<boolean> {
+    return this.http.delete(this.deltaUrl, this.options())
+      .map(res => {
+        return true;
+      })
+      .catch(err => this.handleError(err));
+  }
+
   // Error handling method
   private handleError(error: any): Promise<any> {
     console.error('An error occured', error);

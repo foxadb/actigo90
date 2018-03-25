@@ -9,6 +9,7 @@ router.get('/:id', UserController.userOnly, DeltaController.getDelta);
 router.get('/stock/:id', UserController.userOnly, DeltaController.getStockDeltas);
 router.post('/', UserController.userOnly, DeltaController.createDelta);
 router.put('/:id', UserController.userOnly, DeltaController.updateDelta);
+router.delete('/', UserController.userOnly, DeltaController.deleteAllDeltas);
 router.delete('/:id', UserController.userOnly, DeltaController.deleteDelta);
 
 // Export the Router

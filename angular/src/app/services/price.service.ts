@@ -93,6 +93,15 @@ export class PriceService {
       .catch(err => this.handleError(err));
   }
 
+  // Delete all Prices from API
+  public deleteAllPrices(): Observable<boolean> {
+    return this.http.delete(this.priceUrl, this.options())
+      .map(res => {
+        return true;
+      })
+      .catch(err => this.handleError(err));
+  }
+
   // Error handling method
   private handleError(error: any): Promise<any> {
     console.error('An error occured', error);

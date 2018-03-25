@@ -2,6 +2,11 @@
   <div class="title">
     Portfolio Tracking Error
   </div>
+  <div class="chart">
+    <canvas baseChart #baseChart="base-chart" [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [legend]="chartLegend"
+      [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+    </canvas>
+  </div>
   <form class="form" (ngSubmit)="hedging()" #f="ngForm" novalidate>
     <div class="row justify-content-center tracking-panel">
       <div class="col-md-3">
@@ -11,14 +16,28 @@
             (ngModelChange)="hedgingDate = $event">
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <div class="form-group">
           <button type="submit" arial-label="Hedging" class="btn btn-success">
             <i class="fa fa-money fa-lg"></i> Hedging</button>
         </div>
       </div>
       <div class="col-md-2">
-        <i *ngIf="hedgingSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+        <div class="form-group">
+          <button type="button" class="btn btn-primary" (click)="refreshChartData()">
+            <i class="fa fa-sync fa-lg"></i> Refresh Chart</button>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <button type="button" class="btn btn-danger" (click)="deleteHedging()">
+            <i class="fa fa-trash fa-lg"></i> Delete</button>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <i *ngIf="hedgingSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+        </div>
       </div>
     </div>
   </form>
@@ -42,9 +61,4 @@
       </div>
     </div>
   </form>
-  <div class="chart">
-    <canvas baseChart #baseChart="base-chart" [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [legend]="chartLegend"
-      [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-    </canvas>
-  </div>
 </div>

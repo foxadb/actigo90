@@ -3,6 +3,7 @@ import { BaseChartDirective } from 'ng2-charts/ng2-charts';
 
 import Price from '../models/price.model';
 
+import { DeltaService } from '../services/delta.service';
 import { PriceService } from '../services/price.service';
 import { PricerService } from '../services/pricer.service';
 
@@ -61,11 +62,26 @@ export class TrackingComponent implements OnInit {
   public chartType = 'line';
 
   constructor(
+    private deltaService: DeltaService,
     private priceService: PriceService,
     private pricerService: PricerService
   ) { }
 
   public ngOnInit(): void {
+    this.refreshChartData();
+  }
+
+  public refreshChartData(): void {
+    // Download chart data
+    this.getChartData();
+  }
+
+  public getChartData(): void {
+    // Reset chart labels and prices
+    this.chartLabels.length = 0;
+    this.actigoPrices.length = 0;
+    this.hedgingPrices.length = 0;
+
     // Price subscription
     this.priceService.getPrices(1, 5000).subscribe(
       prices => {
@@ -95,7 +111,7 @@ export class TrackingComponent implements OnInit {
       date: new Date(this.hedgingDate).getTime() / 1000
     };
 
-    // Loading spinner
+    // Loading
     this.hedgingSpinner = true;
 
     // Compute Actigo Delta
@@ -105,7 +121,23 @@ export class TrackingComponent implements OnInit {
       },
       err => console.error('Error', err)
     );
+  }
 
+  public deleteHedging(): void {
+    // Loading spinner
+    this.hedgingSpinner = true;
+
+    // Delete all deltas and prices
+    this.deltaService.deleteAllDeltas().subscribe(
+      deltas => {
+        this.priceService.deleteAllPrices().subscribe(
+          prices => {
+            this.getChartData();
+            this.hedgingSpinner = false;
+          }
+        );
+      }
+    );
   }
 
   public computeTrackingError(): void {
