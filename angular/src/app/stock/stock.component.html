@@ -9,16 +9,25 @@
       <span>Last price ({{ stock?.currency }}): {{ lastSpot?.price }}</span>
     </div>
   </div>
+  <div class="row justify-content-center">
+    <div class="col">
+      <div class="chart">
+        <canvas baseChart #baseChart="base-chart" [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [legend]="chartLegend"
+          [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+        </canvas>
+      </div>
+    </div>
+  </div>
   <div class="row justify-content-center data-panel">
-    <div class="col-sm-4 date">
+    <div class="col-md-4 date">
       <label for="startDate">Start Date</label>
       <input id="startDate" type="date" class="form-control" [ngModel]="startDate | date: 'yyyy-MM-dd'" (ngModelChange)="startDate = $event">
     </div>
-    <div class="col-sm-4 date">
+    <div class="col-md-4 date">
       <label for="endDate">End Date</label>
       <input id="endDate" type="date" class="form-control" [ngModel]="endDate | date: 'yyyy-MM-dd'" (ngModelChange)="endDate = $event">
     </div>
-    <div class="col-md-3">
+    <div class="col-lg-3">
       <div class="row justify-content-center button-section">
         <button type="button" class="btn btn-success" (click)="downloadStockData()">
           <i class="fa fa-download"></i> Download</button>
@@ -32,13 +41,17 @@
       <i *ngIf="downloadSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
     </div>
   </div>
-  <div class="row justify-content-center">
-    <div class="col">
-      <div class="chart">
-        <canvas baseChart #baseChart="base-chart" [datasets]="chartData" [labels]="chartLabels" [options]="chartOptions" [legend]="chartLegend"
-          [chartType]="chartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-        </canvas>
-      </div>
+  <div class="row justify-content-center data-panel">
+    <div class="col-md-4 date">
+      <label for="selectedDate">Date spot price</label>
+      <input id="selectedDate" type="date" class="form-control" [ngModel]="selectedDate | date: 'yyyy-MM-dd'" (ngModelChange)="selectedDate = $event">
+    </div>
+    <div class="col-md-4 button-section">
+      <button type="button" class="btn btn-primary" (click)="showSelectedSpot()">
+        <i class="fa fa-clock"></i> Spot Price</button>
+    </div>
+    <div class="col-md-3 infos">
+      <span>{{ stock?.currency }} {{ selectedSpot?.price }}</span>
     </div>
   </div>
 </div>

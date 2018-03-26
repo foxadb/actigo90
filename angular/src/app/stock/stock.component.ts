@@ -27,6 +27,9 @@ export class StockComponent implements OnInit {
   public startDate: Date;
   public endDate = Date.now();
 
+  public selectedDate: Date;
+  public selectedSpot: Spot;
+
   @ViewChild('baseChart') chart: BaseChartDirective;
 
   public spotPrices: Array<Number> = [];
@@ -82,6 +85,7 @@ export class StockComponent implements OnInit {
 
       // Get Spots
       this.getStockSpots(this.stock._id, 1, 5000);
+
     });
 
     // Parent download data request subscription
@@ -115,7 +119,6 @@ export class StockComponent implements OnInit {
     this.spotService.getStockSpots(stock, page, limit).subscribe(
       spots => {
         this.spots = spots;
-        this.lastSpot = spots[spots.length - 1];
       },
       error => console.error('Error: ', error),
       () => {
@@ -128,6 +131,11 @@ export class StockComponent implements OnInit {
           this.chartLabels.push(new Date(spot.date));
           this.spotPrices.push(spot.price);
         });
+
+        // Init last and selected spots
+        this.lastSpot = this.spots[this.spots.length - 1];
+        this.selectedSpot = this.lastSpot;
+        this.selectedDate = this.selectedSpot.date;
 
         // Refresh chart
         this.chart.ngOnInit();
@@ -180,6 +188,12 @@ export class StockComponent implements OnInit {
 
   public chartHovered(event: any): void {
     console.log(event);
+  }
+
+  public showSelectedSpot(): void {
+    this.selectedSpot = this.spots.find(spot =>
+      new Date(spot.date).getTime() === new Date(this.selectedDate).getTime()
+    );
   }
 
 }
