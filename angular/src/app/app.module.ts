@@ -9,14 +9,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { AdminComponent } from './admin/admin.component';
 import { FinancialDataComponent } from './financial-data/financial-data.component';
 import { StockComponent } from './stock/stock.component';
 import { PricingComponent } from './pricing/pricing.component';
 import { TrackingComponent } from './tracking/tracking.component';
 import { ContactComponent } from './contact/contact.component';
+import { ConfirmModalComponent } from './confirm-modal/confirm-modal.component';
 
 import { AuthGuard } from './services/auth.guard';
 import { AuthenticationService } from './services/authentication.service';
+import { UserService } from './services/user.service';
 import { StockService } from './services/stock.service';
 import { SpotService } from './services/spot.service';
 import { DeltaService } from './services/delta.service';
@@ -33,11 +36,13 @@ import 'chartjs-plugin-zoom';
     AppComponent,
     HomeComponent,
     LoginComponent,
+    AdminComponent,
     FinancialDataComponent,
     StockComponent,
     PricingComponent,
     TrackingComponent,
     ContactComponent,
+    ConfirmModalComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -50,6 +55,7 @@ import 'chartjs-plugin-zoom';
   providers: [
     AuthGuard,
     AuthenticationService,
+    UserService,
     StockService,
     SpotService,
     DeltaService,
