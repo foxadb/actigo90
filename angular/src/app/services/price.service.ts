@@ -77,7 +77,7 @@ export class PriceService {
 
   // Update a Price to API
   public updatePrice(price: any): Observable<boolean> {
-    return this.http.put(this.priceUrl, price, this.options())
+    return this.http.put(`${this.priceUrl}/${price._id}`, price, this.options())
       .map(res => {
         return true;
       })

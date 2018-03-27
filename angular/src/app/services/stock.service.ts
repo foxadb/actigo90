@@ -67,7 +67,7 @@ export class StockService {
 
   // Update a Stock to API
   public updateStock(stock: any): Observable<boolean> {
-    return this.http.put(this.stockUrl, stock, this.options())
+    return this.http.put(`${this.stockUrl}/${stock._id}`, stock, this.options())
       .map(res => {
         return true;
       })

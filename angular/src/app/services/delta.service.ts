@@ -77,7 +77,7 @@ export class DeltaService {
 
   // Update a Delta to API
   public updateDelta(delta: any): Observable<boolean> {
-    return this.http.put(this.deltaUrl, delta, this.options())
+    return this.http.put(`${this.deltaUrl}/${delta._id}`, delta, this.options())
       .map(res => {
         return true;
       })
