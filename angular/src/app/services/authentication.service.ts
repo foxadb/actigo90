@@ -18,31 +18,58 @@ export class AuthenticationService {
   constructor(private http: HttpClient) { }
 
   public isAuthenticated(): boolean {
-    // Get the token
-    const token = JSON.parse(localStorage.getItem('currentUser')).token;
+    // Get user token
+    const token = this.getToken();
 
-    // Check whether the token is expired and return
-    return !this.jwtHelper.isTokenExpired(token);
+    if (token) {
+      // Check whether the token is expired and return
+      return !this.jwtHelper.isTokenExpired(token);
+    } else {
+      return false;
+    }
   }
 
   public getToken(): string {
-    return JSON.parse(localStorage.getItem('currentUser')).token;
+    const user = localStorage.getItem('currentUser');
+    if (user) {
+      return JSON.parse(user).token;
+    } else {
+      return undefined;
+    }
   }
 
   public getTokenPayload(): any {
-    return this.jwtHelper.decodeToken(this.getToken());
+    const token = this.getToken();
+    if (token) {
+      return this.jwtHelper.decodeToken(token);
+    } else {
+      return undefined;
+    }
   }
 
   public getUsername(): string {
-    return this.getTokenPayload().username;
+    const payload = this.getTokenPayload();
+    if (payload) {
+      return payload.username;
+    } else {
+      return undefined;
+    }
   }
 
   public getRole(): string {
-    return this.getTokenPayload().role;
+    const payload = this.getTokenPayload();
+    if (payload) {
+      return payload.role;
+    } else {
+      return undefined;
+    }
   }
 
   public login(username: string, password: string): Observable<boolean> {
-    const body = { username: username, password: password };
+    const body = {
+      username: username,
+      password: password
+    };
     return this.http.post(this.loginUrl, body)
       .map(response => {
         // login successful if there's a jwt token in the response
