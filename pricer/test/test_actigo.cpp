@@ -23,7 +23,10 @@ int main(int argc, char** argv) {
   BlackScholesModel *bsm = new BlackScholesModel(3, 0.04879, 0.0, sigma, spot);
   bsm->trend_ = pnl_vect_create_from_scalar(3, 0.04);
   bsm->simul_market(data, 450, 3.0, rng);
-  Actigo *actigo = new Actigo(1.5, 150,3, 100., 100., 100.);
+  double rEur = 0.0075;
+  double rUsd = 0.028;
+  double rAud = 0.026;
+  Actigo *actigo = new Actigo(1.5, 150,3, 100., 100., 100., rEur, rUsd, rAud);
   //Basket *actigo = new Basket(1.0,365,3,100,basketWeights);
   //Asian* actigo = new Asian(1.5,50,3,100.0,basketWeights);
   MonteCarlo *monteCarlo = new MonteCarlo(bsm, actigo, rng, 0.1,200);
@@ -40,6 +43,6 @@ int main(int argc, char** argv) {
   delete actigo;
   delete bsm;
   delete monteCarlo;
-  
+
   return EXIT_SUCCESS;
 }

@@ -18,7 +18,10 @@ class CalibrationTest : public ::testing::Test {
 };
 
 TEST_F(CalibrationTest, correlations) {
-  Data *data = new Data("2017-12-01", "2017-12-08");
+  double rEur = 0.0075;
+  double rUsd = 0.028;
+  double rAud = 0.026;
+  Data *data = new Data("2017-12-01", "2017-12-08", rEur, rUsd, rAud);
   double step = 1.0 / 365.0;
   Calibration *calibration = new Calibration(data, step);
   PnlMat *correlations = calibration->getCorrelationsMatrix();

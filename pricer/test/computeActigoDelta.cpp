@@ -98,6 +98,11 @@ int main(int argc, char **argv) {
     int actigoSize = 5;
     double calibrationMaturity = 1;
 
+
+    double rEur = 0.0073;
+    double rUsd = 0.02597;
+    double rAud = 0.02703;
+
     // Maturity to modify
     PnlMat* calibrationDataMatrix = pnl_mat_create_from_scalar(dataSize, actigoSize, 0);
     pnl_mat_set_col(calibrationDataMatrix, euroStoxSpots, 0);
@@ -106,7 +111,7 @@ int main(int argc, char **argv) {
     pnl_mat_set_col(calibrationDataMatrix, eurUsdSpots, 3);
     pnl_mat_set_col(calibrationDataMatrix, eurAudSpots, 4);
 
-    Data *data = new Data(calibrationDataMatrix);
+    Data *data = new Data(calibrationDataMatrix, rEur, rUsd, rAud);
     double step = calibrationMaturity / dataSize;
     Calibration *calibration = new Calibration(data, step);
 
@@ -125,12 +130,13 @@ int main(int argc, char **argv) {
 
     double maturity = 8;
 
+
     Actigo *actigo = new Actigo(
                 maturity, 16, actigoSize,
-                euroStoxInitialPrice, spUsdInitialPrice, spAudInitialPrice);
+                euroStoxInitialPrice, spUsdInitialPrice, spAudInitialPrice,
+                rEur, rUsd, rAud);
 
     // Create the BlackScholesModel
-    double rEur = 0.04;
 
     double actuParam = exp(-rEur*maturity);
     PnlVect* initialPricesEuro = pnl_vect_create_from_scalar(actigoSize, 0);
@@ -155,7 +161,7 @@ int main(int argc, char **argv) {
     double price = 0;
     std::vector<time_t> rightDates = getRightDates(date, semesterDates);
     PnlMat* past = pnl_mat_create_from_scalar(rightDates.size(), actigoSize, 0);
-    getPastData(dbManager, past, rightDates);
+    getPastData(dbManager, past, rightDates, rUsd, rAud);
 
     time_t dateDifference = date - 1428451200;
     double convertedDate = (double)dateDifference/(365 * 24 * 3600);
@@ -185,6 +191,5 @@ int main(int argc, char **argv) {
     pnl_rng_free(&rng);
     pnl_vect_free(&delta);
 
-    pnl_mat_free(&calibrationDataMatrix);
     pnl_mat_free(&past);
 }

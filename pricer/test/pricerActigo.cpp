@@ -13,7 +13,10 @@ using namespace std;
 
 int main(int argc, char **argv) {
     //Recuperate data from actigo first day: "2015-10-12" to today
-    Data *data = new Data("2015-10-12","2018-01-24");
+    double rEur = 0.0075;
+    double rUsd = 0.028;
+    double rAud = 0.026;
+    Data *data = new Data("2015-10-12","2018-01-24", rEur, rUsd, rAud);
     cout << "Historical matrix size: " << data->historicalDataMatrix->m << endl;
 
     //// Data calibration
@@ -29,7 +32,8 @@ int main(int argc, char **argv) {
     data->getInitialSpots(initialSpots);
     data->getInitialSpotsEuro(initialSpotsEuro);
     data->getTodaySpots(todaySpots);
-    Actigo *actigo = new Actigo(maturity, 16, size, GET(initialSpots,0), GET(initialSpots, 1), GET(initialSpots, 2));
+    Actigo *actigo = new Actigo(maturity, 16, size, GET(initialSpots,0), GET(initialSpots, 1), GET(initialSpots, 2),
+                                rEur, rUsd, rAud);
     // Complete data from today to actigo end date
     int remainingDates = nbTimeSteps - data->euroStoxSpots->size;
     PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
@@ -38,7 +42,6 @@ int main(int argc, char **argv) {
                        calibration->getCorrelationsMatrix(), calibration->getTrends(), rng);
 
     // Create the BlackScholesModel
-    double rEur = 0.04;
     BlackScholesModel *bsm = new BlackScholesModel(size, rEur, calibration->getCorrelationsMatrix(), calibration->getVolatilities(), initialSpotsEuro);
 
     // Create Monte-Carlo Simulation

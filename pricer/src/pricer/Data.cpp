@@ -19,7 +19,7 @@ Data::~Data() {
     pnl_mat_free(&completeDataMatrix);
 }
 
-Data::Data(PnlMat *matrixData){
+Data::Data(PnlMat *matrixData, double eur, double usd, double aud){
     this->euroStoxSpots = pnl_vect_new();
     this->spUsdSpots = pnl_vect_new();
     this->spAudSpots = pnl_vect_new();
@@ -40,17 +40,17 @@ Data::Data(PnlMat *matrixData){
     pnl_vect_mult_vect_term(spAudSpots, eurAud);
 
     // Building zero coupons
-    rEur = 0.05;
-    rUsd = 0.05;
-    rAud = 0.05;
+    rEur = eur;
+    rUsd = usd;
+    rAud = aud;
     getZeroCoupon(eurUsd, rUsd, 8.0);
     getZeroCoupon(eurAud, rAud, 8.0);
 }
 
-Data::Data(const char* startDate, const char* currentDate){
-    rEur = 0.05;
-    rUsd = 0.05;
-    rAud = 0.05;
+Data::Data(const char* startDate, const char* currentDate, double eur, double usd, double aud){
+    rEur = eur;
+    rUsd = usd;
+    rAud = aud;
 
     Quote *quote1 = new Quote("^STOXX50E");
     quote1->getHistoricalSpots(startDate, currentDate, "1d");

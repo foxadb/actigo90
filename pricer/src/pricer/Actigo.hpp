@@ -11,6 +11,9 @@ public:
     double euroStoxSpot_; // euroStox initial spot
     double spUsaSpot_; // S&P 500 initial spot
     double spAusSpot_; // S&P 200 initial spot
+    double rEur; // eur free risk rate
+    double rUsd; // Usd free risk rate
+    double rAud; // Aud free risk rate
     PnlVect *semestrialSpot_; // spots at the current semester date
 
     /**
@@ -21,8 +24,12 @@ public:
      * @param euroStoxSpot    : euroStox initial spot
      * @param spotUsa: S&P 500 initial spot
      * @param spotAus: S&P200 initial spot
+     * @param rEur european free risk rate
+     * @param rUsd american free risk rate
+     * @param rAud australian free risk rate
      */
-    Actigo(double maturity, int nbSteps, int size, double euroStoxSpot, double spotUsa, double spotAus);
+    Actigo(double maturity, int nbSteps, int size, double euroStoxSpot, double spotUsa, double spotAus, double rEur,
+            double rUsd, double rAud);
 
     /**
     * @param init initial spot

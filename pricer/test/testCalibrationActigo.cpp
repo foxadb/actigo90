@@ -13,17 +13,20 @@ using namespace std;
 
 int main(int argc, char **argv){
   time_t todayEpoch = currentEpoch();
-  Actigo *actigo = new Actigo(1., 365, 5, 100., 100., 100.);
+  double rEur = 0.0075;
+  double rUsd = 0.028;
+  double rAud = 0.026;
+  Actigo *actigo = new Actigo(1., 365, 5, 100., 100., 100., rEur, rUsd, rAud);
   PnlVect *sigma = pnl_vect_create_from_scalar(5, 0.5);
   PnlVect *spots = pnl_vect_create_from_scalar(5, 100.);
   PnlVect *trends = pnl_vect_create_from_scalar(5, 0.04);
-  BlackScholesModel *bsm = new BlackScholesModel(5, 0.04, 0.2, sigma,spots);
+  BlackScholesModel *bsm = new BlackScholesModel(5, rEur, 0.2, sigma,spots);
   bsm->trend_ = trends;
   PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
   pnl_rng_sseed(rng, time(NULL));
   PnlMat* dataMatrix = pnl_mat_create_from_scalar(365,5, 0.0);
   bsm->simul_market(dataMatrix, 365, 1., rng);
-  Data *data = new Data(dataMatrix);
+  Data *data = new Data(dataMatrix, rEur, rUsd, rAud);
   double step = actigo->T_ / actigo->nbTimeSteps_;
   Calibration *calibration = new Calibration(data, step);
   PnlMat* correlations = pnl_mat_create(5,5);
