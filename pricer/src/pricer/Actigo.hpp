@@ -24,6 +24,9 @@ public:
      * @param euroStoxSpot    : euroStox initial spot
      * @param spotUsa: S&P 500 initial spot
      * @param spotAus: S&P200 initial spot
+     * @param rEur european free risk rate
+     * @param rUsd american free risk rate
+     * @param rAud australian free risk rate
      */
     Actigo(double maturity, int nbSteps, int size, double euroStoxSpot, double spotUsa, double spotAus, double rEur,
             double rUsd, double rAud);
