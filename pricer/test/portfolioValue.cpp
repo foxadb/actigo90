@@ -66,6 +66,12 @@ int main(int argc, char** argv) {
     int actigoSize = 5;
     double calibrationMaturity = 1;
 
+    // free risk rates
+
+    double rEur = 0.0075;
+    double rUsd = 0.028;
+    double rAud = 0.026;
+
     // Maturity to modify
     PnlMat* calibrationDataMatrix = pnl_mat_create_from_scalar(dataSize, actigoSize, 0);
     pnl_mat_set_col(calibrationDataMatrix, euroStoxSpots, 0);
@@ -74,17 +80,17 @@ int main(int argc, char** argv) {
     pnl_mat_set_col(calibrationDataMatrix, eurUsdSpots, 3);
     pnl_mat_set_col(calibrationDataMatrix, eurAudSpots, 4);
 
-    Data *data = new Data(calibrationDataMatrix);
+    Data *data = new Data(calibrationDataMatrix, rEur, rUsd, rAud);
     double step = calibrationMaturity / dataSize;
     Calibration *calibration = new Calibration(data, step);
     double euroStoxInitialSpot = dbManager->getSpot(1428451200, "^STOXX50E").getClose();
     double spUsdInitialSpot = dbManager->getSpot(1428451200, "^GSPC").getClose();
     double spAudInitialSpot = dbManager->getSpot(1428451200, "^AXJO").getClose();
     double maturity = 8;
-    Actigo *actigo = new Actigo(maturity, 16, actigoSize, euroStoxInitialSpot, spUsdInitialSpot, spAudInitialSpot);
+    Actigo *actigo = new Actigo(maturity, 16, actigoSize, euroStoxInitialSpot, spUsdInitialSpot, spAudInitialSpot,
+                      rEur, rUsd, rAud);
 
     // Create the BlackScholesModel
-    double rEur = 0.04;
 
     // Recuprate Initial Spots
     double actuParam = exp(-rEur * maturity);
@@ -125,7 +131,7 @@ int main(int argc, char** argv) {
 
         rightDates = getRightDates(current_date, semesterDates);
         PnlMat* past = pnl_mat_create_from_scalar(rightDates.size(), actigoSize, 0);
-        getPastData(dbManager, past, rightDates);
+        getPastData(dbManager, past, rightDates, rUsd, rAud);
 
         time_t dateDifference = current_date - 1428451200;
 

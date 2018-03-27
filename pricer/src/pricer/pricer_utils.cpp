@@ -18,7 +18,7 @@ void getZeroCoupon(PnlVect *exchangeRate, double r, double maturity){
 }
 
 
-void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> dates){
+void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> dates, double rUsd, double rAud){
     int count = 0;
     PnlVect* euroStoxSpots = pnl_vect_create_from_scalar(dates.size(), 0);
     PnlVect* spUsdSpots = pnl_vect_create_from_scalar(dates.size(), 0);
@@ -38,8 +38,8 @@ void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> d
     pnl_vect_mult_vect_term (spAudSpots, eurAudSpots);
 
     // Building zero coupons
-    getZeroCoupon(eurUsdSpots, 0.05, 8.0);
-    getZeroCoupon(eurAudSpots, 0.05, 8.0);
+    getZeroCoupon(eurUsdSpots, rUsd, 8.0);
+    getZeroCoupon(eurAudSpots, rAud, 8.0);
 
     pnl_mat_set_col(past, euroStoxSpots, 0);
     pnl_mat_set_col(past, spUsdSpots, 1);

@@ -16,12 +16,14 @@ int main(int argc, char **argv) {
 
     //// Data calibration
     // Create Actigo Option
+    double rEur = 0.0075;
+    double rUsd = 0.028;
+    double rAud = 0.026;
     double maturity = 8;
     int nbTimeSteps = 2016;
     double step = maturity / nbTimeSteps;
     int size = 5;
     // Create the BlackScholesModel
-    double rEur = 0.04;
     double rho = 0.;
     PnlVect *vols = pnl_vect_create_from_scalar(size, 0.04);
     PnlVect *initialSpots = pnl_vect_create_from_scalar(size, 3000.0);
@@ -48,7 +50,8 @@ int main(int argc, char **argv) {
     pnl_vect_mult_vect_term(spAudspots, eurAud);
     pnl_mat_set_col(data, spUsdspots, 1);
     pnl_mat_set_col(data, spAudspots, 2);
-    Actigo *actigo = new Actigo(maturity, 16, size, GET(initialSpots,0), GET(initialSpots, 1), GET(initialSpots, 2));
+    Actigo *actigo = new Actigo(maturity, 16, size, GET(initialSpots,0), GET(initialSpots, 1), GET(initialSpots, 2),
+                                rEur, rUsd, rAud);
     // Complete data from today to actigo end date
     PnlVect* initialSpotsEuro = pnl_vect_create_from_scalar(size, 0.);
     pnl_mat_get_row(initialSpotsEuro, data, 0);

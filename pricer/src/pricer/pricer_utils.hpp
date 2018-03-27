@@ -13,7 +13,7 @@ void vectorToPnlVect(std::vector<Spot> spots, PnlVect* spotsVect);
 
 void getZeroCoupon(PnlVect *exchangeRate, double r, double maturity);
 
-void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> dates);
+void getPastData(DataBaseManager *dbManager, PnlMat* past, std::vector<time_t> dates, double rUsd, double rAud);
 
 std::vector<time_t> getRightDates(time_t today, std::vector<time_t> dates);
 

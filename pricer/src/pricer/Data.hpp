@@ -36,14 +36,14 @@ public:
       * @param debutDate is the data's first day "YYYY-MM-DD" format
       * @param currentDate is the data's last day
       */
-    Data(const char* debutDate, const char* currentDate);
+    Data(const char* debutDate, const char* currentDate, double rEur, double rUsd, double rAud);
 
     /**
       * @brief Data constructor.
       * @brief construct the data from an already filled matrix
       * @param matrixData matrix 5x5 containing the market data
       */
-    Data(PnlMat *matrixData);
+    Data(PnlMat *matrixData, double rEur, double rUsd, double rAud);
 
     /**
       * @brief Calibration destructor

@@ -12,11 +12,15 @@ Actigo::~Actigo(){
     pnl_vect_free(&semestrialSpot_);
 }
 
-Actigo::Actigo(double maturity, int nbSteps, int size, double euroStoxSpot, double spUsa, double spAus){
+Actigo::Actigo(double maturity, int nbSteps, int size, double euroStoxSpot, double spUsa, double spAus,
+                double eur, double usd, double aud){
     size_ = size;
     euroStoxSpot_ = euroStoxSpot;
     spUsaSpot_ = spUsa;
     spAusSpot_ = spAus;
+    rEur = eur;
+    rUsd = usd;
+    rAud = aud;
     T_ = maturity;
     nbTimeSteps_ = nbSteps;
     semestrialSpot_ = pnl_vect_create(3);
@@ -27,9 +31,6 @@ double Actigo::indexPerf(double init, double current){
 }
 
 double Actigo::payoff(const PnlMat* path){
-    double rUsd = 0.05;
-    double rAud = 0.05;
-    //cout << lastDate;
     double totalPerf= 0.;
     for (int currentSemesterDate = 1; currentSemesterDate <=16; currentSemesterDate++){
         double semestrialPerf = 0.;
