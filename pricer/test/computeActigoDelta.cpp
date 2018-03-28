@@ -116,11 +116,12 @@ int main(int argc, char **argv) {
     Calibration *calibration = new Calibration(data, step);
 
     // Recuperate Initial Spots
-    Spot euroStoxInitialSpot = dbManager->getSpot(1428451200, "^STOXX50E");
-    Spot spUsdInitialSpot = dbManager->getSpot(1428451200, "^GSPC");
-    Spot spAudInitialSpot = dbManager->getSpot(1428451200, "^AXJO");
-    Spot eurUsdInitialSpot = dbManager->getSpot(1428451200, "EURUSD=X");
-    Spot eurAudInitialSpot = dbManager->getSpot(1428451200, "EURAUD=X");
+
+    Spot euroStoxInitialSpot = dbManager->getSpot(1428624000, "^STOXX50E");
+    Spot spUsdInitialSpot = dbManager->getSpot(1428624000, "^GSPC");
+    Spot spAudInitialSpot = dbManager->getSpot(1428624000, "^AXJO");
+    Spot eurUsdInitialSpot = dbManager->getSpot(1428624000, "EURUSD=X");
+    Spot eurAudInitialSpot = dbManager->getSpot(1428624000, "EURAUD=X");
 
     double euroStoxInitialPrice = euroStoxInitialSpot.getClose();
     double spUsdInitialPrice = spUsdInitialSpot.getClose();
@@ -163,7 +164,7 @@ int main(int argc, char **argv) {
     PnlMat* past = pnl_mat_create_from_scalar(rightDates.size(), actigoSize, 0);
     getPastData(dbManager, past, rightDates, rUsd, rAud);
 
-    time_t dateDifference = date - 1428451200;
+    time_t dateDifference = date - 1428624000;
     double convertedDate = (double)dateDifference/(365 * 24 * 3600);
 
     if ( convertedDate > 8)
