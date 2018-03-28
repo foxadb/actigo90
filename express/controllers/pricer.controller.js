@@ -14,11 +14,13 @@ exports.actigoDelta = function (req, res) {
 };
 
 exports.hedging = function (req, res) {
-    // Get date
+    // Get pricer parameters
     const date = req.body.date;
+    const frequency = req.body.frequency;
+    const samples = req.body.samples;
 
     try {
-        PricerService.hedging(date, code => {
+        PricerService.hedging(date, frequency, samples, code => {
             res.status(200).json({ status: 200, data: code, message: 'Hedging portfolio successfully computed' });
         });
     } catch (error) {

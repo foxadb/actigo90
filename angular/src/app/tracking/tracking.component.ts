@@ -17,6 +17,12 @@ export class TrackingComponent implements OnInit {
   public hedgingDate: Date;
   public hedgingSpinner = false;
 
+  // Rebalancing Frequency in days
+  public rebalancingFrequency = 1;
+
+  // Number of Monte Carlo Samples
+  public mcSamples = 5000;
+
   public trackingDate: Date;
   public trackingError: number;
 
@@ -108,7 +114,9 @@ export class TrackingComponent implements OnInit {
 
   public hedging(): void {
     const body = {
-      date: new Date(this.hedgingDate).getTime() / 1000
+      date: new Date(this.hedgingDate).getTime() / 1000,
+      frequency: this.rebalancingFrequency,
+      samples: this.mcSamples
     };
 
     // Loading
@@ -145,6 +153,7 @@ export class TrackingComponent implements OnInit {
     const errorsSerie = [];
     let averageError = 0;
     let i = 1;
+
     while (new Date(this.prices[i].date).getTime()
       <= new Date(this.trackingDate).getTime()) {
       // Get current and previous prices

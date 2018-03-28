@@ -40,17 +40,31 @@
         </div>
       </div>
     </div>
+    <div class="row justify-content-center tracking-panel">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="rebalancingFrequency">Rebalancing Frequency</label>
+          <input id="rebalancingFrequency" type="number" class="form-control" name="rebalancingFrequency" [(ngModel)]="rebalancingFrequency">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="mcSamples">Monte Carlo Samples</label>
+          <input id="mcSamples" type="number" class="form-control" name="mcSamples" [(ngModel)]="mcSamples">
+        </div>
+      </div>
+    </div>
   </form>
   <form class="form" (ngSubmit)="computeTrackingError()" #f="ngForm" novalidate>
     <div class="row justify-content-center tracking-panel">
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="form-group">
           <label for="trackingDate">Tracking end date</label>
           <input id="trackingDate" type="date" class="form-control" name="trackingDate" [ngModel]="trackingDate | date : 'yyyy-MM-dd'"
             (ngModelChange)="trackingDate = $event">
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="form-group">
           <button type="submit" arial-label="Tracking Error" class="btn btn-primary">
             <i class="fa fa-bullseye fa-lg"></i> Tracking error</button>
