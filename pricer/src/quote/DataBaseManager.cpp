@@ -168,3 +168,7 @@ std::time_t DataBaseManager::getLastHedgingDate(){
   return bDateToEpoch(date);
   }
 }
+
+void DataBaseManager::clearPrices(){
+    db["prices"].delete_many({});
+}
