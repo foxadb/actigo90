@@ -108,6 +108,9 @@ public:
     */
     double getActigoPrice(std::time_t date);
 
+    std::time_t getLastHedgingDate();
+
+    double getHedging(std::time_t date);
 };
 
 #endif /* DATABASEMANAGER_H */

@@ -84,7 +84,7 @@ vector<Spot> DataBaseManager::getSpots(std::time_t start_date, std::time_t end_d
 
 void DataBaseManager::postDelta(double delta, std::time_t date, const char* symbol){
     b_oid id = getStockId(symbol);
-    b_date bdate = read_date(date, 1);
+    b_date bdate = read_date(date, 0);
 
     bsoncxx::document::value doc = make_document(
                 kvp("stock", id), kvp("date", bdate), kvp("delta", delta));
@@ -94,7 +94,7 @@ void DataBaseManager::postDelta(double delta, std::time_t date, const char* symb
 
 double DataBaseManager::getDelta(std::time_t date, const char* symbol){
     b_oid id = getStockId(symbol);
-    b_date bdate = read_date(date, 1);
+    b_date bdate = read_date(date, 0);
     mongocxx::collection coll = db["deltas"];
     double delta = 0;
 
@@ -114,14 +114,14 @@ void DataBaseManager::clearDeltas(){
 }
 
 void DataBaseManager::postPrice(std::time_t date, double price, double portfolioValue){
-    b_date bdate = read_date(date, 1);
+    b_date bdate = read_date(date, 0);
     bsoncxx::document::value doc = make_document(
                 kvp("date", bdate), kvp("actigo", price), kvp("hedging", portfolioValue));
     auto res = db["prices"].insert_one(std::move(doc));
 }
 
 double DataBaseManager::getActigoPrice(std::time_t date){
-    b_date bdate = read_date(date, 1);
+    b_date bdate = read_date(date, 0);
     mongocxx::collection coll = db["prices"];
     double actigo = 0;
 
@@ -134,4 +134,37 @@ double DataBaseManager::getActigoPrice(std::time_t date){
     }
 
     return actigo;
+}
+
+double DataBaseManager::getHedging(std::time_t date) {
+  b_date bdate = read_date(date, 0);
+  mongocxx::collection coll = db["prices"];
+  double hedging = 0.0;
+
+  auto cursor = coll.find(make_document(kvp("date", bdate)));
+  for (const bsoncxx::document::view& doc : cursor) {
+    bsoncxx::document::element id_ele = doc["hedging"];
+    if (id_ele.type() == type::k_double){
+      hedging = double(id_ele.get_double());
+    }
+  }
+  return hedging;
+}
+
+std::time_t DataBaseManager::getLastHedgingDate(){
+  bsoncxx::builder::basic::document group_doc;
+  mongocxx::collection coll = db["prices"];
+  b_date date = read_date(0,0);
+  mongocxx::pipeline stages;
+  stages.group(make_document(
+              kvp("_id", "last_date"),
+              kvp("date", make_document(kvp("$max", "$date")))));
+  auto cursor = coll.aggregate(stages);
+  for (auto&& doc : cursor) {
+    bsoncxx::document::element date_document = doc["date"];
+    if (date_document.type() == type::k_date){
+      date = date_document.get_date();
+  }
+  return bDateToEpoch(date);
+  }
 }
