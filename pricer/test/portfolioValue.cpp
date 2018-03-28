@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
         int mcSamplesNb = std::atoi(argv[3]);
 
         std::vector<time_t> semesterDates {
-            1428451200, 1444608000, 1460332800, 1476057600,
+            1428624000, 1444608000, 1460332800, 1476057600,
             1491782400, 1507593600, 1523318400, 1539129600,
             1554854400, 1570665600, 1586822400, 1602460800,
             1618185600, 1633910400, 1649635200, 1665360000,
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
         //deleting deltas and prices in case someone else has already computed
         // at those dates
         dbManager->clearDeltas();
-        dbManager->clearPrices(); 
+        dbManager->clearPrices();
 
         time_t last_year = endingDate - 365 * 24 * 3600;
         std::vector<Spot> euroStoxSpotspots = dbManager->getSpots(last_year, endingDate, "^STOXX50E");

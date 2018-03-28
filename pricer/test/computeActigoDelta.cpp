@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     DataBaseManager *dbManager = DataBaseManager::getDbManager();
 
     std::vector<time_t> semesterDatesT {
-        dateToEpoch("2015-04-08"),
+        dateToEpoch("2015-04-10"),
                 dateToEpoch("2015-10-12"),
                 dateToEpoch("2016-04-11"),
                 dateToEpoch("2016-10-10"),
@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
     };
 
     std::vector<time_t> semesterDates {
-        1428451200,
+        1428624000,
         1444608000,
         1460332800,
         1476057600,
