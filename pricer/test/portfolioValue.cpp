@@ -96,9 +96,9 @@ int main(int argc, char** argv) {
         // Create the calibration object
         Calibration *calibration = new Calibration(data, step);
 
-        double euroStoxInitialSpot = dbManager->getSpot(1428451200, "^STOXX50E").getClose();
-        double spUsdInitialSpot = dbManager->getSpot(1428451200, "^GSPC").getClose();
-        double spAudInitialSpot = dbManager->getSpot(1428451200, "^AXJO").getClose();
+        double euroStoxInitialSpot = dbManager->getSpot(1428624000, "^STOXX50E").getClose();
+        double spUsdInitialSpot = dbManager->getSpot(1428624000, "^GSPC").getClose();
+        double spAudInitialSpot = dbManager->getSpot(1428624000, "^AXJO").getClose();
         double maturity = 8;
 
         // Create Actigo
@@ -109,9 +109,9 @@ int main(int argc, char** argv) {
         // Recuprate Initial Spots
         double actuParam = exp(-rEur * maturity);
         PnlVect* initialSpotsEuro = pnl_vect_create_from_scalar(actigoSize, 0);
-        double eurUsdInitialSpot = dbManager->getSpot(1428451200, "EURUSD=X").getClose() ;
+        double eurUsdInitialSpot = dbManager->getSpot(1428624000, "EURUSD=X").getClose() ;
         spUsdInitialSpot *= eurUsdInitialSpot;
-        double eurAudInitialSpot = dbManager->getSpot(1428451200, "EURAUD=X").getClose() ;
+        double eurAudInitialSpot = dbManager->getSpot(1428624000, "EURAUD=X").getClose() ;
         spAudInitialSpot *= eurAudInitialSpot;
 
         // TODO change zeros coupons so as to use the correct free risk rates
@@ -146,7 +146,7 @@ int main(int argc, char** argv) {
         PnlVect* currentSpots = pnl_vect_create_from_scalar(actigoSize, 0);
 
         // Rebalancing until endingDate
-        for (time_t currentDate = 1428451200; currentDate <= endingDate;
+        for (time_t currentDate = 1428624000; currentDate <= endingDate;
              currentDate += rebalancingFrequency * 86400) {
             // Timer start
             std::time_t start = std::clock();
@@ -155,7 +155,7 @@ int main(int argc, char** argv) {
             PnlMat* past = pnl_mat_create_from_scalar(rightDates.size(), actigoSize, 0);
             getPastData(dbManager, past, rightDates, rUsd, rAud);
 
-            time_t dateDifference = currentDate - 1428451200;
+            time_t dateDifference = currentDate - 1428624000;
 
             double convertedDate = (double) dateDifference / (365 * 24 * 3600);
             if (convertedDate > 8) {
@@ -179,7 +179,7 @@ int main(int argc, char** argv) {
 
             riskedPart = pnl_vect_scalar_prod(currentSpots, currentDelta);
 
-            if (currentDate == 1428451200) {
+            if (currentDate == 1428624000) {
                 freeRiskPart = actigoPrice - riskedPart;
             } else {
                 freeRiskPart = freeRiskPart * exp(rEur * (rebalancingFrequency / 365.0))

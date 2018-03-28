@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
         int mcSamplesNb = std::atoi(argv[2]);
 
         std::vector<time_t> semesterDates {
-            1428451200, 1444608000, 1460332800, 1476057600,
+            1428624000, 1444608000, 1460332800, 1476057600,
             1491782400, 1507593600, 1523318400, 1539129600,
             1554854400, 1570665600, 1586822400, 1602460800,
             1618185600, 1633910400, 1649635200, 1665360000,
@@ -85,9 +85,9 @@ int main(int argc, char** argv) {
         Data *data = new Data(calibrationDataMatrix, rEur, rUsd, rAud);
         double step = calibrationMaturity / dataSize;
         Calibration *calibration = new Calibration(data, step);
-        double euroStoxInitialSpot = dbManager->getSpot(1428451200, "^STOXX50E").getClose();
-        double spUsdInitialSpot = dbManager->getSpot(1428451200, "^GSPC").getClose();
-        double spAudInitialSpot = dbManager->getSpot(1428451200, "^AXJO").getClose();
+        double euroStoxInitialSpot = dbManager->getSpot(1428624000, "^STOXX50E").getClose();
+        double spUsdInitialSpot = dbManager->getSpot(1428624000, "^GSPC").getClose();
+        double spAudInitialSpot = dbManager->getSpot(1428624000, "^AXJO").getClose();
 
         // 8 years maturity
         double maturity = 8;
@@ -100,9 +100,9 @@ int main(int argc, char** argv) {
         // Recuprate Initial Spots
         double actuParam = exp(-rEur * maturity);
         PnlVect* initialSpotsEuro = pnl_vect_create_from_scalar(actigoSize, 0);
-        double eurUsdInitialSpot = dbManager->getSpot(1428451200, "EURUSD=X").getClose() ;
+        double eurUsdInitialSpot = dbManager->getSpot(1428624000, "EURUSD=X").getClose() ;
         spUsdInitialSpot *= eurUsdInitialSpot;
-        double eurAudInitialSpot = dbManager->getSpot(1428451200, "EURAUD=X").getClose() ;
+        double eurAudInitialSpot = dbManager->getSpot(1428624000, "EURAUD=X").getClose() ;
         spAudInitialSpot *= eurAudInitialSpot;
 
         // TODO change zeros coupons so as to use the correct free risk rates
@@ -143,7 +143,7 @@ int main(int argc, char** argv) {
         rightDates = getRightDates(currentDate, semesterDates);
         PnlMat* past = pnl_mat_create_from_scalar(rightDates.size(), actigoSize, 0);
         getPastData(dbManager, past, rightDates, rUsd, rAud);
-        time_t dateDifference = currentDate - 1428451200;
+        time_t dateDifference = currentDate - 1428624000;
 
         double convertedDate = (double) dateDifference / (365 * 24 * 3600);
         if (convertedDate > 8) {
@@ -169,7 +169,7 @@ int main(int argc, char** argv) {
 
         riskedPart = pnl_vect_scalar_prod(currentSpots, currentDelta);
 
-        if (currentDate == 1428451200) {
+        if (currentDate == 1428624000) {
             freeRiskPart = actigoPrice - riskedPart;
         } else {
             time_t previousDate = dbManager->getLastHedgingDate();
