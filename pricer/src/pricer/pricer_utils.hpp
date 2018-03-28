@@ -11,9 +11,9 @@
 /**
 * @brief fills the PnlVect with the vector
 * @param spots
-* @param spots
+* @param input_spots
 */
-void vectorToPnlVect(std::vector<Spot> spots, PnlVect* spots);
+void vectorToPnlVect(std::vector<Spot> input_spots, PnlVect* spots);
 /**
 * @brief fills the exchangeRate with calculated ZeroCoupon
 * @param exchangeRate
