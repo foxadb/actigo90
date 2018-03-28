@@ -31,8 +31,17 @@ export class PricingComponent implements OnInit {
   public eurUsdDeltas: Array<Delta> = [];
   public eurAudDeltas: Array<Delta> = [];
 
+  // Rebalancing Frequency in days
+  public rebalancingFrequency = 1;
+
+  // Number of Monte Carlo Samples
+  public mcSamples = 5000;
+
   public pricingDate: Date;
   public pricing: any;
+
+  // Spinners
+  public rebalancingSpinner = false;
   public pricingSpinner = false;
 
   constructor(
@@ -108,7 +117,22 @@ export class PricingComponent implements OnInit {
   }
 
   public rebalance(): void {
-    console.log('Rebalancing');
+    const body = {
+      date: Date.now(),
+      samples: this.mcSamples
+    };
+
+    console.log(body);
+
+    // Loading spinner
+    this.rebalancingSpinner = true;
+
+    // Rebalancing
+    this.pricerService.rebalance(body).subscribe(
+      res => {
+        this.rebalancingSpinner = false;
+      }
+    );
   }
 
   public actigoDelta(): void {

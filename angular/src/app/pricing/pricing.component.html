@@ -23,9 +23,24 @@
             </tr>
           </tbody>
         </table>
-        <button type="button" class="btn btn-primary" (click)="rebalance()">
-          <i class="fa fa-balance-scale"></i> Rebalance</button>
       </div>
+    </div>
+    <div class="col-md-3">
+      <form class="form" (ngSubmit)="rebalance()" #f="ngForm" novalidate>
+        <div class="form-group">
+          <label for="rebalancingFrequency">Rebalancing Frequency</label>
+          <input id="rebalancingFrequency" type="number" class="form-control" name="rebalancingFrequency" [(ngModel)]="rebalancingFrequency">
+        </div>
+        <div class="from-group">
+          <label for="mcSamples">Monte Carlo Samples</label>
+          <input id="mcSamples" type="number" class="form-control" name="mcSamples" [(ngModel)]="mcSamples">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary" (click)="rebalance()">
+            <i class="fa fa-balance-scale"></i> Rebalance</button>
+        </div>
+      </form>
+      <i *ngIf="rebalancingSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
     </div>
   </div>
   <div class="row justify-content-center pricing">
@@ -33,7 +48,8 @@
       <form class="form" (ngSubmit)="actigoDelta()" #f="ngForm" novalidate>
         <div class="form-group">
           <label for="pricingDate">Pricing date</label>
-          <input id="pricingDate" type="date" class="form-control" name="pricingDate" [ngModel]="pricingDate | date: 'yyyy-MM-dd'" (ngModelChange)="pricingDate = $event">
+          <input id="pricingDate" type="date" class="form-control" name="pricingDate" [ngModel]="pricingDate | date: 'yyyy-MM-dd'"
+            (ngModelChange)="pricingDate = $event">
         </div>
         <div class="form-group">
           <button type="submit" arial-label="Pricing" class="btn btn-success">
