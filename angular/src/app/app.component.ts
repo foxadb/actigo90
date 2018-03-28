@@ -20,4 +20,16 @@ export class AppComponent {
     this.router.navigate(['']);
   }
 
+  public isAuthenticated(): boolean {
+    return this.auth.isAuthenticated();
+  }
+
+  public isUser(): boolean {
+    return this.auth.getRole() === 'user';
+  }
+
+  public isAdmin(): boolean {
+    return this.auth.getRole() === 'admin';
+  }
+
 }

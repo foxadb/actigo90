@@ -93,7 +93,7 @@ export class SpotService {
 
   // Update a Spot to API
   public updateSpot(spot: any): Observable<boolean> {
-    return this.http.put(this.spotUrl, spot, this.options())
+    return this.http.put(`${this.spotUrl}/${spot._id}`, spot, this.options())
       .map(res => {
         return true;
       })

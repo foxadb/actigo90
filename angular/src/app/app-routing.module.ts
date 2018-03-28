@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { AdminComponent } from './admin/admin.component';
 import { PricingComponent } from './pricing/pricing.component';
 import { TrackingComponent } from './tracking/tracking.component';
 import { FinancialDataComponent } from './financial-data/financial-data.component';
@@ -16,6 +17,14 @@ const routes: Routes = [
 
   // Login page
   { path: 'login', component: LoginComponent },
+
+  // Admin panel
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [AuthGuard],
+    data: { expectedRole: 'admin' }
+  },
 
   // Tracking page
   {

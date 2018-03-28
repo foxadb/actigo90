@@ -1,4 +1,4 @@
-import Stock from '../models/stock.model';
+import User from '../models/user.model';
 
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
@@ -12,14 +12,15 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
-export class StockService {
+export class UserService {
 
-  private stockUrl = `${environment.apiUrl}/stock`;
+  private userUrl = `${environment.apiUrl}/user`;
 
   constructor(
     private http: HttpClient,
     private auth: AuthenticationService
   ) { }
+
 
   // Requests options
   public options(): any {
@@ -34,49 +35,49 @@ export class StockService {
     return options;
   }
 
-  // Get Stocks from API
-  public getStocks(): Observable<Array<Stock>> {
-    return this.http.get(this.stockUrl, this.options())
+  // Get Users from API
+  public getUsers(): Observable<Array<User>> {
+    return this.http.get(this.userUrl, this.options())
       .map(res => {
-        const stocks: Array<Stock> = [];
-        res['data'].docs.forEach(stock => {
-          stocks.push(new Stock(stock));
+        const users: Array<User> = [];
+        res['data'].forEach(user => {
+          users.push(new User(user));
         });
-        return stocks;
+        return users;
       })
       .catch(err => this.handleError(err));
   }
 
-  // Get a Stock from API by ID
-  public getStock(id: string): Observable<Stock> {
-    return this.http.get(`${this.stockUrl}/${id}`, this.options())
+  // Get a User from API by ID
+  public getUser(id: string): Observable<User> {
+    return this.http.get(`${this.userUrl}/${id}`, this.options())
       .map(res => {
-        return new Stock(res['data']);
+        return new User(res['data']);
       })
       .catch(err => this.handleError(err));
   }
 
-  // Create a new Stock to API
-  public createStock(stock: any): Observable<boolean> {
-    return this.http.post(this.stockUrl, stock, this.options())
-      .map(res => {
-        return true;
-      })
-      .catch(err => this.handleError(err));
-  }
-
-  // Update a Stock to API
-  public updateStock(stock: any): Observable<boolean> {
-    return this.http.put(`${this.stockUrl}/${stock._id}`, stock, this.options())
+  // Create a new User to API
+  public createUser(user: any): Observable<boolean> {
+    return this.http.post(`${this.userUrl}/register`, user, this.options())
       .map(res => {
         return true;
       })
       .catch(err => this.handleError(err));
   }
 
-  // Delete a Stock from API
-  public deleteStock(id: any): Observable<boolean> {
-    return this.http.delete(`${this.stockUrl}/${id}`, this.options())
+  // Update a User to API
+  public updateUser(user: any): Observable<boolean> {
+    return this.http.put(`${this.userUrl}/${user._id}`, user, this.options())
+      .map(res => {
+        return true;
+      })
+      .catch(err => this.handleError(err));
+  }
+
+  // Delete a User from API
+  public deleteUser(id: any): Observable<boolean> {
+    return this.http.delete(`${this.userUrl}/${id}`, this.options())
       .map(res => {
         return true;
       })

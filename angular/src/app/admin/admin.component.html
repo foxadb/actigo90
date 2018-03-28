@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="element col-md-8">
+      <h2>User list</h2>
+      <table class="table table-striped">
+        <thead>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.username }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+              <button arial-label="Delete" class="btn btn-danger" (click)="deleteUser(user._id)">
+                <i class="fa fa-trash-o fa-lg"></i> Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="element col-md-4">
+      <h2>Create a New User</h2>
+      <form class="form form-center" (ngSubmit)="createUser()" #f="ngForm" novalidate>
+        <div class="form-group">
+          <label for="name">Username:</label>
+          <input id="username" type="text" class="form-control" placeholder="Enter a Username" name="username" [(ngModel)]="input.username"
+            #name="ngModel" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input id="password" type="password" class="form-control" placeholder="Enter a Password" name="password" [(ngModel)]="input.password"
+            #password="ngModel" required>
+        </div>
+        <label for="radio-role">Role:</label>
+        <div id="radio-role" class="form-group">
+          <label class="radio-inline">
+            <input id="user" type="radio" name="radio-role" value="user" [(ngModel)]="input.role" #manager="ngModel">User</label>
+          <label class="radio-inline">
+            <input id="admin" type="radio" name="radio-role" value="admin" [(ngModel)]="input.role" #admin="ngModel">Admin</label>
+        </div>
+        <div class="form-group">
+          <button id="submitUser" type="submit" class="btn btn-success">
+            <i class="fa fa-plus fa-lg"></i> Create User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div *ngIf="successMessageBox" class="alert alert-success top-buffer">{{ successMessageBox }}</div>
+    <div *ngIf="errorMessageBox" class="alert alert-danger top-buffer">{{ errorMessageBox }}</div>
+  </div>
+</div>
+<app-confirm-modal></app-confirm-modal>
