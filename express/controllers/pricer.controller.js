@@ -13,6 +13,20 @@ exports.actigoDelta = function (req, res) {
     }
 };
 
+exports.rebalance = function (req, res) {
+    // Get pricer parameters
+    const date = req.body.date;
+    const samples = req.body.samples;
+
+    try {
+        PricerService.rebalance(date, samples, code => {
+            res.status(200).json({ status: 200, data: code, message: 'Rebalancing portfolio successfully done' });
+        });
+    } catch (error) {
+        res.status(400).json({ status: 400, message: error.message });
+    }
+};
+
 exports.hedging = function (req, res) {
     // Get pricer parameters
     const date = req.body.date;

@@ -32,9 +32,18 @@ export class PricerService {
     return options;
   }
 
+  // Rebalancing
+  public rebalance(body: any): Observable<any> {
+    return this.http.post(`${this.pricerUrl}/rebalance`, body, this.options())
+      .map(res => {
+        return res['data'];
+      })
+      .catch(err => this.handleError(err));
+  }
+
   // Actigo Delta from API by date
   public actigoDelta(body: any): Observable<any> {
-    return this.http.post(this.pricerUrl, body, this.options())
+    return this.http.post(`${this.pricerUrl}/delta`, body, this.options())
       .map(res => {
         return res['data'];
       })

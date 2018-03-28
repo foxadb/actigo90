@@ -26,6 +26,19 @@ exports.actigoDelta = function (date, callback) {
     });
 };
 
+exports.rebalance = function (date, samples, callback) {
+    const pricer = exec(`../pricer/build/test/portfolioValueAtT ${date} ${samples}`);
+
+    pricer.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    pricer.on('close', (code) => {
+        console.log(`portfolioValueAtT process exited with code ${code}`);
+        callback(code);
+    });
+};
+
 exports.hedging = function (date, frequency, samples, callback) {
     const pricer = exec(`../pricer/build/test/portfolioValue ${date} ${frequency} ${samples}`);
 
@@ -34,7 +47,7 @@ exports.hedging = function (date, frequency, samples, callback) {
     });
 
     pricer.on('close', (code) => {
-        console.log(`computeActigoDelta process exited with code ${code}`);
+        console.log(`portfolioValue process exited with code ${code}`);
         callback(code);
     });
 };

@@ -31,8 +31,15 @@ export class PricingComponent implements OnInit {
   public eurUsdDeltas: Array<Delta> = [];
   public eurAudDeltas: Array<Delta> = [];
 
+  // Number of Monte Carlo Samples
+  public mcSamples = 5000;
+
   public pricingDate: Date;
   public pricing: any;
+
+  // Spinners
+  public refreshDataSpinner = false;
+  public rebalancingSpinner = false;
   public pricingSpinner = false;
 
   constructor(
@@ -67,48 +74,75 @@ export class PricingComponent implements OnInit {
       },
       error => console.error('Error', error),
       () => {
-        this.priceService.getPrices(1, 5000).subscribe(
-          prices => {
-            this.prices = prices;
-            this.prices.sort((a, b) =>
-              new Date(b.date).getTime() - new Date(a.date).getTime());
-          }
-        );
+        this.getDeltasPrices();
+      }
+    );
+  }
 
-        this.deltaService.getDeltas(1, 5000).subscribe(
-          deltas => {
-            this.deltas = deltas;
-            this.deltas.sort((a, b) =>
-              new Date(b.date).getTime() - new Date(a.date).getTime());
+  public getDeltasPrices(): void {
+    // Loading spinner
+    this.refreshDataSpinner = true;
 
-            // Divide delta list into each stock
-            this.deltas.forEach(delta => {
-              switch (delta.stock) {
-                case this.euroStoxx50._id:
-                  this.euroStoxx50Deltas.push(delta);
-                  break;
-                case this.snp500._id:
-                  this.snp500Deltas.push(delta);
-                  break;
-                case this.snp200._id:
-                  this.snp200Deltas.push(delta);
-                  break;
-                case this.eurUsd._id:
-                  this.eurUsdDeltas.push(delta);
-                  break;
-                case this.eurAud._id:
-                  this.eurAudDeltas.push(delta);
-                  break;
+    this.priceService.getPrices(1, 5000).subscribe(
+      prices => {
+        this.prices = prices;
+        this.prices.sort((a, b) =>
+          new Date(b.date).getTime() - new Date(a.date).getTime());
+      }
+    );
+
+    this.deltaService.getDeltas(1, 5000).subscribe(
+      deltas => {
+        this.deltas = deltas;
+        this.deltas.sort((a, b) =>
+          new Date(b.date).getTime() - new Date(a.date).getTime());
+
+        // Divide delta list into each stock
+        this.deltas.forEach(delta => {
+          switch (delta.stock) {
+            case this.euroStoxx50._id:
+              this.euroStoxx50Deltas.push(delta);
+              break;
+            case this.snp500._id:
+              this.snp500Deltas.push(delta);
+              break;
+            case this.snp200._id:
+              this.snp200Deltas.push(delta);
+              break;
+            case this.eurUsd._id:
+              this.eurUsdDeltas.push(delta);
+              break;
+            case this.eurAud._id:
+              this.eurAudDeltas.push(delta);
+              break;
           }
-            });
-          }
-        );
+        });
+
+        // Stop loading spinner
+        this.refreshDataSpinner = false;
       }
     );
   }
 
   public rebalance(): void {
-    console.log('Rebalancing');
+    const body = {
+      date: new Date(Date.now()).setUTCHours(0, 0, 0, 0) / 1000,
+      samples: this.mcSamples
+    };
+
+    // Loading spinner
+    this.rebalancingSpinner = true;
+
+    // Rebalancing
+    this.pricerService.rebalance(body).subscribe(
+      res => {
+        // Reload deltas and prices
+        this.getDeltasPrices();
+
+        // Stop spinner
+        this.rebalancingSpinner = false;
+      }
+    );
   }
 
   public actigoDelta(): void {
