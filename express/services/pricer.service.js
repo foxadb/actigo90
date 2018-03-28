@@ -26,8 +26,8 @@ exports.actigoDelta = function (date, callback) {
     });
 };
 
-exports.hedging = function (date, callback) {
-    const pricer = exec(`../pricer/build/test/portfolioValue ${date}`);
+exports.hedging = function (date, frequency, samples, callback) {
+    const pricer = exec(`../pricer/build/test/portfolioValue ${date} ${frequency} ${samples}`);
 
     pricer.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
