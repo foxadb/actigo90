@@ -15,9 +15,14 @@
 #include <ctime>
 
 int main(int argc, char** argv) {
-    time_t input_date = std::atoi(argv[1]);
-    int rebalancingFrequency = 1; // Rebalancing everyday
-    int mcSamplesNb = 50000; // Monte Carlo samples number
+    // Ending hedging date
+    time_t endingDate = std::atoi(argv[1]);
+
+    // Rebalancing everyday
+    int rebalancingFrequency = 1;
+
+    // Monte Carlo samples number
+    int mcSamplesNb = 50000;
 
     std::vector<time_t> semesterDates {
         1428451200, 1444608000, 1460332800, 1476057600,
@@ -29,24 +34,24 @@ int main(int argc, char** argv) {
 
     DataBaseManager *dbManager = DataBaseManager::getDbManager();
 
-    time_t last_year = input_date - 365 * 24 * 3600;
-    std::vector<Spot> euroStoxSpotspots = dbManager->getSpots(last_year, input_date, "^STOXX50E");
+    time_t last_year = endingDate - 365 * 24 * 3600;
+    std::vector<Spot> euroStoxSpotspots = dbManager->getSpots(last_year, endingDate, "^STOXX50E");
 
     PnlVect* euroStoxSpots = pnl_vect_create_from_scalar(euroStoxSpotspots.size(), 0);
     vectorToPnlVect(euroStoxSpotspots, euroStoxSpots);
-    std::vector<Spot> spUsdSpotspots = dbManager->getSpots(last_year, input_date, "^GSPC");
+    std::vector<Spot> spUsdSpotspots = dbManager->getSpots(last_year, endingDate, "^GSPC");
 
     PnlVect* spUsdSpots = pnl_vect_create_from_scalar(spUsdSpotspots.size(), 0);
     vectorToPnlVect(spUsdSpotspots, spUsdSpots);
-    std::vector<Spot> spAudSpotspots = dbManager->getSpots(last_year, input_date, "^AXJO");
+    std::vector<Spot> spAudSpotspots = dbManager->getSpots(last_year, endingDate, "^AXJO");
 
     PnlVect* spAudSpots = pnl_vect_create_from_scalar(spAudSpotspots.size(), 0);
     vectorToPnlVect(spAudSpotspots, spAudSpots);
-    std::vector<Spot> eurUsdSpotspots = dbManager->getSpots(last_year, input_date, "EURUSD=X");
+    std::vector<Spot> eurUsdSpotspots = dbManager->getSpots(last_year, endingDate, "EURUSD=X");
 
     PnlVect* eurUsdSpots = pnl_vect_create_from_scalar(eurUsdSpotspots.size(), 0);
     vectorToPnlVect(eurUsdSpotspots, eurUsdSpots);
-    std::vector<Spot> eurAudSpotspots = dbManager->getSpots(last_year, input_date, "EURAUD=X");
+    std::vector<Spot> eurAudSpotspots = dbManager->getSpots(last_year, endingDate, "EURAUD=X");
 
     PnlVect* eurAudSpots = pnl_vect_create_from_scalar(eurAudSpotspots.size(), 0);
     vectorToPnlVect(eurAudSpotspots, eurAudSpots);
@@ -66,8 +71,7 @@ int main(int argc, char** argv) {
     int actigoSize = 5;
     double calibrationMaturity = 1;
 
-    // free risk rates
-
+    // Free risk rates
     double rEur = 0.0075;
     double rUsd = 0.028;
     double rAud = 0.026;
@@ -87,10 +91,11 @@ int main(int argc, char** argv) {
     double spUsdInitialSpot = dbManager->getSpot(1428451200, "^GSPC").getClose();
     double spAudInitialSpot = dbManager->getSpot(1428451200, "^AXJO").getClose();
     double maturity = 8;
-    Actigo *actigo = new Actigo(maturity, 16, actigoSize, euroStoxInitialSpot, spUsdInitialSpot, spAudInitialSpot,
-                      rEur, rUsd, rAud);
 
-    // Create the BlackScholesModel
+    // Create Actigo
+    Actigo *actigo = new Actigo(maturity, 16, actigoSize,
+                                euroStoxInitialSpot, spUsdInitialSpot, spAudInitialSpot,
+                                rEur, rUsd, rAud);
 
     // Recuprate Initial Spots
     double actuParam = exp(-rEur * maturity);
@@ -108,65 +113,83 @@ int main(int argc, char** argv) {
     LET(initialSpotsEuro, 2) = spAudInitialSpot;
     LET(initialSpotsEuro, 3) = eurUsdInitialSpot;
     LET(initialSpotsEuro, 4) = eurAudInitialSpot;
+
+    // Create the BlackScholesModel
     BlackScholesModel *bsm = new BlackScholesModel(
                 actigoSize, rEur, calibration->getCorrelationsMatrix(),
                 calibration->getVolatilities(), initialSpotsEuro);
+
     PnlRng *rng = pnl_rng_create(PNL_RNG_MERSENNE);
     pnl_rng_sseed(rng, time(NULL));
+
+    // Create the MonteCarlo simulator
     MonteCarlo *mc = new MonteCarlo(bsm, actigo, rng, 0.01, mcSamplesNb);
-    PnlVect* current_delta = pnl_vect_create_from_scalar(actigoSize, 0);
-    PnlVect* previous_delta = pnl_vect_create_from_scalar(actigoSize, 0);
+
+    PnlVect* currentDelta = pnl_vect_create_from_scalar(actigoSize, 0);
+    PnlVect* previousDelta = pnl_vect_create_from_scalar(actigoSize, 0);
+
     std::vector<time_t> rightDates;
     double actigoPrice = 0;
     double hedgingPrice = 0;
     double free_risk_part = 0;
     double risked_part = 0;
 
-    PnlVect* current_spots = pnl_vect_create_from_scalar(actigoSize, 0);
+    PnlVect* currentSpots = pnl_vect_create_from_scalar(actigoSize, 0);
 
-    // Rebalancing for loop
-    for (time_t current_date = 1428451200; current_date <= input_date;
-         current_date += rebalancingFrequency * 86400) {
+    // Rebalancing until endingDate
+    for (time_t currentDate = 1428451200; currentDate <= endingDate;
+         currentDate += rebalancingFrequency * 86400) {
+        // Timer start
         std::time_t start = std::clock();
 
-        rightDates = getRightDates(current_date, semesterDates);
+        rightDates = getRightDates(currentDate, semesterDates);
         PnlMat* past = pnl_mat_create_from_scalar(rightDates.size(), actigoSize, 0);
         getPastData(dbManager, past, rightDates, rUsd, rAud);
 
-        time_t dateDifference = current_date - 1428451200;
+        time_t dateDifference = currentDate - 1428451200;
 
         double convertedDate = (double) dateDifference / (365 * 24 * 3600);
         if (convertedDate > 8) {
             convertedDate = 8;
         }
 
-        LET(current_spots, 0) = getLastAvailableSpot(dbManager, "^STOXX50E", current_date);
-        LET(current_spots, 1) = getLastAvailableSpot(dbManager, "^GSPC", current_date);
-        LET(current_spots, 2) = getLastAvailableSpot(dbManager, "^AXJO", current_date);
-        LET(current_spots, 3) = getLastAvailableSpot(dbManager, "EURUSD=X", current_date);
-        LET(current_spots, 4) = getLastAvailableSpot(dbManager, "EURAUD=X", current_date);
+        LET(currentSpots, 0) = getLastAvailableSpot(dbManager, "^STOXX50E", currentDate);
+        LET(currentSpots, 1) = getLastAvailableSpot(dbManager, "^GSPC", currentDate);
+        LET(currentSpots, 2) = getLastAvailableSpot(dbManager, "^AXJO", currentDate);
+        LET(currentSpots, 3) = getLastAvailableSpot(dbManager, "EURUSD=X", currentDate);
+        LET(currentSpots, 4) = getLastAvailableSpot(dbManager, "EURAUD=X", currentDate);
 
-        mc->rebalanceAtSpecificDate(past, convertedDate, current_delta, actigoPrice);
-        dbManager->postDelta(GET(current_delta, 0), current_date, "^STOXX50E");
-        dbManager->postDelta(GET(current_delta, 1), current_date, "^GSPC");
-        dbManager->postDelta(GET(current_delta, 2), current_date, "^AXJO");
-        dbManager->postDelta(GET(current_delta, 3), current_date, "EURUSD=X");
-        dbManager->postDelta(GET(current_delta, 4), current_date, "EURAUD=X");
-        risked_part = pnl_vect_scalar_prod(current_spots, current_delta);
+        mc->rebalanceAtSpecificDate(past, convertedDate, currentDelta, actigoPrice);
 
-        if (current_date == 1428451200) {
+        // Send deltas to database
+        dbManager->postDelta(GET(currentDelta, 0), currentDate, "^STOXX50E");
+        dbManager->postDelta(GET(currentDelta, 1), currentDate, "^GSPC");
+        dbManager->postDelta(GET(currentDelta, 2), currentDate, "^AXJO");
+        dbManager->postDelta(GET(currentDelta, 3), currentDate, "EURUSD=X");
+        dbManager->postDelta(GET(currentDelta, 4), currentDate, "EURAUD=X");
+
+        risked_part = pnl_vect_scalar_prod(currentSpots, currentDelta);
+
+        if (currentDate == 1428451200) {
             free_risk_part = actigoPrice - risked_part;
         } else {
             free_risk_part = free_risk_part * exp(rEur * (rebalancingFrequency / 365.0))
-                    - risked_part + pnl_vect_scalar_prod(previous_delta, current_spots);
+                    - risked_part + pnl_vect_scalar_prod(previousDelta, currentSpots);
         }
 
         hedgingPrice = free_risk_part + risked_part;
-        dbManager->postPrice(current_date, actigoPrice, hedgingPrice);
-        pnl_vect_clone(previous_delta, current_delta);
 
+        // Send price to database
+        dbManager->postPrice(currentDate, actigoPrice, hedgingPrice);
+
+        // Clone current delta for next iteration
+        pnl_vect_clone(previousDelta, currentDelta);
+
+        // Timer end
         double duration = (double)(std::clock() - start) / CLOCKS_PER_SEC;
-        std::cout << "Actigo: " << actigoPrice
+
+        std::cout << "Date: " << epochToDate(currentDate)
+                  << ", Actigo: " << actigoPrice
                   << ", Hedging: " << hedgingPrice
                   << ", Error: " << hedgingPrice - actigoPrice
                   << ", Timer: " << duration << " s"
@@ -185,9 +208,9 @@ int main(int argc, char** argv) {
     pnl_vect_free(&eurUsdSpots);
     pnl_vect_free(&eurAudSpots);
     pnl_vect_free(&initialSpotsEuro);
-    pnl_vect_free(&current_spots);
-    pnl_vect_free(&current_delta);
-    pnl_vect_free(&previous_delta);
+    pnl_vect_free(&currentSpots);
+    pnl_vect_free(&currentDelta);
+    pnl_vect_free(&previousDelta);
 
     delete data;
     delete actigo;

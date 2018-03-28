@@ -23,7 +23,7 @@ private:
 
     /**
      * @brief Get the id coresponding to the symbol
-     * @param char* symbol
+     * @param symbol
      * @return b_oid id
      */
     b_oid getStockId(const char* symbol);
@@ -31,8 +31,8 @@ private:
     /**
      * @brief Get the price
      * @param date date
-     * @param char*symbol
-     * @return double containing the price of the actif coresponding to symbol at the
+     * @param symbol
+     * @return double containing the price of the asset coresponding to symbol at the
      */
     double getSpot(b_date date, const char* symbol);
     /**
@@ -54,8 +54,8 @@ public:
     /**
      * @brief Get the price
      * @param date date
-     * @param char* symbol
-     * @return double containing the price of the actif coresponding to symbol at the
+     * @param symbol
+     * @return double containing the price of the asset coresponding to symbol at the
      */
     Spot getSpot(std::time_t date, const char* symbol);
 
@@ -63,24 +63,23 @@ public:
      * @brief Get the spots of the period
      * @param startDate Begining date (POSIX timestamp)
      * @param endDate Ending date (POSIX timestamp)
-     * @param char* symbol
-     * @return  a vector containing all the spots of the actif corespondig to symbol of the duration
+     * @param symbol
+     * @return a vector containing all the spots of the assets corespondig to symbol of the duration
      */
     std::vector<Spot> getSpots(std::time_t startDate,std::time_t endDate, const char* symbol);
 
     /**
-    * @brief POST the Delta in th DataBase
+    * @brief Post the Delta in th DataBase
     * @param delta
     * @param date
-    * @param char* symbol
+    * @param symbol
     */
     void postDelta(double delta, std::time_t date, const char* symbol);
 
     /**
-    * @brief Get the Delta of the acitf corespondig to symbol at the Date from the Data Base
-    * @param delta
+    * @brief Get the Delta of the stock corespondig to symbol at the Date from the Data Base
     * @param date
-    * @param char* symbol
+    * @param symbol
     * post the delta in the data base
     */
     double getDelta(std::time_t date, const char* symbol);
@@ -96,12 +95,19 @@ public:
     void clearDeltas();
 
     /**
-    * @brief POST the Price in the DataBase
+    * @brief Post the Price in the DataBase
     * @param date
     * @param price
     * @param portfolioValue
     */
     void postPrice(std::time_t date, double price, double portfolioValue);
+
+    /**
+    * @brief Get the Actigo price at the given Date from the Data Base
+    * @param date
+    */
+    double getActigoPrice(std::time_t date);
+
 };
 
 #endif /* DATABASEMANAGER_H */
