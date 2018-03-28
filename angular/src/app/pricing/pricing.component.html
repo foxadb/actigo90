@@ -15,11 +15,11 @@
             </tr>
             <tr>
               <td class="align-left">Actigo Price</td>
-              <td class="align-right">{{ prices[0]?.actigo | number : '1.8-8' }} €</td>
+              <td class="align-right">{{ prices[0]?.actigo | number : '1.4-4' }} €</td>
             </tr>
             <tr>
               <td class="align-left">Hedging Price</td>
-              <td class="align-right">{{ prices[0]?.hedging | number : '1.8-8' }} €</td>
+              <td class="align-right">{{ prices[0]?.hedging | number : '1.4-4' }} €</td>
             </tr>
           </tbody>
         </table>
@@ -122,8 +122,8 @@
       <tbody>
         <tr *ngFor="let price of prices | slice : 0:50; let i = index">
           <td>{{ price.date | date : 'mediumDate' }}</td>
-          <td>{{ price.actigo | number : '1.5-5' }} €</td>
-          <td>{{ price.hedging | number : '1.5-5' }} €</td>
+          <td>{{ price.actigo | number : '1.4-4' }} €</td>
+          <td>{{ price.hedging | number : '1.4-4' }} €</td>
           <td>{{ euroStoxx50Deltas[i]?.delta | number : '1.7-7' }}</td>
           <td>{{ snp500Deltas[i]?.delta | number : '1.7-7' }}</td>
           <td>{{ snp200Deltas[i]?.delta | number : '1.7-7' }}</td>
