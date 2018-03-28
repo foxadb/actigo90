@@ -111,6 +111,8 @@ public:
     std::time_t getLastHedgingDate();
 
     double getHedging(std::time_t date);
+
+    void clearPrices();
 };
 
 #endif /* DATABASEMANAGER_H */

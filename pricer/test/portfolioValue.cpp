@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
         // Ending hedging date
         time_t endingDate = std::atoi(argv[1]);
 
-        // Rebalancing everyday
+        // Rebalancing frequency
         int rebalancingFrequency = std::atoi(argv[2]);
 
         // Monte Carlo samples number
@@ -34,6 +34,11 @@ int main(int argc, char** argv) {
         };
 
         DataBaseManager *dbManager = DataBaseManager::getDbManager();
+
+        //deleting deltas and prices in case someone else has already computed
+        // at those dates
+        dbManager->clearDeltas();
+        dbManager->clearPrices(); 
 
         time_t last_year = endingDate - 365 * 24 * 3600;
         std::vector<Spot> euroStoxSpotspots = dbManager->getSpots(last_year, endingDate, "^STOXX50E");
