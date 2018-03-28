@@ -41,6 +41,15 @@
       </div>
     </div>
   </div>
+  <div class="row justify-content-center refresh">
+    <div class="col-sm-4">
+      <button type="button" arial-label="Refresh" class="btn btn-secondary" (click)="getDeltasPrices()">
+        <i class="fa fa-retweet fa-lg"></i> Refresh Data</button>
+    </div>
+    <div class="col-sm-2">
+      <i *ngIf="refreshDataSpinner" class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+    </div>
+  </div>
   <div class="row justify-content-center pricing v-center">
     <div class="col-md-3">
       <form class="form" (ngSubmit)="actigoDelta()" #f="ngForm" novalidate>
