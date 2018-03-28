@@ -16,11 +16,10 @@ exports.actigoDelta = function (req, res) {
 exports.rebalance = function (req, res) {
     // Get pricer parameters
     const date = req.body.date;
-    const frequency = req.body.frequency;
     const samples = req.body.samples;
 
     try {
-        PricerService.rebalance(date, frequency, samples, code => {
+        PricerService.rebalance(date, samples, code => {
             res.status(200).json({ status: 200, data: code, message: 'Rebalancing portfolio successfully done' });
         });
     } catch (error) {

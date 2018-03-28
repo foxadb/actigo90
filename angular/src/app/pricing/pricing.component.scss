@@ -15,11 +15,21 @@
     text-align: right;
 }
 
-.pricing {
-    padding: 32px 0;
-    // columns vertically aligned
+.v-center {
     display: flex;
     align-items: center;
+}
+
+.rebalance {
+    padding: 48px 0;
+}
+
+.rebalance .form-group {
+    padding: 24px 0;
+}
+
+.pricing {
+    padding: 32px 0;
 }
 
 .pricing form {

@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="row justify-content-center">
+  <div class="row justify-content-center rebalance v-center">
     <div class="col-md-6">
       <div class="portfolio-info">
         <table class="table">
@@ -25,25 +25,23 @@
         </table>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 text-center">
       <form class="form" (ngSubmit)="rebalance()" #f="ngForm" novalidate>
-        <div class="form-group">
-          <label for="rebalancingFrequency">Rebalancing Frequency</label>
-          <input id="rebalancingFrequency" type="number" class="form-control" name="rebalancingFrequency" [(ngModel)]="rebalancingFrequency">
-        </div>
         <div class="from-group">
           <label for="mcSamples">Monte Carlo Samples</label>
           <input id="mcSamples" type="number" class="form-control" name="mcSamples" [(ngModel)]="mcSamples">
         </div>
         <div class="form-group">
-          <button type="submit" class="btn btn-primary" (click)="rebalance()">
+          <button type="submit" class="btn btn-primary">
             <i class="fa fa-balance-scale"></i> Rebalance</button>
         </div>
       </form>
-      <i *ngIf="rebalancingSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+      <div class="form-group">
+        <i *ngIf="rebalancingSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+      </div>
     </div>
   </div>
-  <div class="row justify-content-center pricing">
+  <div class="row justify-content-center pricing v-center">
     <div class="col-md-3">
       <form class="form" (ngSubmit)="actigoDelta()" #f="ngForm" novalidate>
         <div class="form-group">
@@ -55,8 +53,10 @@
           <button type="submit" arial-label="Pricing" class="btn btn-success">
             <i class="fa fa-money fa-lg"></i> Pricing</button>
         </div>
+        <div class="form-group">
+          <i *ngIf="pricingSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+        </div>
       </form>
-      <i *ngIf="pricingSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
     </div>
     <div class="col-md-6">
       <table class="table">

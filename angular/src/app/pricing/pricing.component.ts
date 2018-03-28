@@ -31,9 +31,6 @@ export class PricingComponent implements OnInit {
   public eurUsdDeltas: Array<Delta> = [];
   public eurAudDeltas: Array<Delta> = [];
 
-  // Rebalancing Frequency in days
-  public rebalancingFrequency = 1;
-
   // Number of Monte Carlo Samples
   public mcSamples = 5000;
 
@@ -118,11 +115,9 @@ export class PricingComponent implements OnInit {
 
   public rebalance(): void {
     const body = {
-      date: Date.now(),
+      date: new Date(Date.now()).setUTCHours(0, 0, 0, 0) / 1000,
       samples: this.mcSamples
     };
-
-    console.log(body);
 
     // Loading spinner
     this.rebalancingSpinner = true;
