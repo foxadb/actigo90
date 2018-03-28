@@ -18,7 +18,7 @@ class CalibrationTest : public ::testing::Test {
 };
 
 TEST_F(CalibrationTest, correlations) {
-  double rEur = 0.0075;
+  /*double rEur = 0.0075;
   double rUsd = 0.028;
   double rAud = 0.026;
   Data *data = new Data("2017-12-01", "2017-12-08", rEur, rUsd, rAud);
@@ -32,7 +32,7 @@ TEST_F(CalibrationTest, correlations) {
     }
   }
   delete calibration;
-  delete data;
+  delete data;*/
   }
 
 TEST_F(CalibrationTest, correlation) {
@@ -59,13 +59,3 @@ TEST_F(CalibrationTest, volatility) {
     pnl_vect_free(&x);
     delete calibration;
  }
-
-TEST_F(CalibrationTest, trend){
-  PnlVect *x = pnl_vect_create_from_file("../../market-data/simul_call.dat");
-  Calibration *calibration = new Calibration();
-  double trend = calibration->estimate_trend(x);
-  double sigma = calibration->estimate_volatility(x);;
-  trend += (sigma * sigma) / 2.0;
-  EXPECT_TRUE(trend < 0.05);
-  EXPECT_TRUE(trend > 0.03);
-}

@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   testDelta.cpp
  * Author: bernoush
  *
@@ -16,7 +16,7 @@
 using namespace std;
 
 /*
- * 
+ *
  */
 int main(int argc, char** argv) {
 
@@ -44,9 +44,8 @@ int main(int argc, char** argv) {
     delete basket;
     delete bsm;
     delete mc;
+
     
-    
-    
+
     return 0;
 }
-

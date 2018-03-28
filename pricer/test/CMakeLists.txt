@@ -24,6 +24,7 @@ add_executable(quoteTests
 add_executable(pricerTests
     pricer/TestAllPricer.cpp
     pricer/test_calibration.cpp
+    pricer/test_pricer_actigo.cpp
     )
 
 target_link_libraries(quoteTests peps gtest gtest_main curl ${LIBS})
