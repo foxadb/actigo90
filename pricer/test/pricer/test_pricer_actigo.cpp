@@ -32,7 +32,7 @@ TEST_F(ActigoPricerTest, priceAtZero) {
   int mcSamplesNb = 5000; // Monte Carlo samples number
   DataBaseManager *dbManager = DataBaseManager::getDbManager();
   std::vector<time_t> semesterDates {
-      1428451200,
+      1428624000,
       1444608000,
       1460332800,
       1476057600,
@@ -51,7 +51,7 @@ TEST_F(ActigoPricerTest, priceAtZero) {
       1681171200
   };
 
-  time_t date = 1428451200 ;
+  time_t date = 1428624000 ;
   time_t oneYearBeforeDate = date -  365 * 24 * 3600;
 
   std::vector<Spot> euroStoxSpotspots = dbManager->getSpots(oneYearBeforeDate, date, "^STOXX50E");
@@ -107,11 +107,11 @@ TEST_F(ActigoPricerTest, priceAtZero) {
   Calibration *calibration = new Calibration(data, step);
 
   // Recuperate Initial Spots
-  Spot euroStoxInitialSpot = dbManager->getSpot(1428451200, "^STOXX50E");
-  Spot spUsdInitialSpot = dbManager->getSpot(1428451200, "^GSPC");
-  Spot spAudInitialSpot = dbManager->getSpot(1428451200, "^AXJO");
-  Spot eurUsdInitialSpot = dbManager->getSpot(1428451200, "EURUSD=X");
-  Spot eurAudInitialSpot = dbManager->getSpot(1428451200, "EURAUD=X");
+  Spot euroStoxInitialSpot = dbManager->getSpot(1428624000, "^STOXX50E");
+  Spot spUsdInitialSpot = dbManager->getSpot(1428624000, "^GSPC");
+  Spot spAudInitialSpot = dbManager->getSpot(1428624000, "^AXJO");
+  Spot eurUsdInitialSpot = dbManager->getSpot(1428624000, "EURUSD=X");
+  Spot eurAudInitialSpot = dbManager->getSpot(1428624000, "EURAUD=X");
 
   double euroStoxInitialPrice = euroStoxInitialSpot.getClose();
   double spUsdInitialPrice = spUsdInitialSpot.getClose();
@@ -153,15 +153,15 @@ TEST_F(ActigoPricerTest, priceAtZero) {
   PnlMat* past = pnl_mat_create_from_scalar(rightDates.size(), actigoSize, 0);
   getPastData(dbManager, past, rightDates, rUsd, rAud);
 
-  time_t dateDifference = date - 1428451200;
+  time_t dateDifference = date - 1428624000;
   double convertedDate = (double)dateDifference/(365 * 24 * 3600);
 
   if ( convertedDate > 8)
       convertedDate = 8;
 
   mc->rebalanceAtSpecificDate(past,  convertedDate, delta, price);
-  EXPECT_TRUE(price >= 0.9*exp(-rEur*8.0));
-  EXPECT_TRUE(price <= 1);
+  EXPECT_TRUE(price >= 90*exp(-rEur*8.0));
+  EXPECT_TRUE(price <= 100);
 
   // Free memory
   delete data;
@@ -185,7 +185,7 @@ TEST_F(ActigoPricerTest, priceAtZero) {
     int mcSamplesNb = 5000; // Monte Carlo samples number
     DataBaseManager *dbManager = DataBaseManager::getDbManager();
     std::vector<time_t> semesterDates {
-        1428451200,
+        1428624000,
         1444608000,
         1460332800,
         1476057600,
@@ -260,11 +260,11 @@ TEST_F(ActigoPricerTest, priceAtZero) {
     Calibration *calibration = new Calibration(data, step);
 
     // Recuperate Initial Spots
-    Spot euroStoxInitialSpot = dbManager->getSpot(1428451200, "^STOXX50E");
-    Spot spUsdInitialSpot = dbManager->getSpot(1428451200, "^GSPC");
-    Spot spAudInitialSpot = dbManager->getSpot(1428451200, "^AXJO");
-    Spot eurUsdInitialSpot = dbManager->getSpot(1428451200, "EURUSD=X");
-    Spot eurAudInitialSpot = dbManager->getSpot(1428451200, "EURAUD=X");
+    Spot euroStoxInitialSpot = dbManager->getSpot(1428624000, "^STOXX50E");
+    Spot spUsdInitialSpot = dbManager->getSpot(1428624000, "^GSPC");
+    Spot spAudInitialSpot = dbManager->getSpot(1428624000, "^AXJO");
+    Spot eurUsdInitialSpot = dbManager->getSpot(1428624000, "EURUSD=X");
+    Spot eurAudInitialSpot = dbManager->getSpot(1428624000, "EURAUD=X");
 
     double euroStoxInitialPrice = euroStoxInitialSpot.getClose();
     double spUsdInitialPrice = spUsdInitialSpot.getClose();
@@ -306,15 +306,15 @@ TEST_F(ActigoPricerTest, priceAtZero) {
     PnlMat* past = pnl_mat_create_from_scalar(rightDates.size(), actigoSize, 0);
     getPastData(dbManager, past, rightDates, rUsd, rAud);
 
-    time_t dateDifference = date - 1428451200;
+    time_t dateDifference = date - 1428624000;
     double convertedDate = (double)dateDifference/(365 * 24 * 3600);
 
     if ( convertedDate > 8)
         convertedDate = 8;
 
     mc->rebalanceAtSpecificDate(past,  convertedDate, delta, price);
-    EXPECT_TRUE(price >= 0.9*exp(-rEur*(8.0 - convertedDate)));
-    EXPECT_TRUE(price <= 1);
+    EXPECT_TRUE(price >= 90*exp(-rEur*(8.0 - convertedDate)));
+    EXPECT_TRUE(price <= 100);
 
     // Free memory
     delete data;
