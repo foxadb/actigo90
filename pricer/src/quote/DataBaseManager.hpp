@@ -98,8 +98,8 @@ public:
     /**
     * @brief POST the Price in the DataBase
     * @param date
-    * @param price
-    * @param portfolioValue
+    * @param price the price of actigo
+    * @param portfolioValue the price of the hedgin
     */
     void postPrice(std::time_t date, double price, double portfolioValue);
 };
