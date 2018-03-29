@@ -1,10 +1,13 @@
 import Stock from '../models/stock.model';
+import Spot from '../models/spot.model';
 import Price from '../models/price.model';
 import Delta from '../models/delta.model';
 
 import { Component, OnInit } from '@angular/core';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 import { StockService } from '../services/stock.service';
+import { SpotService } from '../services/spot.service';
 import { DeltaService } from '../services/delta.service';
 import { PriceService } from '../services/price.service';
 import { PricerService } from '../services/pricer.service';
@@ -21,6 +24,12 @@ export class PricingComponent implements OnInit {
   public snp200: Stock;
   public eurUsd: Stock;
   public eurAud: Stock;
+
+  public euroStoxx50Spots: Array<Spot>;
+  public snp500Spots: Array<Spot>;
+  public snp200Spots: Array<Spot>;
+  public eurUsdSpots: Array<Spot>;
+  public eurAudSpots: Array<Spot>;
 
   public prices: Array<Price> = [];
 
@@ -44,6 +53,7 @@ export class PricingComponent implements OnInit {
 
   constructor(
     private stockService: StockService,
+    private spotService: SpotService,
     private deltaService: DeltaService,
     private priceService: PriceService,
     private pricerService: PricerService
@@ -74,28 +84,51 @@ export class PricingComponent implements OnInit {
       },
       error => console.error('Error', error),
       () => {
+        // Get Deltas and Prices
         this.getDeltasPrices();
       }
     );
   }
 
+  public getStockSpots(): void {
+    const euroStoxx50Sub = this.spotService.getStockSpots(this.euroStoxx50._id, 1, 5000);
+    const snp500Sub = this.spotService.getStockSpots(this.snp500._id, 1, 5000);
+    const snp200Sub = this.spotService.getStockSpots(this.snp200._id, 1, 5000);
+    const eurUsdSub = this.spotService.getStockSpots(this.eurUsd._id, 1, 5000);
+    const eurAudSub = this.spotService.getStockSpots(this.eurAud._id, 1, 5000);
+
+    forkJoin([euroStoxx50Sub, snp500Sub, snp200Sub, eurUsdSub, eurAudSub]).subscribe(
+      spots => {
+        // Get spots from database
+        this.euroStoxx50Spots = spots[0];
+        this.snp500Spots = spots[1];
+        this.snp200Spots = spots[2];
+        this.eurUsdSpots = spots[3];
+        this.eurAudSpots = spots[4];
+
+        // Sort spots by date
+        this.sortByDate(this.euroStoxx50Spots);
+        this.sortByDate(this.snp500Spots);
+        this.sortByDate(this.snp200Spots);
+        this.sortByDate(this.eurUsdSpots);
+        this.sortByDate(this.eurAudSpots);
+      });
+ }
+
   public getDeltasPrices(): void {
     // Loading spinner
     this.refreshDataSpinner = true;
 
-    this.priceService.getPrices(1, 5000).subscribe(
+    this.priceService.getPrices(1, 15000).subscribe(
       prices => {
         this.prices = prices;
-        this.prices.sort((a, b) =>
-          new Date(b.date).getTime() - new Date(a.date).getTime());
-      }
-    );
+        this.sortByDate(this.prices);
+      });
 
-    this.deltaService.getDeltas(1, 5000).subscribe(
+    this.deltaService.getDeltas(1, 15000).subscribe(
       deltas => {
         this.deltas = deltas;
-        this.deltas.sort((a, b) =>
-          new Date(b.date).getTime() - new Date(a.date).getTime());
+        this.sortByDate(this.deltas);
 
         // Divide delta list into each stock
         this.deltas.forEach(delta => {
@@ -161,6 +194,11 @@ export class PricingComponent implements OnInit {
       },
       err => console.error('Error', err)
     );
+  }
+
+  public sortByDate(array: Array<any>): void {
+    array.sort((a, b) =>
+      new Date(b.date).getTime() - new Date(a.date).getTime());
   }
 
 }

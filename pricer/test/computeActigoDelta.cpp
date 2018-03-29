@@ -16,7 +16,7 @@
 
 int main(int argc, char **argv) {
     // Monte Carlo samples number
-    int mcSamplesNb = 5000;
+    int mcSamplesNb = 50000;
 
     DataBaseManager *dbManager = DataBaseManager::getDbManager();
 
