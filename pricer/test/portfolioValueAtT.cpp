@@ -200,11 +200,9 @@ int main(int argc, char** argv) {
 
         hedgingPrice = freeRiskPart + riskedPart;
         dbManager->postPrice(currentDate, actigoPrice, hedgingPrice);
-        pnl_vect_clone(previousDelta, currentDelta);
 
         // End timer
         double duration = (double)(std::clock() - start) / CLOCKS_PER_SEC;
-
         std::cout << "Date: " << epochToDate(currentDate)
                   << ", Actigo: " << actigoPrice
                   << ", Hedging: " << hedgingPrice

@@ -83,13 +83,16 @@ vector<Spot> DataBaseManager::getSpots(std::time_t start_date, std::time_t end_d
 }
 
 void DataBaseManager::postDelta(double delta, std::time_t date, const char* symbol){
-    b_oid id = getStockId(symbol);
-    b_date bdate = read_date(date, 0);
+    double duplicated_delta = getDelta(date, symbol);
+    if (duplicated_delta == 0.0){
+      b_oid id = getStockId(symbol);
+      b_date bdate = read_date(date, 0);
 
-    bsoncxx::document::value doc = make_document(
-                kvp("stock", id), kvp("date", bdate), kvp("delta", delta));
+      bsoncxx::document::value doc = make_document(
+                  kvp("stock", id), kvp("date", bdate), kvp("delta", delta));
 
-    auto res = db["deltas"].insert_one(std::move(doc));
+      auto res = db["deltas"].insert_one(std::move(doc));
+    }
 }
 
 double DataBaseManager::getDelta(std::time_t date, const char* symbol){
@@ -114,10 +117,13 @@ void DataBaseManager::clearDeltas(){
 }
 
 void DataBaseManager::postPrice(std::time_t date, double price, double portfolioValue){
+  double duplicated_price = getActigoPrice(date);
+  if (duplicated_price == 0.0){
     b_date bdate = read_date(date, 0);
     bsoncxx::document::value doc = make_document(
                 kvp("date", bdate), kvp("actigo", price), kvp("hedging", portfolioValue));
     auto res = db["prices"].insert_one(std::move(doc));
+  }
 }
 
 double DataBaseManager::getActigoPrice(std::time_t date){
