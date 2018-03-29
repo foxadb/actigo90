@@ -5,7 +5,8 @@
   "scripts": {
     "start": "NODE_ENV=production nodemon ./bin/www",
     "test-server": "NODE_ENV=test nodemon ./bin/www",
-    "unit-tests": "NODE_ENV=test mocha tests/unit-tests.js --exit"
+    "unit-tests": "NODE_ENV=test mocha tests/unit-tests.js --exit",
+    "load-tests": "artillery run tests/load.yml"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",
@@ -26,6 +27,7 @@
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
+    "artillery": "^1.6.0-15",
     "mocha": "^5.0.4",
     "supertest": "^3.0.0"
   }

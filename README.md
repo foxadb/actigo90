@@ -79,6 +79,21 @@ npm start
 
 URL to access the API: `http://localhost:3000/api`
 
+#### Unit tests
+
+You can run unit tests in test mode using the following script:
+```
+npm run unit-tests
+```
+
+#### Load tests
+
+Load tests require to run the server with `npm run test-server` first.
+Then call the script for load tests.
+```
+npm run load-tests
+```
+
 ### Angular client
 
 #### Install dependencies and run

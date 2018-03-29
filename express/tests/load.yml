@@ -1,0 +1,29 @@
+config:
+  target: "http://localhost:3000/api"
+  http:
+    # Responses have to be sent within 10 seconds or the request will be aborted
+    timeout: 5
+    # All HTTP requests from all virtual users will be sent over the same 10 connections
+    pool: 10
+  phases:
+    # 10 seconds duration
+    - duration: 10
+      # Simulate 10 different users
+      arrivalRate: 10
+scenarios:
+  # Login scenario
+  - flow:
+     # Authentication
+     - post:
+          url: "/user/login"
+          json:
+            username: "admin"
+            password: "password"
+          capture:
+            json: "$.token"
+            as: "token"
+     # Retreive the user list after login
+     - get:
+          url: "/user"
+          headers:
+            Authorization: "Bearer {{ token }}"
