@@ -15,47 +15,16 @@
 #include <ctime>
 
 int main(int argc, char **argv) {
-    int mcSamplesNb = 50000; // Monte Carlo samples number
+    // Monte Carlo samples number
+    int mcSamplesNb = 5000;
 
     DataBaseManager *dbManager = DataBaseManager::getDbManager();
 
-    std::vector<time_t> semesterDatesT {
-        dateToEpoch("2015-04-10"),
-                dateToEpoch("2015-10-12"),
-                dateToEpoch("2016-04-11"),
-                dateToEpoch("2016-10-10"),
-                dateToEpoch("2017-04-10"),
-                dateToEpoch("2017-10-10"),
-                dateToEpoch("2018-04-10"),
-                dateToEpoch("2018-10-10"),
-                dateToEpoch("2019-04-10"),
-                dateToEpoch("2019-10-10"),
-                dateToEpoch("2020-04-14"),
-                dateToEpoch("2020-10-12"),
-                dateToEpoch("2021-04-12"),
-                dateToEpoch("2021-10-11"),
-                dateToEpoch("2022-04-11"),
-                dateToEpoch("2022-10-10"),
-                dateToEpoch("2023-04-11")
-    };
-
     std::vector<time_t> semesterDates {
-        1428624000,
-        1444608000,
-        1460332800,
-        1476057600,
-        1491782400,
-        1507593600,
-        1523318400,
-        1539129600,
-        1554854400,
-        1570665600,
-        1586822400,
-        1602460800,
-        1618185600,
-        1633910400,
-        1649635200,
-        1665360000,
+        1428624000, 1444608000, 1460332800, 1476057600,
+        1491782400, 1507593600, 1523318400, 1539129600,
+        1554854400, 1570665600, 1586822400, 1602460800,
+        1618185600, 1633910400, 1649635200, 1665360000,
         1681171200
     };
 
@@ -63,23 +32,23 @@ int main(int argc, char **argv) {
     time_t oneYearBeforeDate = date -  365 * 24 * 3600;
 
     std::vector<Spot> euroStoxSpotspots = dbManager->getSpots(oneYearBeforeDate, date, "^STOXX50E");
-    PnlVect* euroStoxSpots = pnl_vect_create_from_scalar(euroStoxSpotspots.size(), 0.);
+    PnlVect* euroStoxSpots = pnl_vect_create_from_scalar(euroStoxSpotspots.size(), 0);
     vectorToPnlVect(euroStoxSpotspots, euroStoxSpots);
 
     std::vector<Spot> spUsdSpotspots = dbManager->getSpots(oneYearBeforeDate, date, "^GSPC");
-    PnlVect* spUsdSpots = pnl_vect_create_from_scalar(spUsdSpotspots.size(), 0.);
+    PnlVect* spUsdSpots = pnl_vect_create_from_scalar(spUsdSpotspots.size(), 0);
     vectorToPnlVect(spUsdSpotspots, spUsdSpots);
 
     std::vector<Spot> spAudSpotspots = dbManager->getSpots(oneYearBeforeDate, date, "^AXJO");
-    PnlVect* spAudSpots = pnl_vect_create_from_scalar(spAudSpotspots.size(), 0.);
+    PnlVect* spAudSpots = pnl_vect_create_from_scalar(spAudSpotspots.size(), 0);
     vectorToPnlVect(spAudSpotspots, spAudSpots);
 
     std::vector<Spot> eurUsdSpotspots = dbManager->getSpots(oneYearBeforeDate, date, "EURUSD=X");
-    PnlVect* eurUsdSpots = pnl_vect_create_from_scalar(eurUsdSpotspots.size(), 0.);
+    PnlVect* eurUsdSpots = pnl_vect_create_from_scalar(eurUsdSpotspots.size(), 0);
     vectorToPnlVect(eurUsdSpotspots, eurUsdSpots);
 
     std::vector<Spot> eurAudSpotspots = dbManager->getSpots(oneYearBeforeDate, date, "EURAUD=X");
-    PnlVect* eurAudSpots = pnl_vect_create_from_scalar(eurAudSpotspots.size(), 0.);
+    PnlVect* eurAudSpots = pnl_vect_create_from_scalar(eurAudSpotspots.size(), 0);
     vectorToPnlVect(eurAudSpotspots, eurAudSpots);
 
     //int dataSize = euroStoxSpots->size;
@@ -98,10 +67,10 @@ int main(int argc, char **argv) {
     int actigoSize = 5;
     double calibrationMaturity = 1;
 
-
-    double rEur = 0.0073;
-    double rUsd = 0.02597;
-    double rAud = 0.02703;
+    // Free risk rates
+    double rEur = 0.0075;
+    double rUsd = 0.028;
+    double rAud = 0.026;
 
     // Maturity to modify
     PnlMat* calibrationDataMatrix = pnl_mat_create_from_scalar(dataSize, actigoSize, 0);
@@ -116,7 +85,6 @@ int main(int argc, char **argv) {
     Calibration *calibration = new Calibration(data, step);
 
     // Recuperate Initial Spots
-
     Spot euroStoxInitialSpot = dbManager->getSpot(1428624000, "^STOXX50E");
     Spot spUsdInitialSpot = dbManager->getSpot(1428624000, "^GSPC");
     Spot spAudInitialSpot = dbManager->getSpot(1428624000, "^AXJO");
@@ -129,17 +97,16 @@ int main(int argc, char **argv) {
     double eurUsdInitialPrice = eurUsdInitialSpot.getClose();
     double eurAudInitialPrice = eurAudInitialSpot.getClose();
 
+    // 8 years maturity
     double maturity = 8;
 
-
+    // Create Actigo
     Actigo *actigo = new Actigo(
                 maturity, 16, actigoSize,
                 euroStoxInitialPrice, spUsdInitialPrice, spAudInitialPrice,
                 rEur, rUsd, rAud);
 
-    // Create the BlackScholesModel
-
-    double actuParam = exp(-rEur*maturity);
+    double actuParam = exp(-rEur * maturity);
     PnlVect* initialPricesEuro = pnl_vect_create_from_scalar(actigoSize, 0);
     spUsdInitialPrice *= eurUsdInitialPrice;
     spAudInitialPrice *= eurAudInitialPrice;
@@ -151,6 +118,7 @@ int main(int argc, char **argv) {
     LET(initialPricesEuro, 3) = eurUsdInitialPrice;
     LET(initialPricesEuro, 4) = eurAudInitialPrice;
 
+    // Create the BlackScholesModel
     BlackScholesModel *bsm = new BlackScholesModel(
                 actigoSize, rEur, calibration->getCorrelationsMatrix(),
                 calibration->getVolatilities(), initialPricesEuro);
@@ -165,12 +133,14 @@ int main(int argc, char **argv) {
     getPastData(dbManager, past, rightDates, rUsd, rAud);
 
     time_t dateDifference = date - 1428624000;
-    double convertedDate = (double)dateDifference/(365 * 24 * 3600);
+    double convertedDate = (double)dateDifference / (365 * 24 * 3600);
 
     if ( convertedDate > 8)
         convertedDate = 8;
 
+    // Rebalancing
     mc->rebalanceAtSpecificDate(past,  convertedDate, delta, price);
+
     pnl_vect_print(delta);
     std::cout << price << std::endl;
 
