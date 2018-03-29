@@ -35,6 +35,12 @@ int main(int argc, char** argv) {
 
         DataBaseManager *dbManager = DataBaseManager::getDbManager();
 
+        time_t previous_date = dbManager->getLastHedgingDate();
+
+        if (endingDate <= previous_date){
+          return 0;
+        }
+        
         //deleting deltas and prices in case someone else has already computed
         // at those dates
         dbManager->clearDeltas();
