@@ -1,19 +1,19 @@
 <div class="container">
   <div class="row justify-content-center main-data-panel">
-    <div class="col-sm-2">
+    <div class="col-lg-3">
       <a class="panel-title">
         Main controller
       </a>
     </div>
-    <div class="col-sm-3 date">
+    <div class="col-lg-3 date">
       <label for="startDate">Start Date</label>
       <input id="startDate" type="date" class="form-control" [ngModel]="startDate | date: 'yyyy-MM-dd'" (ngModelChange)="startDate = $event">
     </div>
-    <div class="col-sm-3 date">
+    <div class="col-lg-3 date">
       <label for="endDate">End Date</label>
       <input id="endDate" type="date" class="form-control" [ngModel]="endDate | date: 'yyyy-MM-dd'" (ngModelChange)="endDate = $event">
     </div>
-    <div class="col-md-3">
+    <div class="col-lg-3">
       <div class="row justify-content-center button-section">
         <button type="button" class="btn btn-success" (click)="downloadStocksData()">
           <i class="fa fa-download"></i> Download</button>

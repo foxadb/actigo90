@@ -9,45 +9,45 @@
   </div>
   <form class="form" (ngSubmit)="hedging()" #f="ngForm" novalidate>
     <div class="row justify-content-center tracking-panel">
-      <div class="col-md-3">
+      <div class="col-lg-3">
         <div class="form-group">
           <label for="hedgingDate">Hedging end date</label>
           <input id="hedgingDate" type="date" class="form-control" name="hedgingDate" [ngModel]="hedgingDate | date : 'yyyy-MM-dd'"
             (ngModelChange)="hedgingDate = $event">
         </div>
       </div>
-      <div class="col-md-2">
+      <div class="col-lg-2">
         <div class="form-group">
           <button type="submit" arial-label="Hedging" class="btn btn-success">
             <i class="fa fa-money fa-lg"></i> Hedging</button>
         </div>
       </div>
-      <div class="col-md-2">
+      <div class="col-lg-2">
         <div class="form-group">
           <button type="button" class="btn btn-primary" (click)="refreshChartData()">
             <i class="fa fa-sync fa-lg"></i> Refresh Chart</button>
         </div>
       </div>
-      <div class="col-md-2">
+      <div class="col-lg-2">
         <div class="form-group">
           <button type="button" class="btn btn-danger" (click)="deleteHedging()">
             <i class="fa fa-trash fa-lg"></i> Delete</button>
         </div>
       </div>
-      <div class="col-md-2">
+      <div class="col-lg-2">
         <div class="form-group">
           <i *ngIf="hedgingSpinner" class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
         </div>
       </div>
     </div>
     <div class="row justify-content-center tracking-panel">
-      <div class="col-md-3">
+      <div class="col-sm-4">
         <div class="form-group">
           <label for="rebalancingFrequency">Rebalancing Frequency</label>
           <input id="rebalancingFrequency" type="number" class="form-control" name="rebalancingFrequency" [(ngModel)]="rebalancingFrequency">
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-sm-4">
         <div class="form-group">
           <label for="mcSamples">Monte Carlo Samples</label>
           <input id="mcSamples" type="number" class="form-control" name="mcSamples" [(ngModel)]="mcSamples">
@@ -70,7 +70,7 @@
             <i class="fa fa-bullseye fa-lg"></i> Tracking error</button>
         </div>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-4">
         <a class="tracking-error">{{ trackingError | number : '1.5-5' }} &#x25;</a>
       </div>
     </div>
