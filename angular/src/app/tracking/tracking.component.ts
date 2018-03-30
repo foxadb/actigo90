@@ -154,7 +154,7 @@ export class TrackingComponent implements OnInit {
     let averageError = 0;
     let i = 1;
 
-    while (new Date(this.prices[i].date).getTime()
+    while (this.prices[i] && new Date(this.prices[i].date).getTime()
       <= new Date(this.trackingDate).getTime()) {
       // Get current and previous prices
       const currentPrice = this.prices[i];
