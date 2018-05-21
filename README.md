@@ -5,12 +5,19 @@
 An online preview is available here:
 [Actigo 90](https://www.actigo90.trade)
 
+Use the following user credentials:
+- username: actigoguest
+- password: actigoguest123
+
+*This guest account have read-only access to the web app preview.*
+
 ## Dependencies
 
-### Express & Angular
+### NodeJS
 
-- npm >= 5.6.1
-- nodejs >= 9.x
+This project requires nodejs >= 8.11.x.
+
+The web app uses ExpressJS and Angular 5.
 
 ### Pricer
 
