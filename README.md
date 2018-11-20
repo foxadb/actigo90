@@ -1,16 +1,5 @@
 # Actigo90 Pricer
 
-## Online Preview
-
-An online preview is available here:
-[Actigo 90](https://www.actigo90.trade)
-
-Use the following user credentials:
-- username: actigoguest
-- password: actigoguest123
-
-*This guest account have read-only access to the web app preview.*
-
 ## Dependencies
 
 ### NodeJS
